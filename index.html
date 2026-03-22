@@ -73,6 +73,127 @@ body.dark-mode #theme-toggle {
     background: rgba(0, 0, 0, 0.3);
     border-color: rgba(255, 255, 255, 0.2);
 }
+
+.links-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 0;
+    list-style: none;
+    max-width: 800px;
+}
+
+.links-grid li a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 10px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    height: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.links-grid li a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--link-color);
+}
+
+body.dark-mode .links-grid li a {
+    background: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+body.dark-mode .links-grid li a:hover {
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+    .links-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .links-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Interactive Polish & Animations --- */
+
+/* Smooth page load animation */
+body {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Improved reading spacing */
+p, li {
+    line-height: 1.6;
+}
+
+/* Match text selection color to theme */
+::selection {
+    background: var(--link-color);
+    color: var(--bg-color);
+}
+
+/* Animated Waving Hand */
+.wave {
+    display: inline-block;
+    animation: wave-animation 2.5s infinite;
+    transform-origin: 70% 70%;
+    cursor: default;
+}
+
+@keyframes wave-animation {
+    0% { transform: rotate( 0.0deg) }
+    10% { transform: rotate(14.0deg) }
+    20% { transform: rotate(-8.0deg) }
+    30% { transform: rotate(14.0deg) }
+    40% { transform: rotate(-4.0deg) }
+    50% { transform: rotate(10.0deg) }
+    60% { transform: rotate( 0.0deg) }
+    100% { transform: rotate( 0.0deg) }
+}
+
+/* Sliding underline hover effect for standard text links */
+p a {
+    position: relative;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+p a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: var(--link-color);
+    transform-origin: bottom right;
+    transition: transform 0.25s ease-out;
+}
+
+p a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
 </style>
     
 <body id="page-body">
@@ -82,13 +203,13 @@ body.dark-mode #theme-toggle {
 
     <!--<p> I am Senthil Palanivelu, Bioinformatician in <a href="https://www.brighamandwomens.org/medicine/sleep-and-circadian-disorders/overview" target="_blank">Department of Sleep Medicine, Brigham and Women’s Hospital (BWH)</a><br>and <a href="https://sleep.hms.harvard.edu/" target="_blank">Harvard Medical School (HMS)</a>, part of <a href="https://zzz.bwh.harvard.edu/" target="_blank">Purcell lab</a> directed by <a href="https://zzz.bwh.harvard.edu/bio.html" target="_blank">Shaun Purcell, Ph.D</a>.</p>-->
 
-    <p>Hi👋 I'm Senthil Palanivelu. I’m a CS graduate from UMass Boston.</p>
+    <p>Hi <span class="wave" title="Hello!">👋</span> I'm Senthil Palanivelu. I’m a CS graduate from UMass Boston.</p>
     
     <p>I have a strong background in Data Analytics, AI Engineering, and Machine Learning. I’m passionate about exploring data to uncover meaningful patterns and trends, using evidence-based analysis and data-driven insights to guide informed decision-making. My work focuses on applying AI and advanced analytics to solve real-world problems, optimize processes, and deliver clear, measurable business value. I enjoy bridging the gap between complex data and practical outcomes by turning insights into actionable solutions.</p>
     
     <section>
     <h2>Quick Links</h2>
-    <ul>
+    <ul class="links-grid">
         <li><a href="https://senthilcaesar.github.io/portfolio/" target="_blank">Portfolio</a></li>
         <li><a href="https://senthilcaesar.github.io/my-reading/" target="_blank">Readings</a></li>
         <li><a href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">KnowledgeLab</a></li>
