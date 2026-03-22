@@ -86,8 +86,10 @@ body.dark-mode #theme-toggle {
 
 .links-grid li a {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     padding: 12px 10px;
     background: rgba(255, 255, 255, 0.4);
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -100,6 +102,11 @@ body.dark-mode #theme-toggle {
     height: 100%;
     box-sizing: border-box;
     text-align: center;
+}
+
+.links-grid .icon {
+    font-size: 26px;
+    line-height: 1;
 }
 
 .links-grid li a:hover {
@@ -129,11 +136,15 @@ body.dark-mode .links-grid li a:hover {
 }
 @media (max-width: 480px) {
     .links-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
     }
     .links-grid li a {
-        font-size: 19px;
-        padding: 20px 16px;
+        font-size: 15px;
+        padding: 12px 8px;
+    }
+    .links-grid .icon {
+        font-size: 22px;
     }
 }
 
@@ -219,15 +230,15 @@ p a:hover::after {
     <section>
     <h2>Quick Links</h2>
     <ul class="links-grid">
-        <li><a href="https://senthilcaesar.github.io/portfolio/" target="_blank">Portfolio</a></li>
-        <li><a href="https://senthilcaesar.github.io/my-reading/" target="_blank">Readings</a></li>
-        <li><a href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">KnowledgeLab</a></li>
-        <li><a href="https://senthilcaesar.github.io/resources/" target="_blank">URL Library</a></li>
-        <li><a href="https://senthilcaesar.github.io/blogs/" target="_blank">Blogs</a></li>
-        <li><a href="https://senthilcaesar.github.io/commands/" target="_blank">Commands</a></li>
-        <li><a href="https://senthilcaesar.github.io/concepts/" target="_blank">Concepts</a></li>
-        <li><a href="https://senthilcaesar.github.io/notebook/" target="_blank">Notebook</a></li>
-        <li><a href="https://senthilcaesar.github.io/url-content-tracker/" target="_blank">Content Tracker</a></li>
+        <li><a href="https://senthilcaesar.github.io/portfolio/" target="_blank"><span class="icon">💼</span>Portfolio</a></li>
+        <li><a href="https://senthilcaesar.github.io/my-reading/" target="_blank"><span class="icon">📖</span>Readings</a></li>
+        <li><a href="https://senthilcaesar.github.io/knowledgelab/" target="_blank"><span class="icon">🧠</span>KnowledgeLab</a></li>
+        <li><a href="https://senthilcaesar.github.io/resources/" target="_blank"><span class="icon">🔗</span>URL Library</a></li>
+        <li><a href="https://senthilcaesar.github.io/blogs/" target="_blank"><span class="icon">✍️</span>Blogs</a></li>
+        <li><a href="https://senthilcaesar.github.io/commands/" target="_blank"><span class="icon">💻</span>Commands</a></li>
+        <li><a href="https://senthilcaesar.github.io/concepts/" target="_blank"><span class="icon">💡</span>Concepts</a></li>
+        <li><a href="https://senthilcaesar.github.io/notebook/" target="_blank"><span class="icon">📓</span>Notebook</a></li>
+        <li><a href="https://senthilcaesar.github.io/url-content-tracker/" target="_blank"><span class="icon">🌐</span>Content Tracker</a></li>
     </ul>
     </section>
 
