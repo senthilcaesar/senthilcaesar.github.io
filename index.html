@@ -8,7 +8,7 @@
 <link href='https://fonts.googleapis.com/css?family=JetBrains Mono' rel='stylesheet'>
 <style>
 :root {
-    --bg-color: rgba(226, 234, 210, 1);
+    --bg-color: #F1E9D2; /* Light Sandalwood */
     --text-color: #1a1a1a;
     --link-color: #0000ee;
     --heading-color: #000;
@@ -19,6 +19,7 @@ body.dark-mode {
     --text-color: #e0e0e0;
     --link-color: #8ab4f8;
     --heading-color: #ffffff;
+    --azure-header: #52A5FF;
 }
 
 body {
@@ -48,6 +49,15 @@ h2 {
     font-size: 1.4rem;
     margin-top: 1.2rem;
     margin-bottom: 0.6rem;
+}
+
+h2.compact-header {
+    margin-bottom: 10px;
+    color: #00509E; /* Dark Azure Blue */
+}
+
+.contact-section p, .links-grid {
+    margin-top: 5px;
 }
 
 #theme-toggle {
@@ -293,6 +303,10 @@ body.dark-mode .social-icon:hover {
     color: #fff;
 }
 
+body.dark-mode h2.compact-header {
+    color: var(--azure-header);
+}
+
 @media (max-width: 768px) {
     .links-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -393,13 +407,14 @@ p a:hover::after {
         </div>
         <div class="hero-text">
             <!--<p> I am Senthil Palanivelu, Bioinformatician in ... </p>-->
-            <p>Hi <span class="wave" title="Hello!">👋</span> I'm Senthil Palanivelu. I’m a CS graduate from UMass Boston.</p>
-            <p>I have a strong background in Data Analytics, AI Engineering, and Machine Learning. I’m passionate about exploring data to uncover meaningful patterns and trends, using evidence-based analysis and data-driven insights to guide informed decision-making. My work focuses on applying AI and advanced analytics to solve real-world problems, optimize processes, and deliver clear, measurable business value. I enjoy bridging the gap between complex data and practical outcomes by turning insights into actionable solutions.</p>
+            <p>Hi <span class="wave" title="Hello!">👋</span> I'm <strong>Senthil Palanivelu</strong>. I’m a CS graduate from UMass Boston.</p>
+            <p>I have a strong background in Data Analytics, AI Engineering, and Machine Learning.<br> I’m passionate about exploring data to uncover meaningful patterns and trends, using <br> evidence-based analysis 
+                and data-driven insights to guide informed decision-making.<br> My work focuses on applying AI and advanced analytics to solve real-world problems, <br> optimize processes, and deliver clear, measurable business value. I enjoy bridging the <br> gap between complex data and practical outcomes by turning insights into actionable solutions.</p>
         </div>
     </section>
     
+    <h2 class="compact-header">Quick Links</h2>
     <section>
-    <h2>Quick Links</h2>
     <ul class="links-grid">
         <li><a href="https://senthilcaesar.github.io/portfolio/" target="_blank"><span class="icon">💼</span>Portfolio</a></li>
         <li><a href="https://senthilcaesar.github.io/my-reading/" target="_blank"><span class="icon">📖</span>Readings</a></li>
@@ -413,9 +428,9 @@ p a:hover::after {
     </ul>
     </section>
 
-    <h2>Contact</h2>
-    <section>
-    <p>Senthil Palanivelu<br>
+    <h2 class="compact-header">Contact</h2>
+    <section class="contact-section">
+    <p><strong>Senthil Palanivelu</strong><br>
     Email: [senthilcaesar@gmail.com]</p>
     
     <div class="social-links">
