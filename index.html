@@ -273,10 +273,12 @@ body.dark-mode #theme-toggle {
 
 @media (max-width: 900px) {
     .hero-section {
-        flex-direction: column-reverse; /* Bio then Image? Or Image then Bio? Usually Image then Bio is better. let's use column. */
         flex-direction: column;
         align-items: center;
-        text-align: center;
+    }
+    .hero-text {
+        text-align: left; /* Improved readability for long paragraphs on mobile */
+        width: 100%;
     }
     .links-grid {
         max-width: 100%;
