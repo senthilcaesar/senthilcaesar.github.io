@@ -14,12 +14,18 @@
     --heading-color: #000;
 }
 
+/* Catppuccin Frappé dark mode */
 body.dark-mode {
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --link-color: #8ab4f8;
-    --heading-color: #ffffff;
-    --azure-header: #52A5FF;
+    --bg-color: #303446;       /* Frappé Base */
+    --text-color: #c6d0f5;     /* Frappé Text */
+    --link-color: #8caaee;     /* Frappé Blue */
+    --heading-color: #babbf1;  /* Frappé Lavender */
+    --azure-header: #85c1dc;   /* Frappé Sapphire */
+    --surface-0: #414559;      /* Frappé Surface 0 */
+    --overlay-0: #737994;      /* Frappé Overlay 0 */
+    --mantle: #292c3c;         /* Frappé Mantle */
+    --mauve: #ca9ee6;          /* Frappé Mauve */
+    --peach: #ef9f76;          /* Frappé Peach */
 }
 
 body {
@@ -86,8 +92,8 @@ h2.compact-header {
 }
 
 body.dark-mode #theme-toggle {
-    background: rgba(0, 0, 0, 0.3);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--surface-0, #414559);
+    border-color: var(--overlay-0, #737994);
 }
 
 .links-grid {
@@ -287,23 +293,24 @@ body.dark-mode #theme-toggle {
 }
 
 body.dark-mode .links-grid li a {
-    background: rgba(255, 255, 255, 0.05); /* Slightly lighter background for contrast */
-    border-color: rgba(255, 255, 255, 0.25); /* More visible border */
+    background: var(--surface-0, #414559);
+    border-color: var(--overlay-0, #737994);
 }
 body.dark-mode .links-grid li a:hover {
-    background: rgba(0, 0, 0, 0.4);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: var(--mantle, #292c3c);
+    color: var(--peach, #ef9f76);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 body.dark-mode .social-icon {
-    border-color: rgba(255, 255, 255, 0.3);
-    color: rgba(255, 255, 255, 0.8);
+    border-color: var(--overlay-0, #737994);
+    color: var(--text-color, #c6d0f5);
 }
 
 body.dark-mode .social-icon:hover {
-    background: #003366; /* Deep navy for dark mode */
-    border-color: #003366;
-    color: #fff;
+    background: var(--mauve, #ca9ee6);
+    border-color: var(--mauve, #ca9ee6);
+    color: var(--bg-color, #303446);
 }
 
 body.dark-mode h2.compact-header {
