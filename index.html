@@ -1195,40 +1195,45 @@
             scene.add(gearGroup);
 
             // Lighting
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
             scene.add(ambientLight);
 
-            const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.6);
-            dirLight1.position.set(5, 5, 8);
+            const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
+            dirLight1.position.set(5, 8, 5);
             scene.add(dirLight1);
 
-            const pointLight = new THREE.PointLight(0xffffff, 0.5, 30);
-            pointLight.position.set(-5, -5, 4);
+            // Fill light to light up shadowed gear facets and make metal reflections look realistic
+            const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+            dirLight2.position.set(-5, -8, -5);
+            scene.add(dirLight2);
+
+            const pointLight = new THREE.PointLight(0xffffff, 0.8, 30);
+            pointLight.position.set(-3, -3, 6);
             scene.add(pointLight);
 
             // Materials and Theme Colors
             const colors = {
                 dark: {
-                    gear: 0x85c1dc,       // Sapphire
-                    ambient: 0x0f172a,
-                    ambientIntensity: 0.4,
-                    dirLight: 0xcbd5e1,
+                    gear: 0xa0a5ad,       // Brushed matte silver
+                    ambient: 0xffffff,
+                    ambientIntensity: 0.35,
+                    dirLight: 0xffffff,
                     dirIntensity: 0.6,
-                    pointLight: 0x60a5fa,
-                    pointIntensity: 0.5,
-                    metalness: 0.5,
-                    roughness: 0.65
+                    pointLight: 0xffffff,
+                    pointIntensity: 0.4,
+                    metalness: 0.6,
+                    roughness: 0.45
                 },
                 light: {
-                    gear: 0x2563eb,       // Blue 600
-                    ambient: 0xf8fafc,
+                    gear: 0xb8bcc4,       // Bright brushed silver
+                    ambient: 0xffffff,
                     ambientIntensity: 0.4,
                     dirLight: 0xffffff,
                     dirIntensity: 0.6,
-                    pointLight: 0x93c5fd,
-                    pointIntensity: 0.5,
-                    metalness: 0.5,
-                    roughness: 0.65
+                    pointLight: 0xffffff,
+                    pointIntensity: 0.4,
+                    metalness: 0.6,
+                    roughness: 0.45
                 }
             };
 
@@ -1251,6 +1256,7 @@
 
                 dirLight1.color.setHex(theme.dirLight);
                 dirLight1.intensity = theme.dirIntensity;
+                dirLight2.intensity = theme.dirIntensity * 0.5;
 
                 pointLight.color.setHex(theme.pointLight);
                 pointLight.intensity = theme.pointIntensity;
