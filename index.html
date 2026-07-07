@@ -1636,6 +1636,69 @@
             }
         })();
     </script>
+
+    <!-- Header Navigation Active Link Handler -->
+    <script>
+        (function () {
+            const navLinks = document.querySelectorAll('.header-middle .nav-link');
+            const sections = [
+                { id: 'about-section', link: document.querySelector('.header-middle a[href="#"]') },
+                { id: 'quick-links', link: document.querySelector('.header-middle a[href="#quick-links"]') },
+                { id: 'contact', link: document.querySelector('.header-middle a[href="#contact"]') }
+            ];
+
+            const aboutSec = document.querySelector('.main-layout');
+            if (aboutSec) aboutSec.id = 'about-section';
+
+            let isScrollingFromClick = false;
+            let clickTimeout = null;
+
+            // 1. Click Listener for instant highlight and scroll-spy bypass
+            navLinks.forEach(link => {
+                link.addEventListener('click', function () {
+                    if (clickTimeout) clearTimeout(clickTimeout);
+                    isScrollingFromClick = true;
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // Allow scroll spy again after smooth scroll finishes
+                    clickTimeout = setTimeout(() => {
+                        isScrollingFromClick = false;
+                    }, 800);
+                });
+            });
+
+            // 2. Scroll Spy using offsets
+            window.addEventListener('scroll', () => {
+                if (isScrollingFromClick) return;
+
+                let currentActive = null;
+                const scrollPos = window.scrollY + window.innerHeight * 0.45; // trigger line at 45% of viewport
+
+                // Find which section container is currently in focus
+                sections.forEach(sec => {
+                    const el = document.getElementById(sec.id);
+                    if (el) {
+                        const top = el.offsetTop;
+                        const height = el.offsetHeight;
+                        if (scrollPos >= top && scrollPos < top + height) {
+                            currentActive = sec;
+                        }
+                    }
+                });
+
+                // Force active state to Contact if user scrolled to bottom of the page
+                if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 20) {
+                    currentActive = sections.find(s => s.id === 'contact');
+                }
+
+                if (currentActive && currentActive.link) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    currentActive.link.classList.add('active');
+                }
+            });
+        })();
+    </script>
 </body>
 
 </html>
