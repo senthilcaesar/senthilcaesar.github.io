@@ -1693,6 +1693,9 @@
 
             const commandHistory = [];
             let historyIndex = -1;
+            let isTyping = false;
+            let hasTypedWelcome = false;
+            const TYPING_SPEED = 30; // ms per character
 
             const qaDatabase = [
                 {
@@ -1725,11 +1728,83 @@
                 }
             ];
 
+            function tokenizeHTML(htmlString) {
+                const tokens = [];
+                let i = 0;
+                while (i < htmlString.length) {
+                    if (htmlString[i] === '<') {
+                        const endIdx = htmlString.indexOf('>', i);
+                        if (endIdx !== -1) {
+                            tokens.push(htmlString.substring(i, endIdx + 1));
+                            i = endIdx + 1;
+                        } else {
+                            tokens.push(htmlString[i]);
+                            i++;
+                        }
+                    } else if (htmlString[i] === '&') {
+                        const endIdx = htmlString.indexOf(';', i);
+                        if (endIdx !== -1 && endIdx - i < 10) {
+                            tokens.push(htmlString.substring(i, endIdx + 1));
+                            i = endIdx + 1;
+                        } else {
+                            tokens.push(htmlString[i]);
+                            i++;
+                        }
+                    } else {
+                        tokens.push(htmlString[i]);
+                        i++;
+                    }
+                }
+                return tokens;
+            }
+
+            function typewrite(element, htmlString, speed = TYPING_SPEED, onComplete) {
+                const tokens = tokenizeHTML(htmlString);
+                let currentTokenIdx = 0;
+                let accumulated = '';
+
+                function typeNext() {
+                    if (currentTokenIdx >= tokens.length) {
+                        if (onComplete) onComplete();
+                        return;
+                    }
+
+                    let token = tokens[currentTokenIdx];
+                    while (token && token.startsWith('<') && token.endsWith('>')) {
+                        accumulated += token;
+                        currentTokenIdx++;
+                        token = tokens[currentTokenIdx];
+                    }
+
+                    if (token) {
+                        accumulated += token;
+                        currentTokenIdx++;
+                    }
+
+                    element.innerHTML = accumulated;
+                    outputContainer.scrollTop = outputContainer.scrollHeight;
+
+                    setTimeout(typeNext, speed);
+                }
+
+                typeNext();
+            }
+
             trigger.addEventListener('click', (e) => {
                 e.stopPropagation();
                 windowDiv.classList.toggle('hidden');
                 if (!windowDiv.classList.contains('hidden')) {
                     input.focus();
+                    if (!hasTypedWelcome) {
+                        hasTypedWelcome = true;
+                        const welcomeHTML = `Welcome to Senthil's interactive console v1.0.0.<br>Type <span class="highlight">help</span> to see a list of commands.<br><br>`;
+                        outputContainer.innerHTML = '';
+                        isTyping = true;
+                        typewrite(outputContainer, welcomeHTML, TYPING_SPEED, () => {
+                            isTyping = false;
+                            input.focus();
+                        });
+                    }
                 }
             });
 
@@ -1742,6 +1817,10 @@
             });
 
             input.addEventListener('keydown', (e) => {
+                if (isTyping) {
+                    e.preventDefault();
+                    return;
+                }
                 if (e.key === 'Enter') {
                     const cmdVal = input.value.trim();
                     if (cmdVal) {
@@ -1757,8 +1836,13 @@
                         const result = executeCommand(cmdVal);
                         if (result) {
                             const resLine = document.createElement('div');
-                            resLine.innerHTML = result;
                             outputContainer.appendChild(resLine);
+                            
+                            isTyping = true;
+                            typewrite(resLine, result, TYPING_SPEED, () => {
+                                isTyping = false;
+                                input.focus();
+                            });
                         }
                     } else {
                         const userLine = document.createElement('div');
