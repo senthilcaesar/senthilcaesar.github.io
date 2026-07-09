@@ -41,6 +41,9 @@
             --orb-color-1: rgba(37, 99, 235, 0.08);
             --orb-color-2: rgba(139, 92, 246, 0.06);
             --divider-gradient: linear-gradient(90deg, rgba(37, 99, 235, 0) 0%, rgba(37, 99, 235, 0.4) 50%, rgba(37, 99, 235, 0) 100%);
+            --mountain-back: #cbd5e1;
+            --mountain-mid: #94a3b8;
+            --mountain-front: #64748b;
         }
 
         body.dark-mode {
@@ -64,6 +67,9 @@
             --orb-color-1: rgba(96, 165, 250, 0.15);
             --orb-color-2: rgba(139, 92, 246, 0.12);
             --divider-gradient: linear-gradient(90deg, rgba(96, 165, 250, 0) 0%, rgba(96, 165, 250, 0.5) 50%, rgba(96, 165, 250, 0) 100%);
+            --mountain-back: #1e293b;
+            --mountain-mid: #334155;
+            --mountain-front: #475569;
         }
 
         html {
@@ -196,6 +202,24 @@
             max-width: 1080px;
             margin: 0 auto;
             padding: 40px 24px;
+            position: relative; /* Position context for mountain backdrop */
+        }
+
+        .mountain-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 480px; /* Cover the upper layout area above quick links */
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            opacity: 0.15; /* Subtle and soft blend to not interfere with text */
+            transition: opacity var(--transition-speed);
+        }
+
+        body.dark-mode .mountain-background {
+            opacity: 0.35; /* Increased opacity in dark mode for visible silhouette */
         }
 
         .main-layout {
@@ -1032,6 +1056,28 @@
 
     <!-- Main Content Area -->
     <main>
+        <!-- Layered Mountain Background -->
+        <div class="mountain-background">
+            <svg viewBox="0 0 1200 400" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+                <defs>
+                    <linearGradient id="mtn-grad-back" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="var(--mountain-back)" stop-opacity="0.4"/>
+                        <stop offset="100%" stop-color="var(--bg-color)" stop-opacity="1"/>
+                    </linearGradient>
+                    <linearGradient id="mtn-grad-mid" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="var(--mountain-mid)" stop-opacity="0.6"/>
+                        <stop offset="100%" stop-color="var(--bg-color)" stop-opacity="1"/>
+                    </linearGradient>
+                    <linearGradient id="mtn-grad-front" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="var(--mountain-front)" stop-opacity="0.8"/>
+                        <stop offset="100%" stop-color="var(--bg-color)" stop-opacity="1"/>
+                    </linearGradient>
+                </defs>
+                <path d="M0,400 L0,220 L150,140 L320,260 L480,110 L680,290 L850,150 L1020,270 L1200,180 L1200,400 Z" fill="url(#mtn-grad-back)" />
+                <path d="M0,400 L0,280 L220,180 L440,310 L620,190 L800,320 L980,210 L1200,310 L1200,400 Z" fill="url(#mtn-grad-mid)" />
+                <path d="M0,400 L0,340 L120,270 L300,360 L500,260 L720,380 L920,290 L1080,360 L1200,310 L1200,400 Z" fill="url(#mtn-grad-front)" />
+            </svg>
+        </div>
         <div class="main-layout">
             <!-- Left Sidebar -->
             <aside class="sidebar">
@@ -1547,6 +1593,17 @@
             gearC.position.copy(posC);
             gearGroup.add(gearC);
 
+            // Expose gears data globally for rain simulation interaction
+            window.gearsData = {
+                container: container,
+                camera: camera,
+                gears: [
+                    { mesh: gearA, radiusInner: 1.25, radiusOuter: 1.75, pos: posA, teeth: teethA },
+                    { mesh: gearB, radiusInner: 1.75, radiusOuter: 2.25, pos: posB, teeth: teethB },
+                    { mesh: gearC, radiusInner: 0.8, radiusOuter: 1.2, pos: posC, teeth: teethC }
+                ]
+            };
+
             function getDrivenRotation(driverRotation, N_driver, N_driven, centerDriver, centerDriven, isValleyAligned = true) {
                 const dx = centerDriven.x - centerDriver.x;
                 const dy = centerDriven.y - centerDriver.y;
@@ -1921,6 +1978,8 @@
             // Arrays for entities
             let drops = [];
             let splashes = [];
+            let gearDroplets = [];
+            let cardDroplets = [];
 
             // Lightning state
             let lightningOpacity = 0;
@@ -1944,27 +2003,92 @@
                     this.reset(isInitial);
                 }
 
-                reset(isInitial = false) {
-                    this.x = Math.random() * (width + 100) - 50; // extra padding for wind drift
-                    this.y = isInitial ? Math.random() * height : -CONFIG.dropMaxLength - Math.random() * 50;
-                    this.length = CONFIG.dropMinLength + Math.random() * (CONFIG.dropMaxLength - CONFIG.dropMinLength);
-                    this.speed = CONFIG.dropMinSpeed + Math.random() * (CONFIG.dropMaxSpeed - CONFIG.dropMinSpeed);
-                    this.width = 1.0 + Math.random() * 0.8;
-                    // Slightly vary speed and length for depth parallax
-                    this.opacity = (this.length / CONFIG.dropMaxLength) * 0.7; // longer drops look closer and more visible
+                reset(isInitial = false, customX = null, customY = null, customVx = null, customVy = null) {
+                    if (customX !== null && customY !== null) {
+                        this.x = customX;
+                        this.y = customY;
+                        this.length = CONFIG.dropMinLength * 0.5 + Math.random() * 6; // shorter drip length
+                        this.speed = customVy || (CONFIG.dropMinSpeed * 0.5);
+                        this.vx = customVx !== null ? customVx : CONFIG.windX;
+                        this.width = 1.0 + Math.random() * 0.5;
+                        this.opacity = 0.55;
+                        this.isDrip = true;
+                    } else {
+                        this.x = Math.random() * (width + 100) - 50; // extra padding for wind drift
+                        this.y = isInitial ? Math.random() * height : -CONFIG.dropMaxLength - Math.random() * 50;
+                        this.length = CONFIG.dropMinLength + Math.random() * (CONFIG.dropMaxLength - CONFIG.dropMinLength);
+                        this.speed = CONFIG.dropMinSpeed + Math.random() * (CONFIG.dropMaxSpeed - CONFIG.dropMinSpeed);
+                        this.vx = CONFIG.windX;
+                        this.width = 1.0 + Math.random() * 0.8;
+                        // Slightly vary speed and length for depth parallax
+                        this.opacity = (this.length / CONFIG.dropMaxLength) * 0.7; // longer drops look closer and more visible
+                        this.isDrip = false;
+                    }
                 }
 
-                update() {
+                update(activeObstacles, activeGears) {
+                    const prevX = this.x;
+                    const prevY = this.y;
+
                     this.y += this.speed;
-                    this.x += CONFIG.windX;
+                    this.x += this.vx;
+
+                    const bottomPrevY = prevY + this.length;
+                    const bottomNextY = this.y + this.length;
+
+                    // 1. Check collision with active gears (circular 2D boundaries)
+                    if (activeGears && activeGears.length > 0) {
+                        for (let gear of activeGears) {
+                            const dx = this.x - gear.cx;
+                            const dy = bottomNextY - gear.cy;
+                            const dist = Math.hypot(dx, dy);
+                            
+                            // If bottom of drop enters the gear circle from above
+                            if (dist <= gear.radius && dy < 0 && bottomPrevY <= gear.cy) {
+                                // Hit! Spawn a splash on the gear boundary
+                                const hitAngle = Math.atan2(dy, dx);
+                                const hitX = gear.cx + gear.radius * Math.cos(hitAngle);
+                                const hitY = gear.cy + gear.radius * Math.sin(hitAngle);
+                                createSplash(hitX, hitY);
+
+                                // Create a sliding GearDroplet
+                                gearDroplets.push(new GearDroplet(gear.index, hitAngle, gear.radius, this.width * 1.5));
+
+                                return false; // remove from active drops
+                            }
+                        }
+                    }
+
+                    // 2. Check collision with card/box obstacles (top edges)
+                    if (activeObstacles && activeObstacles.length > 0) {
+                        for (let obs of activeObstacles) {
+                            // Check if drop bottom crosses the top boundary of the box
+                            if (bottomPrevY <= obs.top && bottomNextY >= obs.top) {
+                                // Interpolate x position at obs.top
+                                const t = (obs.top - bottomPrevY) / (bottomNextY - bottomPrevY || 1);
+                                const hitX = prevX + (this.x - prevX) * t;
+
+                                if (hitX >= obs.left && hitX <= obs.right) {
+                                    // Hit! Spawn splash
+                                    createSplash(hitX, obs.top);
+
+                                    // Create a CardDroplet (15% chance)
+                                    if (Math.random() < 0.15) {
+                                        cardDroplets.push(new CardDroplet(hitX, obs.top, obs.bottom, this.width * 1.4));
+                                    }
+
+                                    return false; // remove from active drops
+                                }
+                            }
+                        }
+                    }
 
                     // Check collision with screen bottom
                     if (this.y >= height) {
                         if (!fadingOut) {
                             createSplash(this.x, height);
-                            this.reset();
                         }
-                        return false; // mark as finished if fading out
+                        return false; // mark as finished
                     }
                     return true;
                 }
@@ -1978,8 +2102,173 @@
                     ctx.lineWidth = this.width;
                     ctx.beginPath();
                     ctx.moveTo(this.x, this.y);
-                    ctx.lineTo(this.x + CONFIG.windX * 0.6, this.y + this.length);
+                    ctx.lineTo(this.x + this.vx * 0.6, this.y + this.length);
                     ctx.stroke();
+                }
+            }
+
+            class GearDroplet {
+                constructor(gearIndex, angle, radius, size) {
+                    this.gearIndex = gearIndex;
+                    this.angle = angle; // screen angle in radians
+                    this.radius = radius;
+                    this.size = size || 2;
+                    this.trail = [];
+                    this.gravitySlideSpeed = 0.015 + Math.random() * 0.015;
+                    this.friction = 0.98; // follows rotation
+                    this.age = 0;
+                }
+
+                update(activeGears) {
+                    this.age++;
+                    const gear = activeGears.find(g => g.index === this.gearIndex);
+                    if (!gear) return false;
+
+                    // Calculate gear rotation delta
+                    const currentRot = gear.mesh.rotation.z;
+                    if (gear.mesh.lastZRotation === undefined) {
+                        gear.mesh.lastZRotation = currentRot;
+                    }
+                    const dphi = currentRot - gear.mesh.lastZRotation;
+                    
+                    // Update angle:
+                    // Since positive 3D rotation is CCW, and screen y is down:
+                    // 3D CCW rotation corresponds to CCW rotation on screen, which is negative angle change.
+                    // So we subtract dphi.
+                    this.angle -= dphi * this.friction;
+
+                    // Gravity pulls down towards PI/2. Tangential force proportional to cos(angle).
+                    const gravityForce = Math.cos(this.angle);
+                    this.angle += gravityForce * this.gravitySlideSpeed;
+
+                    // Keep angle in [-PI, PI]
+                    this.angle = Math.atan2(Math.sin(this.angle), Math.cos(this.angle));
+
+                    // Get screen coordinates
+                    const x = gear.cx + this.radius * Math.cos(this.angle);
+                    const y = gear.cy + this.radius * Math.sin(this.angle);
+
+                    // Store trail for smooth drawing
+                    this.trail.push({ x, y });
+                    if (this.trail.length > 5) {
+                        this.trail.shift();
+                    }
+
+                    // Check detach conditions:
+                    // 1. Near the bottom: sin(angle) > 0.94
+                    const isNearBottom = Math.sin(this.angle) > 0.94;
+                    // 2. Fling off if spinning fast: dphi is large
+                    const isSpinningFast = Math.abs(dphi) > 0.05;
+
+                    let detach = false;
+                    if (isNearBottom && Math.random() < 0.06) {
+                        detach = true;
+                    } else if (isSpinningFast && Math.random() < 0.12) {
+                        detach = true;
+                    } else if (this.age > 240) {
+                        detach = true;
+                    }
+
+                    if (detach) {
+                        // Spawn a falling drip
+                        let vx = CONFIG.windX;
+                        let vy = 3 + Math.random() * 2; // slow initial vertical drip
+
+                        if (isSpinningFast) {
+                            // Fling tangentially!
+                            // Tangent vector: (-sin(theta), cos(theta))
+                            // Speed = rotation delta (rad/frame) * radius (pixels)
+                            const speed = -dphi * this.radius * 0.8;
+                            vx = -speed * Math.sin(this.angle) + CONFIG.windX * 0.5;
+                            vy = speed * Math.cos(this.angle) + 2;
+                        }
+
+                        spawnDrippingDrop(x, y, vx, vy);
+                        return false;
+                    }
+
+                    return true;
+                }
+
+                draw() {
+                    if (this.trail.length < 2) return;
+                    const isDark = document.body.classList.contains('dark-mode');
+                    
+                    ctx.strokeStyle = isDark 
+                        ? `rgba(165, 203, 255, 0.8)` 
+                        : `rgba(47, 65, 90, 0.75)`;
+                    ctx.lineWidth = this.size;
+                    ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(this.trail[0].x, this.trail[0].y);
+                    for (let i = 1; i < this.trail.length; i++) {
+                        ctx.lineTo(this.trail[i].x, this.trail[i].y);
+                    }
+                    ctx.stroke();
+
+                    const head = this.trail[this.trail.length - 1];
+                    ctx.fillStyle = isDark 
+                        ? `rgba(200, 225, 255, 0.95)` 
+                        : `rgba(60, 80, 110, 0.9)`;
+                    ctx.beginPath();
+                    ctx.arc(head.x, head.y, this.size * 0.8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            class CardDroplet {
+                constructor(x, y, bottomY, size) {
+                    this.x = x;
+                    this.y = y;
+                    this.bottomY = bottomY;
+                    this.size = size || 1.5;
+                    this.trail = [];
+                    this.speed = 0.5 + Math.random() * 0.8;
+                    this.wiggleFactor = 0.25;
+                }
+
+                update() {
+                    // Slide down
+                    this.y += this.speed;
+                    // Wiggle slightly sideways
+                    this.x += (Math.random() - 0.5) * this.wiggleFactor + CONFIG.windX * 0.05;
+
+                    this.trail.push({ x: this.x, y: this.y });
+                    if (this.trail.length > 5) {
+                        this.trail.shift();
+                    }
+
+                    // Detach if reaches bottom
+                    if (this.y >= this.bottomY) {
+                        spawnDrippingDrop(this.x, this.y, CONFIG.windX, 2 + Math.random() * 2);
+                        return false;
+                    }
+                    return true;
+                }
+
+                draw() {
+                    if (this.trail.length < 2) return;
+                    const isDark = document.body.classList.contains('dark-mode');
+                    
+                    ctx.strokeStyle = isDark 
+                        ? `rgba(165, 203, 255, 0.45)` 
+                        : `rgba(47, 65, 90, 0.4)`;
+                    ctx.lineWidth = this.size;
+                    ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(this.trail[0].x, this.trail[0].y);
+                    for (let i = 1; i < this.trail.length; i++) {
+                        ctx.lineTo(this.trail[i].x, this.trail[i].y);
+                    }
+                    ctx.stroke();
+
+                    const head = this.trail[this.trail.length - 1];
+                    ctx.fillStyle = isDark 
+                        ? `rgba(180, 215, 255, 0.7)` 
+                        : `rgba(50, 70, 95, 0.65)`;
+                    ctx.beginPath();
+                    ctx.arc(head.x, head.y, this.size * 0.7, 0, Math.PI * 2);
+                    ctx.fill();
                 }
             }
 
@@ -2014,6 +2303,13 @@
                     ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                     ctx.fill();
                 }
+            }
+
+            function spawnDrippingDrop(x, y, vx, vy) {
+                if (drops.length > CONFIG.maxDrops * 1.5) return;
+                const d = new Drop();
+                d.reset(false, x, y, vx, vy);
+                drops.push(d);
             }
 
             function createSplash(x, y) {
@@ -2053,6 +2349,8 @@
             function initRain() {
                 drops = [];
                 splashes = [];
+                gearDroplets = [];
+                cardDroplets = [];
                 const initialCount = Math.floor(CONFIG.maxDrops * 0.4); // start with partial rain filled in
                 for (let i = 0; i < CONFIG.maxDrops; i++) {
                     drops.push(new Drop(i < initialCount));
@@ -2107,7 +2405,7 @@
             }
 
             function loop() {
-                if (!active && drops.length === 0 && splashes.length === 0) {
+                if (!active && drops.length === 0 && splashes.length === 0 && gearDroplets.length === 0 && cardDroplets.length === 0) {
                     stopRainSimulation();
                     return;
                 }
@@ -2165,6 +2463,77 @@
                     }
                 }
 
+                // 1. Gather active card / box obstacles in viewport
+                const activeObstacles = [];
+                const selectors = [
+                    '.quick-link-card',
+                    '.profile-img',
+                    '.speech-bubble',
+                    '.contact-box',
+                    '.sub-list-col'
+                ];
+                
+                selectors.forEach(sel => {
+                    const elements = document.querySelectorAll(sel);
+                    elements.forEach(el => {
+                        const rect = el.getBoundingClientRect();
+                        if (rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < height) {
+                            activeObstacles.push({
+                                left: rect.left,
+                                top: rect.top,
+                                right: rect.right,
+                                bottom: rect.bottom
+                            });
+                        }
+                    });
+                });
+
+                // Add terminal window if visible
+                const terminalWindow = document.getElementById('terminal-window');
+                if (terminalWindow && !terminalWindow.classList.contains('hidden')) {
+                    const rect = terminalWindow.getBoundingClientRect();
+                    if (rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < height) {
+                        activeObstacles.push({
+                            left: rect.left,
+                            top: rect.top,
+                            right: rect.right,
+                            bottom: rect.bottom
+                        });
+                    }
+                }
+
+                // 2. Gather active projected 3D gears in viewport
+                const activeGears = [];
+                if (window.gearsData && window.gearsData.camera && window.gearsData.gears && typeof THREE !== 'undefined') {
+                    const containerRect = window.gearsData.container.getBoundingClientRect();
+                    if (containerRect.bottom > 0 && containerRect.top < height && containerRect.right > 0 && containerRect.left < width) {
+                        window.gearsData.gears.forEach((gear, idx) => {
+                            const wp = new THREE.Vector3();
+                            wp.setFromMatrixPosition(gear.mesh.matrixWorld);
+                            wp.project(window.gearsData.camera);
+                            
+                            const cx = containerRect.left + (wp.x * 0.5 + 0.5) * containerRect.width;
+                            const cy = containerRect.top + (-(wp.y * 0.5) + 0.5) * containerRect.height;
+                            
+                            // Project a point on outer radius to screen space to get exact radius in pixels
+                            const localPoint = new THREE.Vector3(gear.radiusOuter, 0, 0);
+                            gear.mesh.localToWorld(localPoint);
+                            localPoint.project(window.gearsData.camera);
+                            const px = containerRect.left + (localPoint.x * 0.5 + 0.5) * containerRect.width;
+                            const py = containerRect.top + (-(localPoint.y * 0.5) + 0.5) * containerRect.height;
+                            const radius = Math.hypot(px - cx, py - cy);
+                            
+                            activeGears.push({
+                                index: idx,
+                                cx: cx,
+                                cy: cy,
+                                radius: radius,
+                                mesh: gear.mesh
+                            });
+                        });
+                    }
+                }
+
                 // Update and draw drops
                 if (active && !fadingOut) {
                     // Replenish drops if count dropped
@@ -2174,8 +2543,22 @@
                 }
 
                 drops = drops.filter(drop => {
-                    const keep = drop.update();
+                    const keep = drop.update(activeObstacles, activeGears);
                     if (keep) drop.draw();
+                    return keep;
+                });
+
+                // Update and draw gear droplets
+                gearDroplets = gearDroplets.filter(droplet => {
+                    const keep = droplet.update(activeGears);
+                    if (keep) droplet.draw();
+                    return keep;
+                });
+
+                // Update and draw card droplets
+                cardDroplets = cardDroplets.filter(droplet => {
+                    const keep = droplet.update();
+                    if (keep) droplet.draw();
                     return keep;
                 });
 
@@ -2185,6 +2568,13 @@
                     if (keep) particle.draw();
                     return keep;
                 });
+
+                // Update last rotation state for all active gears so rotation delta can be computed in next frame
+                if (activeGears.length > 0) {
+                    activeGears.forEach(gear => {
+                        gear.mesh.lastZRotation = gear.mesh.rotation.z;
+                    });
+                }
 
                 animationFrameId = requestAnimationFrame(loop);
             }
@@ -2214,6 +2604,8 @@
                 fadingOut = false;
                 activeBolt = null;
                 lightningOpacity = 0;
+                gearDroplets = [];
+                cardDroplets = [];
                 if (animationFrameId) {
                     cancelAnimationFrame(animationFrameId);
                     animationFrameId = null;
