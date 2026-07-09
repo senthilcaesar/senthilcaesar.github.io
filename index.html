@@ -33,11 +33,14 @@
             --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
             --header-bg: rgba(255, 255, 255, 0.85);
             --accent-color: #2563eb;
-            --transition-speed: 0.25s;
+            --transition-speed: 0.3s;
             --bubble-bg: linear-gradient(135deg, #2563eb, #4f46e5);
             --bubble-tail-bg: #4f46e5;
             --bubble-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3), 0 4px 6px -4px rgba(37, 99, 235, 0.3);
             --contact-bg: #e0e0dc;
+            --orb-color-1: rgba(37, 99, 235, 0.08);
+            --orb-color-2: rgba(139, 92, 246, 0.06);
+            --divider-gradient: linear-gradient(90deg, rgba(37, 99, 235, 0) 0%, rgba(37, 99, 235, 0.4) 50%, rgba(37, 99, 235, 0) 100%);
         }
 
         body.dark-mode {
@@ -58,6 +61,9 @@
             --bubble-tail-bg: #6366f1;
             --bubble-shadow: 0 10px 15px -3px rgba(96, 165, 250, 0.4), 0 4px 6px -4px rgba(96, 165, 250, 0.4);
             --contact-bg: #222220;
+            --orb-color-1: rgba(96, 165, 250, 0.15);
+            --orb-color-2: rgba(139, 92, 246, 0.12);
+            --divider-gradient: linear-gradient(90deg, rgba(96, 165, 250, 0) 0%, rgba(96, 165, 250, 0.5) 50%, rgba(96, 165, 250, 0) 100%);
         }
 
         html {
@@ -77,6 +83,22 @@
             transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
             min-height: 100vh;
             padding-bottom: 80px;
+        }
+
+        /* Smooth transitions for theme toggle */
+        body,
+        header,
+        .nav-link,
+        .site-logo,
+        .section-title,
+        .bio-paragraph strong,
+        .section-divider,
+        .card-icon,
+        .contact-box,
+        .sub-list-col,
+        .sub-list-item,
+        .sub-list-icon {
+            transition: background-color var(--transition-speed) ease, border-color var(--transition-speed) ease, color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
         }
 
         header {
@@ -491,13 +513,13 @@
             font-weight: 600;
             font-size: 0.95rem;
             box-shadow: var(--card-shadow);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all var(--transition-speed) cubic-bezier(0.4, 0, 0.2, 1);
             height: 100%;
             box-sizing: border-box;
         }
 
         .quick-link-card a:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px) scale(1.02);
             box-shadow: var(--card-shadow-hover);
             border-color: var(--link-color);
             color: var(--link-color);
@@ -544,7 +566,15 @@
         }
 
         /* Centered Sections Styling */
+        /* Centered Sections Styling */
         #quick-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .quick-links-box {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -557,7 +587,7 @@
             width: 100%;
         }
 
-        body.dark-mode #quick-links {
+        body.dark-mode .quick-links-box {
             background: linear-gradient(135deg, #070d19 0%, #0f254c 100%);
             border-color: rgba(96, 165, 250, 0.2);
             box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
@@ -565,54 +595,64 @@
 
         #quick-links .section-title {
             text-align: center;
-            color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            color: var(--heading-color);
+            margin-bottom: 24px;
         }
 
-        #quick-links .quick-links-grid {
+        .quick-links-box .quick-links-grid {
             width: 100%;
             justify-content: center;
         }
 
         /* Glassmorphic Cards inside Quick Links */
-        #quick-links .quick-link-card a {
+        .quick-links-box .quick-link-card a {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.12);
             color: #f1f5f9;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
-        #quick-links .quick-link-card a:hover {
+        .quick-links-box .quick-link-card a:hover {
             background: rgba(255, 255, 255, 0.16);
             border-color: #60a5fa;
             color: #ffffff;
-            box-shadow: 0 10px 20px -5px rgba(96, 165, 250, 0.3);
+            box-shadow: 0 12px 24px -5px rgba(96, 165, 250, 0.4), 0 0 20px 2px rgba(96, 165, 250, 0.2);
+            transform: translateY(-5px) scale(1.02);
         }
 
-        #quick-links .quick-link-card .card-icon {
+        .quick-links-box .quick-link-card .card-icon {
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
         }
 
-        #quick-links .quick-link-card a:hover .card-icon {
+        .quick-links-box .quick-link-card a:hover .card-icon {
             background: rgba(96, 165, 250, 0.25);
         }
 
-        #quick-links .quick-link-card .card-arrow {
+        .quick-links-box .quick-link-card .card-arrow {
             color: rgba(255, 255, 255, 0.6);
         }
 
-        #quick-links .quick-link-card a:hover .card-arrow {
+        .quick-links-box .quick-link-card a:hover .card-arrow {
             color: #60a5fa;
         }
 
         @media (max-width: 600px) {
-            #quick-links, #contact {
+
+            .quick-links-box,
+            .contact-box {
                 padding: 24px 20px;
             }
         }
 
         #contact {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .contact-box {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -623,7 +663,7 @@
             border: 1px solid var(--border-color);
             width: 100%;
             max-width: 800px;
-            margin: 0 auto;
+            box-sizing: border-box;
         }
 
         #contact .section-title {
@@ -633,10 +673,16 @@
 
         .section-divider {
             border: 0;
-            height: 1px;
-            background-color: var(--border-color);
+            height: 2px;
+            background: var(--divider-gradient);
             margin: 48px auto;
             width: 100%;
+            transition: opacity 0.3s ease, height 0.3s ease, transform 0.3s ease;
+        }
+
+        .section-divider:hover {
+            transform: scaleY(1.5);
+            opacity: 0.9;
         }
 
         /* Wave Waving Hand Animation */
@@ -871,10 +917,39 @@
                 bottom: auto;
             }
         }
+
+        /* Glowing Orbs styling */
+        .glow-orb {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            filter: blur(140px);
+            opacity: 1;
+            transition: transform 0.8s cubic-bezier(0.1, 0.8, 0.2, 1), opacity var(--transition-speed);
+        }
+
+        .orb-1 {
+            background: radial-gradient(circle, var(--orb-color-1) 0%, rgba(255, 255, 255, 0) 70%);
+            top: -150px;
+            left: -150px;
+        }
+
+        .orb-2 {
+            background: radial-gradient(circle, var(--orb-color-2) 0%, rgba(255, 255, 255, 0) 70%);
+            bottom: -200px;
+            right: -150px;
+        }
     </style>
 </head>
 
 <body id="page-body">
+    <!-- Glowing Orbs -->
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+
     <!-- Navigation Header -->
     <header>
         <div class="header-container">
@@ -951,7 +1026,6 @@
             <section class="content-column">
                 <!-- Biography Section -->
                 <article class="content-section">
-                    <h2 class="section-title">Biography</h2>
                     <p class="bio-paragraph">Hi <span class="wave" title="Hello!">👋</span> I'm <strong>Senthil
                             Palanivelu</strong>. I’m a Computer Science graduate from UMass Boston.</p>
                     <p class="bio-paragraph">I have a strong background in Data Analytics, AI Engineering, and Machine
@@ -1049,85 +1123,94 @@
         <!-- Quick Links Section -->
         <article class="content-section" id="quick-links">
             <h2 class="section-title">Quick Links</h2>
-            <ul class="quick-links-grid">
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/portfolio/" target="_blank">
-                        <span class="card-icon">💼</span>
-                        <span>Portfolio</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/my-reading/" target="_blank">
-                        <span class="card-icon">📖</span>
-                        <span>Readings</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">
-                        <span class="card-icon">🧠</span>
-                        <span>KnowledgeLab</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/resources/" target="_blank">
-                        <span class="card-icon">🔗</span>
-                        <span>URL Library</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/contents/" target="_blank">
-                        <span class="card-icon">🎙️</span>
-                        <span>PodTube</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/commands/" target="_blank">
-                        <span class="card-icon">💻</span>
-                        <span>Commands</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/promptshelf/" target="_blank">
-                        <span class="card-icon">🗄️</span>
-                        <span>Prompt Shelf</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/notebook/" target="_blank">
-                        <span class="card-icon">📓</span>
-                        <span>Notebook</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/url-content-tracker/" target="_blank">
-                        <span class="card-icon">📡</span>
-                        <span>Content Tracker</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/blogs/" target="_blank">
-                        <span class="card-icon">✍️</span>
-                        <span>Blogs</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-                <li class="quick-link-card">
-                    <a href="https://senthilcaesar.github.io/tech-stack/" target="_blank">
-                        <span class="card-icon">🛠️</span>
-                        <span>Tech Stack</span>
-                        <span class="card-arrow">→</span>
-                    </a>
-                </li>
-            </ul>
+            <div class="quick-links-box">
+                <ul class="quick-links-grid">
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/portfolio/" target="_blank">
+                            <span class="card-icon">💼</span>
+                            <span>Portfolio</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/my-reading/" target="_blank">
+                            <span class="card-icon">📖</span>
+                            <span>Readings</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">
+                            <span class="card-icon">🧠</span>
+                            <span>KnowledgeLab</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/resources/" target="_blank">
+                            <span class="card-icon">🔗</span>
+                            <span>URL Library</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/contents/" target="_blank">
+                            <span class="card-icon">🎙️</span>
+                            <span>PodTube</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/commands/" target="_blank">
+                            <span class="card-icon">💻</span>
+                            <span>Commands</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/promptshelf/" target="_blank">
+                            <span class="card-icon">🗄️</span>
+                            <span>Prompt Shelf</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/notebook/" target="_blank">
+                            <span class="card-icon">📓</span>
+                            <span>Notebook</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/url-content-tracker/" target="_blank">
+                            <span class="card-icon">📡</span>
+                            <span>Content Tracker</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/blogs/" target="_blank">
+                            <span class="card-icon">✍️</span>
+                            <span>Blogs</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/tech-stack/" target="_blank">
+                            <span class="card-icon">🛠️</span>
+                            <span>Tech Stack</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                    <li class="quick-link-card">
+                        <a href="https://senthilcaesar.github.io/wander-list/" target="_blank">
+                            <span class="card-icon">✈️</span>
+                            <span>Wanderlist</span>
+                            <span class="card-arrow">→</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </article>
 
         <hr class="section-divider">
@@ -1135,14 +1218,17 @@
         <!-- Contact Info Section -->
         <article class="content-section" id="contact">
             <h2 class="section-title">Contact</h2>
-            <p class="bio-paragraph">
-                If you'd like to get in touch, discuss research or ML projects, or just say hello, feel free to drop me
-                an email or reach out on social media:
-            </p>
-            <p class="bio-paragraph" style="margin-top: 10px;">
-                <strong>Senthil Palanivelu</strong><br>
-                Email: <a href="mailto:senthilcaesar@gmail.com">senthilcaesar@gmail.com</a>
-            </p>
+            <div class="contact-box">
+                <p class="bio-paragraph">
+                    If you'd like to get in touch, discuss research or ML projects, or just say hello, feel free to drop
+                    me
+                    an email or reach out on social media:
+                </p>
+                <p class="bio-paragraph" style="margin-top: 10px;">
+                    <strong>Senthil Palanivelu</strong><br>
+                    Email: <a href="mailto:senthilcaesar@gmail.com">senthilcaesar@gmail.com</a>
+                </p>
+            </div>
         </article>
     </main>
 
@@ -1606,7 +1692,7 @@
                     case 'blog':
                         return `Check out my latest thoughts, guides, and learnings:<br><a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">senthilcaesar.github.io/blogs/</a>`;
                     case 'links':
-                        return `Quick Links:<br>• <a class="link" href="https://senthilcaesar.github.io/portfolio/" target="_blank">Portfolio</a><br>• <a class="link" href="https://senthilcaesar.github.io/my-reading/" target="_blank">Readings</a><br>• <a class="link" href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">KnowledgeLab</a><br>• <a class="link" href="https://senthilcaesar.github.io/resources/" target="_blank">URL Library</a><br>• <a class="link" href="https://senthilcaesar.github.io/contents/" target="_blank">PodTube</a><br>• <a class="link" href="https://senthilcaesar.github.io/commands/" target="_blank">Commands</a><br>• <a class="link" href="https://senthilcaesar.github.io/promptshelf/" target="_blank">Prompt Shelf</a><br>• <a class="link" href="https://senthilcaesar.github.io/notebook/" target="_blank">Notebook</a><br>• <a class="link" href="https://senthilcaesar.github.io/url-content-tracker/" target="_blank">Content Tracker</a><br>• <a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">Blogs</a><br>• <a class="link" href="https://senthilcaesar.github.io/tech-stack/" target="_blank">Tech Stack</a>`;
+                        return `Quick Links:<br>• <a class="link" href="https://senthilcaesar.github.io/portfolio/" target="_blank">Portfolio</a><br>• <a class="link" href="https://senthilcaesar.github.io/my-reading/" target="_blank">Readings</a><br>• <a class="link" href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">KnowledgeLab</a><br>• <a class="link" href="https://senthilcaesar.github.io/resources/" target="_blank">URL Library</a><br>• <a class="link" href="https://senthilcaesar.github.io/contents/" target="_blank">PodTube</a><br>• <a class="link" href="https://senthilcaesar.github.io/commands/" target="_blank">Commands</a><br>• <a class="link" href="https://senthilcaesar.github.io/promptshelf/" target="_blank">Prompt Shelf</a><br>• <a class="link" href="https://senthilcaesar.github.io/notebook/" target="_blank">Notebook</a><br>• <a class="link" href="https://senthilcaesar.github.io/url-content-tracker/" target="_blank">Content Tracker</a><br>• <a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">Blogs</a><br>• <a class="link" href="https://senthilcaesar.github.io/tech-stack/" target="_blank">Tech Stack</a><br>• <a class="link" href="https://senthilcaesar.github.io/wander-list/" target="_blank">Wanderlist</a>`;
                     case 'contact':
                         return `Let's connect!<br>• Email: <span class="highlight">senthilcaesar@gmail.com</span><br>• LinkedIn: <a class="link" href="https://www.linkedin.com/in/senthil-palanivelu-0ba38844/" target="_blank">LinkedIn Profile</a><br>• GitHub: <a class="link" href="https://github.com/SenthilCaesar" target="_blank">GitHub Profile</a><br>• Instagram: <a class="link" href="https://www.instagram.com/senthil_p89" target="_blank">Instagram Profile</a>`;
                     case 'theme':
@@ -1749,6 +1835,22 @@
                     currentActive.link.classList.add('active');
                 }
             });
+
+            // Mesh Gradient Orbs mousemove parallax
+            const orb1 = document.querySelector('.orb-1');
+            const orb2 = document.querySelector('.orb-2');
+            if (orb1 && orb2) {
+                window.addEventListener('mousemove', (e) => {
+                    const { clientX, clientY } = e;
+                    const x1 = (clientX - window.innerWidth / 2) * 0.08;
+                    const y1 = (clientY - window.innerHeight / 2) * 0.08;
+                    const x2 = (clientX - window.innerWidth / 2) * -0.05;
+                    const y2 = (clientY - window.innerHeight / 2) * -0.05;
+
+                    orb1.style.transform = `translate(${x1}px, ${y1}px)`;
+                    orb2.style.transform = `translate(${x2}px, ${y2}px)`;
+                });
+            }
         })();
     </script>
 </body>
