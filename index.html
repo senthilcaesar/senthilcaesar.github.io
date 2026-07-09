@@ -37,7 +37,7 @@
             --bubble-bg: linear-gradient(135deg, #2563eb, #4f46e5);
             --bubble-tail-bg: #4f46e5;
             --bubble-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3), 0 4px 6px -4px rgba(37, 99, 235, 0.3);
-            --contact-bg: #f1f5f9;
+            --contact-bg: #e0e0dc;
         }
 
         body.dark-mode {
@@ -57,7 +57,7 @@
             --bubble-bg: linear-gradient(135deg, #3b82f6, #6366f1);
             --bubble-tail-bg: #6366f1;
             --bubble-shadow: 0 10px 15px -3px rgba(96, 165, 250, 0.4), 0 4px 6px -4px rgba(96, 165, 250, 0.4);
-            --contact-bg: #111827;
+            --contact-bg: #222220;
         }
 
         html {
@@ -548,15 +548,68 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            background: linear-gradient(135deg, #0b193c 0%, #1e3a8a 100%);
+            padding: 36px 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            box-shadow: 0 10px 25px -5px rgba(11, 25, 60, 0.3), 0 8px 10px -6px rgba(11, 25, 60, 0.3);
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        body.dark-mode #quick-links {
+            background: linear-gradient(135deg, #070d19 0%, #0f254c 100%);
+            border-color: rgba(96, 165, 250, 0.2);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
         }
 
         #quick-links .section-title {
             text-align: center;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         #quick-links .quick-links-grid {
             width: 100%;
             justify-content: center;
+        }
+
+        /* Glassmorphic Cards inside Quick Links */
+        #quick-links .quick-link-card a {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #f1f5f9;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        #quick-links .quick-link-card a:hover {
+            background: rgba(255, 255, 255, 0.16);
+            border-color: #60a5fa;
+            color: #ffffff;
+            box-shadow: 0 10px 20px -5px rgba(96, 165, 250, 0.3);
+        }
+
+        #quick-links .quick-link-card .card-icon {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        #quick-links .quick-link-card a:hover .card-icon {
+            background: rgba(96, 165, 250, 0.25);
+        }
+
+        #quick-links .quick-link-card .card-arrow {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        #quick-links .quick-link-card a:hover .card-arrow {
+            color: #60a5fa;
+        }
+
+        @media (max-width: 600px) {
+            #quick-links, #contact {
+                padding: 24px 20px;
+            }
         }
 
         #contact {
