@@ -942,6 +942,50 @@
             bottom: -200px;
             right: -150px;
         }
+
+        /* Rain canvas style */
+        #rain-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 101; /* Above header (100) but below terminal (9999) */
+            display: block;
+        }
+
+        #rain-trigger svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: fill var(--transition-speed), stroke var(--transition-speed), transform var(--transition-speed);
+        }
+
+        #rain-trigger.active {
+            color: #3b82f6;
+            background-color: rgba(59, 130, 246, 0.15);
+        }
+
+        #rain-trigger.active svg {
+            fill: #3b82f6;
+            stroke: #3b82f6;
+            transform: scale(1.1);
+            animation: drip-pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes drip-pulse {
+            0%, 100% {
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 2px rgba(59, 130, 246, 0.4));
+            }
+            50% {
+                transform: scale(0.95);
+                filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.8));
+            }
+        }
     </style>
 </head>
 
@@ -962,6 +1006,12 @@
                 <a class="nav-link" href="#contact">Contact</a>
             </nav>
             <div class="header-right">
+                <!-- Rain Trigger Button -->
+                <button class="icon-btn" id="rain-trigger" aria-label="Toggle Rain Effect" title="Toggle Rain Effect">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-11-7-11S5 10.7 5 15a7 7 0 0 0 7 7z" />
+                    </svg>
+                </button>
                 <!-- Terminal Trigger Button -->
                 <button class="icon-btn" id="terminal-trigger" title="Open Interactive Console">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1851,6 +1901,339 @@
                     orb2.style.transform = `translate(${x2}px, ${y2}px)`;
                 });
             }
+        })();
+    </script>
+
+    <!-- Premium Rain Simulator -->
+    <script>
+        (function () {
+            const rainTrigger = document.getElementById('rain-trigger');
+            if (!rainTrigger) return;
+
+            let canvas = null;
+            let ctx = null;
+            let animationFrameId = null;
+            let active = false;
+            let fadingOut = false;
+            let width = window.innerWidth;
+            let height = window.innerHeight;
+
+            // Arrays for entities
+            let drops = [];
+            let splashes = [];
+
+            // Lightning state
+            let lightningOpacity = 0;
+            let nextLightningTime = 0;
+            let activeBolt = null;
+
+            // Configuration
+            const CONFIG = {
+                maxDrops: 180,       // Dynamically scaled by width later
+                windX: -1.2,         // Constant gentle breeze to the left
+                gravity: 0.6,        // Gravity speed boost
+                dropMinLength: 12,
+                dropMaxLength: 24,
+                dropMinSpeed: 16,
+                dropMaxSpeed: 26,
+                splashParticles: 5
+            };
+
+            class Drop {
+                constructor(isInitial = false) {
+                    this.reset(isInitial);
+                }
+
+                reset(isInitial = false) {
+                    this.x = Math.random() * (width + 100) - 50; // extra padding for wind drift
+                    this.y = isInitial ? Math.random() * height : -CONFIG.dropMaxLength - Math.random() * 50;
+                    this.length = CONFIG.dropMinLength + Math.random() * (CONFIG.dropMaxLength - CONFIG.dropMinLength);
+                    this.speed = CONFIG.dropMinSpeed + Math.random() * (CONFIG.dropMaxSpeed - CONFIG.dropMinSpeed);
+                    this.width = 1.0 + Math.random() * 0.8;
+                    // Slightly vary speed and length for depth parallax
+                    this.opacity = (this.length / CONFIG.dropMaxLength) * 0.7; // longer drops look closer and more visible
+                }
+
+                update() {
+                    this.y += this.speed;
+                    this.x += CONFIG.windX;
+
+                    // Check collision with screen bottom
+                    if (this.y >= height) {
+                        if (!fadingOut) {
+                            createSplash(this.x, height);
+                            this.reset();
+                        }
+                        return false; // mark as finished if fading out
+                    }
+                    return true;
+                }
+
+                draw() {
+                    const isDark = document.body.classList.contains('dark-mode');
+                    // Premium colors: glowing blue-white in dark mode, visible steel-blue in light mode
+                    ctx.strokeStyle = isDark 
+                        ? `rgba(165, 203, 255, ${this.opacity * 0.95})` 
+                        : `rgba(47, 65, 90, ${this.opacity * 0.9})`;
+                    ctx.lineWidth = this.width;
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(this.x + CONFIG.windX * 0.6, this.y + this.length);
+                    ctx.stroke();
+                }
+            }
+
+            class SplashParticle {
+                constructor(x, y) {
+                    this.x = x;
+                    this.y = y;
+                    const angle = Math.PI + (Math.random() - 0.5) * 0.8; // generally upwards arc
+                    const force = 1.5 + Math.random() * 2.5;
+                    this.vx = Math.cos(angle) * force + CONFIG.windX * 0.2;
+                    this.vy = Math.sin(angle) * force;
+                    this.size = 1.0 + Math.random() * 1.5;
+                    this.gravity = 0.12;
+                    this.alpha = 1.0;
+                    this.decay = 0.04 + Math.random() * 0.04;
+                }
+
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    this.vy += this.gravity;
+                    this.alpha -= this.decay;
+                    return this.alpha > 0;
+                }
+
+                draw() {
+                    const isDark = document.body.classList.contains('dark-mode');
+                    ctx.fillStyle = isDark 
+                        ? `rgba(165, 203, 255, ${this.alpha * 0.7})` 
+                        : `rgba(47, 65, 90, ${this.alpha * 0.75})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            function createSplash(x, y) {
+                // Limit splash creation if offscreen or too many particles to keep performance at 60 FPS
+                if (splashes.length > 300) return;
+                const count = Math.floor(Math.random() * 3) + 3; // 3 to 5 particles
+                for (let i = 0; i < count; i++) {
+                    splashes.push(new SplashParticle(x, y));
+                }
+            }
+
+            function setupCanvas() {
+                canvas = document.createElement('canvas');
+                canvas.id = 'rain-canvas';
+                document.body.appendChild(canvas);
+                ctx = canvas.getContext('2d');
+                resizeCanvas();
+            }
+
+            function resizeCanvas() {
+                if (!canvas) return;
+                width = window.innerWidth;
+                height = window.innerHeight;
+                
+                // Hi-DPI scaling for sharp lines
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+                canvas.style.width = width + 'px';
+                canvas.style.height = height + 'px';
+                ctx.scale(dpr, dpr);
+
+                // Adjust drop count based on width
+                CONFIG.maxDrops = Math.min(Math.floor(width * 0.15), 250);
+            }
+
+            function initRain() {
+                drops = [];
+                splashes = [];
+                const initialCount = Math.floor(CONFIG.maxDrops * 0.4); // start with partial rain filled in
+                for (let i = 0; i < CONFIG.maxDrops; i++) {
+                    drops.push(new Drop(i < initialCount));
+                }
+            }
+
+            function generateBolt(x1, y1, x2, y2, displace) {
+                const segments = [];
+                function divide(xStart, yStart, xEnd, yEnd, disp) {
+                    if (disp < 4) {
+                        segments.push({ x1: xStart, y1: yStart, x2: xEnd, y2: yEnd });
+                        return;
+                    }
+                    const midX = (xStart + xEnd) / 2;
+                    const midY = (yStart + yEnd) / 2;
+                    const jitter = (Math.random() - 0.5) * disp;
+                    const newMidX = midX + jitter;
+                    
+                    divide(xStart, yStart, newMidX, midY, disp / 2);
+                    divide(newMidX, midY, xEnd, yEnd, disp / 2);
+                    
+                    // Sub-branching
+                    if (Math.random() < 0.12 && disp > 16) {
+                        const bx = newMidX + (Math.random() - 0.5) * disp * 1.5;
+                        const by = midY + Math.random() * (yEnd - midY) * 0.8;
+                        divide(newMidX, midY, bx, by, disp / 2);
+                    }
+                }
+                divide(x1, y1, x2, y2, displace);
+                return segments;
+            }
+
+            function triggerLightningStrike() {
+                // Flash 1 (sharp, fast fade)
+                lightningOpacity = 0.4 + Math.random() * 0.25;
+                
+                // Flash 2 (after a short delay of 150ms)
+                setTimeout(() => {
+                    if (active && !fadingOut) {
+                        lightningOpacity = 0.5 + Math.random() * 0.35;
+                        // Spawn lightning bolt
+                        const startX = Math.random() * width;
+                        const endX = startX + (Math.random() - 0.5) * 200;
+                        const endY = height * 0.3 + Math.random() * height * 0.5;
+                        activeBolt = {
+                            segments: generateBolt(startX, 0, endX, endY, 120),
+                            opacity: 1.0,
+                            width: 1.5 + Math.random() * 2
+                        };
+                    }
+                }, 150);
+            }
+
+            function loop() {
+                if (!active && drops.length === 0 && splashes.length === 0) {
+                    stopRainSimulation();
+                    return;
+                }
+
+                // Clear canvas
+                ctx.clearRect(0, 0, width, height);
+
+                // Lightning strike trigger timer
+                if (active && !fadingOut) {
+                    const now = Date.now();
+                    if (now > nextLightningTime) {
+                        triggerLightningStrike();
+                        // Schedule next strike in 10-25 seconds
+                        nextLightningTime = now + 10000 + Math.random() * 15000;
+                    }
+                }
+
+                // Draw Lightning Screen Flash
+                if (lightningOpacity > 0) {
+                    const isDark = document.body.classList.contains('dark-mode');
+                    ctx.fillStyle = isDark 
+                        ? `rgba(240, 248, 255, ${lightningOpacity * 0.45})` 
+                        : `rgba(186, 230, 253, ${lightningOpacity * 0.22})`;
+                    ctx.fillRect(0, 0, width, height);
+                    lightningOpacity -= 0.035; // fade out flash speed
+                }
+
+                // Draw Lightning Bolt
+                if (activeBolt) {
+                    const isDark = document.body.classList.contains('dark-mode');
+                    ctx.strokeStyle = isDark 
+                        ? `rgba(224, 242, 254, ${activeBolt.opacity * 0.95})` 
+                        : `rgba(37, 99, 235, ${activeBolt.opacity * 0.65})`;
+                    ctx.lineWidth = activeBolt.width;
+                    
+                    // Electric glow blur for dark mode
+                    if (isDark) {
+                        ctx.shadowBlur = 12;
+                        ctx.shadowColor = '#e0f2fe';
+                    }
+                    
+                    ctx.beginPath();
+                    activeBolt.segments.forEach(seg => {
+                        ctx.moveTo(seg.x1, seg.y1);
+                        ctx.lineTo(seg.x2, seg.y2);
+                    });
+                    ctx.stroke();
+                    
+                    // Reset shadowblur
+                    ctx.shadowBlur = 0;
+                    
+                    activeBolt.opacity -= 0.12; // fade out bolt speed
+                    if (activeBolt.opacity <= 0) {
+                        activeBolt = null;
+                    }
+                }
+
+                // Update and draw drops
+                if (active && !fadingOut) {
+                    // Replenish drops if count dropped
+                    while (drops.length < CONFIG.maxDrops) {
+                        drops.push(new Drop());
+                    }
+                }
+
+                drops = drops.filter(drop => {
+                    const keep = drop.update();
+                    if (keep) drop.draw();
+                    return keep;
+                });
+
+                // Update and draw splashes
+                splashes = splashes.filter(particle => {
+                    const keep = particle.update();
+                    if (keep) particle.draw();
+                    return keep;
+                });
+
+                animationFrameId = requestAnimationFrame(loop);
+            }
+
+            function startRainSimulation() {
+                if (!canvas) {
+                    setupCanvas();
+                    window.addEventListener('resize', resizeCanvas);
+                }
+                active = true;
+                fadingOut = false;
+                rainTrigger.classList.add('active');
+                // Schedule first strike in 4-10 seconds
+                nextLightningTime = Date.now() + 4000 + Math.random() * 6000;
+                initRain();
+                loop();
+            }
+
+            function fadeOutRainSimulation() {
+                fadingOut = true;
+                active = false;
+                rainTrigger.classList.remove('active');
+            }
+
+            function stopRainSimulation() {
+                active = false;
+                fadingOut = false;
+                activeBolt = null;
+                lightningOpacity = 0;
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                    animationFrameId = null;
+                }
+                if (canvas && canvas.parentNode) {
+                    canvas.parentNode.removeChild(canvas);
+                    canvas = null;
+                    ctx = null;
+                }
+                window.removeEventListener('resize', resizeCanvas);
+            }
+
+            rainTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (active || fadingOut) {
+                    fadeOutRainSimulation();
+                } else {
+                    startRainSimulation();
+                }
+            });
         })();
     </script>
 </body>
