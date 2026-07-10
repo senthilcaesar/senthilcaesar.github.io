@@ -1298,6 +1298,176 @@
                 transform: translateX(calc(100% + 350px));
             }
         }
+
+        /* Mobile Menu Toggle Button */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        .mobile-menu-toggle:hover {
+            background-color: var(--bg-secondary);
+            color: var(--link-color);
+        }
+
+        .mobile-menu-toggle svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+        }
+
+        .mobile-menu-toggle .hidden {
+            display: none !important;
+        }
+
+        /* Mobile Navigation Overlay */
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: var(--header-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 99;
+            overflow: hidden;
+            transition: height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mobile-nav-overlay.open {
+            height: 190px;
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 0;
+            gap: 20px;
+        }
+
+        .mobile-nav-link {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+            width: 100%;
+            text-align: center;
+            padding: 4px 0;
+        }
+
+        .mobile-nav-link:hover,
+        .mobile-nav-link.active {
+            color: var(--link-color);
+        }
+
+        /* Prevent scroll on HTML/body when overlay is active */
+        body.mobile-menu-open {
+            overflow: hidden;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .header-middle {
+                display: none !important;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 600px) {
+            main {
+                padding: 32px 16px;
+            }
+
+            .profile-name {
+                font-size: 1.6rem;
+            }
+
+            .section-title {
+                font-size: 1.45rem;
+            }
+
+            .weather-dropdown-btn {
+                padding: 0;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                justify-content: center;
+            }
+
+            .weather-dropdown-btn .weather-text,
+            .weather-dropdown-btn .dropdown-chevron {
+                display: none !important;
+            }
+
+            .weather-dropdown-menu {
+                width: calc(100vw - 48px);
+                right: -24px;
+                transform-origin: top right;
+            }
+        }
+
+        @media (max-width: 576px) {
+            #terminal-window {
+                width: 100% !important;
+                height: 60vh !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                top: auto !important;
+                border-radius: 20px 20px 0 0 !important;
+                border-bottom: none !important;
+                border-left: none !important;
+                border-right: none !important;
+                box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 102, 0.15) !important;
+                transform-origin: bottom center !important;
+            }
+
+            #terminal-window.hidden {
+                transform: translateY(100%) scale(1) !important;
+                opacity: 0 !important;
+                pointer-events: none;
+            }
+
+            .terminal-resize-handle {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .profile-img {
+                width: 160px;
+                height: 160px;
+                border-radius: 32px;
+            }
+
+            .site-logo {
+                font-size: 1.05rem;
+            }
+        }
+        
+        /* Ensure touch highlights are standard/clean on mobile */
+        a, button {
+            -webkit-tap-highlight-color: transparent;
+        }
     </style>
 </head>
 
@@ -1384,9 +1554,30 @@
                             d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-8.9 8.2-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-2.8 1.9-4.3 5.3-3.6 8.7.7 3.5 3.6 6.1 7.2 6.4 1 .1 1.9-.2 2.7-.8.4-.3.9-.3 1.2.1.3.4.3.9 0 1.2-1.7 1.4-3.9 2.1-6.2 2.1z" />
                     </svg>
                 </button>
+                <!-- Mobile Menu Toggle Button -->
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" title="Toggle Navigation Menu">
+                    <svg class="hamburger-icon" viewBox="0 0 24 24">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                    <svg class="close-icon hidden" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
             </div>
         </div>
     </header>
+
+    <!-- Mobile Navigation Menu Overlay -->
+    <div id="mobile-nav-overlay" class="mobile-nav-overlay">
+        <nav class="mobile-nav-links">
+            <a class="mobile-nav-link active" href="#">About</a>
+            <a class="mobile-nav-link" href="#quick-links">Links</a>
+            <a class="mobile-nav-link" href="#contact">Contact</a>
+        </nav>
+    </div>
 
     <!-- Main Content Area -->
     <main>
@@ -2304,10 +2495,28 @@
     <script>
         (function () {
             const navLinks = document.querySelectorAll('.header-middle .nav-link');
+            const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+            const mobileToggle = document.getElementById('mobile-menu-toggle');
+            const mobileOverlay = document.getElementById('mobile-nav-overlay');
+            const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+            const closeIcon = mobileToggle.querySelector('.close-icon');
+
             const sections = [
-                { id: 'about-section', link: document.querySelector('.header-middle a[href="#"]') },
-                { id: 'quick-links', link: document.querySelector('.header-middle a[href="#quick-links"]') },
-                { id: 'contact', link: document.querySelector('.header-middle a[href="#contact"]') }
+                { 
+                    id: 'about-section', 
+                    link: document.querySelector('.header-middle a[href="#"]'),
+                    mobileLink: document.querySelector('.mobile-nav-link[href="#"]')
+                },
+                { 
+                    id: 'quick-links', 
+                    link: document.querySelector('.header-middle a[href="#quick-links"]'),
+                    mobileLink: document.querySelector('.mobile-nav-link[href="#quick-links"]')
+                },
+                { 
+                    id: 'contact', 
+                    link: document.querySelector('.header-middle a[href="#contact"]'),
+                    mobileLink: document.querySelector('.mobile-nav-link[href="#contact"]')
+                }
             ];
 
             const aboutSec = document.querySelector('.main-layout');
@@ -2316,19 +2525,73 @@
             let isScrollingFromClick = false;
             let clickTimeout = null;
 
+            function setActiveLink(activeSec) {
+                if (!activeSec) return;
+                
+                navLinks.forEach(l => l.classList.remove('active'));
+                mobileLinks.forEach(l => l.classList.remove('active'));
+                
+                if (activeSec.link) activeSec.link.classList.add('active');
+                if (activeSec.mobileLink) activeSec.mobileLink.classList.add('active');
+            }
+
+            // Close Mobile Menu Overlay
+            function closeMobileMenu() {
+                mobileOverlay.classList.remove('open');
+                document.body.classList.remove('mobile-menu-open');
+                hamburgerIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
+
+            // Open Mobile Menu Overlay
+            function openMobileMenu() {
+                mobileOverlay.classList.add('open');
+                document.body.classList.add('mobile-menu-open');
+                hamburgerIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            }
+
+            // Toggle Mobile Menu Overlay
+            mobileToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (mobileOverlay.classList.contains('open')) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
+                }
+            });
+
             // 1. Click Listener for instant highlight and scroll-spy bypass
-            navLinks.forEach(link => {
-                link.addEventListener('click', function () {
+            const allLinks = [...navLinks, ...mobileLinks];
+            allLinks.forEach(link => {
+                link.addEventListener('click', function (e) {
                     if (clickTimeout) clearTimeout(clickTimeout);
                     isScrollingFromClick = true;
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
+
+                    // Highlight instantly
+                    const targetHref = this.getAttribute('href');
+                    const activeSec = sections.find(s => {
+                        const href = targetHref === '#' ? '#' : targetHref;
+                        return href === (targetHref === '#' ? '#' : '#' + s.id);
+                    });
+                    
+                    if (activeSec) {
+                        setActiveLink(activeSec);
+                    }
+                    closeMobileMenu();
 
                     // Allow scroll spy again after smooth scroll finishes
                     clickTimeout = setTimeout(() => {
                         isScrollingFromClick = false;
                     }, 800);
                 });
+            });
+
+            // Close mobile menu if window is resized above mobile breakpoint
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768 && mobileOverlay.classList.contains('open')) {
+                    closeMobileMenu();
+                }
             });
 
             // 2. Scroll Spy using offsets
@@ -2355,9 +2618,8 @@
                     currentActive = sections.find(s => s.id === 'contact');
                 }
 
-                if (currentActive && currentActive.link) {
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    currentActive.link.classList.add('active');
+                if (currentActive) {
+                    setActiveLink(currentActive);
                 }
             });
 
