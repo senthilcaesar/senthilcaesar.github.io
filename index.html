@@ -91,11 +91,10 @@
                         </button>
                     </div>
                 </div>
-                <!-- Terminal Trigger Button -->
-                <button class="icon-btn" id="terminal-trigger" title="Open Interactive Console">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 12H8v-2h4v2zm6-4H6V8h12v4z" />
+                <button class="icon-btn" id="terminal-trigger" title="Open Interactive Console" aria-label="Open Terminal">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;" aria-hidden="true">
+                        <polyline points="4 17 10 11 4 5"></polyline>
+                        <line x1="12" y1="19" x2="20" y2="19"></line>
                     </svg>
                 </button>
                 <!-- Theme Toggle Button -->
@@ -293,90 +292,163 @@
         <!-- Quick Links Section -->
         <article class="content-section" id="quick-links">
             <h2 class="section-title">Quick Links</h2>
+            <p class="quick-links-intro">A compact map of projects, notes, tools, and things I keep building.</p>
             <div class="quick-links-box">
                 <ul class="quick-links-grid">
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/portfolio/" target="_blank">
-                            <span class="card-icon">💼</span>
-                            <span>Portfolio</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/portfolio/" target="_blank" aria-label="Open Portfolio">
+                            <span class="card-topline">
+                                <span class="card-mark">💼</span>
+                                <span class="card-kicker">Work</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">Portfolio</span>
+                                <span class="card-description">Projects, case studies, and work samples.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/my-reading/" target="_blank">
-                            <span class="card-icon">📖</span>
-                            <span>Readings</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/my-reading/" target="_blank" aria-label="Open Readings">
+                            <span class="card-topline">
+                                <span class="card-mark">📖</span>
+                                <span class="card-kicker">Learn</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">Readings</span>
+                                <span class="card-description">Books and essays I keep close.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">
-                            <span class="card-icon">🧠</span>
-                            <span>KnowledgeLab</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/knowledgelab/" target="_blank" aria-label="Open KnowledgeLab">
+                            <span class="card-topline">
+                                <span class="card-mark">🧠</span>
+                                <span class="card-kicker">Research</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">KnowledgeLab</span>
+                                <span class="card-description">AI and learning notes, organized for recall.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/resources/" target="_blank">
-                            <span class="card-icon">🔗</span>
-                            <span>URL Library</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/resources/" target="_blank" aria-label="Open URL Library">
+                            <span class="card-topline">
+                                <span class="card-mark">🔗</span>
+                                <span class="card-kicker">Save</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">URL Library</span>
+                                <span class="card-description">Useful references, saved with context.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/contents/" target="_blank">
-                            <span class="card-icon">🎙️</span>
-                            <span>PodTube</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/contents/" target="_blank" aria-label="Open PodTube">
+                            <span class="card-topline">
+                                <span class="card-mark">🎙️</span>
+                                <span class="card-kicker">Media</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">PodTube</span>
+                                <span class="card-description">Audio and video notes in one place.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/commands/" target="_blank">
-                            <span class="card-icon">💻</span>
-                            <span>Commands</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/commands/" target="_blank" aria-label="Open Commands">
+                            <span class="card-topline">
+                                <span class="card-mark">⌘</span>
+                                <span class="card-kicker">Tools</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">Commands</span>
+                                <span class="card-description">Small command-line patterns I reuse.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/promptshelf/" target="_blank">
-                            <span class="card-icon">🗄️</span>
-                            <span>Prompt Shelf</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/promptshelf/" target="_blank" aria-label="Open Prompt Shelf">
+                            <span class="card-topline">
+                                <span class="card-mark">🗄️</span>
+                                <span class="card-kicker">AI</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">Prompt Shelf</span>
+                                <span class="card-description">Prompts, agents, and workflow ideas.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/notebook/" target="_blank">
-                            <span class="card-icon">📓</span>
-                            <span>Notebook</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/notebook/" target="_blank" aria-label="Open Notebook">
+                            <span class="card-topline">
+                                <span class="card-mark">📓</span>
+                                <span class="card-kicker">Notes</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">Notebook</span>
+                                <span class="card-description">Loose notes and working thoughts.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/url-content-tracker/" target="_blank">
-                            <span class="card-icon">📡</span>
-                            <span>Content Tracker</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/url-content-tracker/" target="_blank" aria-label="Open Content Tracker">
+                            <span class="card-topline">
+                                <span class="card-mark">📡</span>
+                                <span class="card-kicker">Watch</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">Content Tracker</span>
+                                <span class="card-description">Watch links and follow changes.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/blogs/" target="_blank">
-                            <span class="card-icon">✍️</span>
-                            <span>Blogs</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/blogs/" target="_blank" aria-label="Open Blogs">
+                            <span class="card-topline">
+                                <span class="card-mark">✍️</span>
+                                <span class="card-kicker">Write</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">Blogs</span>
+                                <span class="card-description">Longer writing and public notes.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/tech-stack/" target="_blank">
-                            <span class="card-icon">🛠️</span>
-                            <span>Tech Stack</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/tech-stack/" target="_blank" aria-label="Open Tech Stack">
+                            <span class="card-topline">
+                                <span class="card-mark">🛠️</span>
+                                <span class="card-kicker">Build</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">Tech Stack</span>
+                                <span class="card-description">Tools, frameworks, and setup choices.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                     <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/wander-list/" target="_blank">
-                            <span class="card-icon">✈️</span>
-                            <span>Wanderlist</span>
-                            <span class="card-arrow">→</span>
+                        <a href="https://senthilcaesar.github.io/wander-list/" target="_blank" aria-label="Open Wanderlist">
+                            <span class="card-topline">
+                                <span class="card-mark">✈️</span>
+                                <span class="card-kicker">Travel</span>
+                            </span>
+                            <span class="card-copy">
+                                <span class="card-title">Wanderlist</span>
+                                <span class="card-description">Places and travel ideas to revisit.</span>
+                            </span>
+                            <span class="card-arrow" aria-hidden="true">→</span>
                         </a>
                     </li>
                 </ul>
@@ -388,16 +460,44 @@
         <!-- Contact Info Section -->
         <article class="content-section" id="contact">
             <h2 class="section-title">Contact</h2>
-            <div class="contact-box">
-                <p class="bio-paragraph">
-                    If you'd like to get in touch, discuss research or ML projects, or just say hello, feel free to drop
-                    me
-                    an email or reach out on social media:
-                </p>
-                <p class="bio-paragraph" style="margin-top: 10px;">
-                    <strong>Senthil Palanivelu</strong><br>
-                    Email: <a href="mailto:senthilcaesar@gmail.com">senthilcaesar@gmail.com</a>
-                </p>
+            <div class="contact-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <span class="control close"></span>
+                        <span class="control minimize"></span>
+                        <span class="control zoom"></span>
+                    </div>
+                    <div class="window-title">New Message</div>
+                    <div class="window-header-spacer"></div>
+                </div>
+                <div class="window-fields">
+                    <div class="field-row">
+                        <span class="field-label">To:</span>
+                        <span class="field-value">
+                            <span class="contact-pill">
+                                Senthil Palanivelu &lt;senthilcaesar@gmail.com&gt;
+                            </span>
+                        </span>
+                    </div>
+                    <div class="field-row">
+                        <span class="field-label">Subject:</span>
+                        <span class="field-value highlight-subject">Hello! Let's connect</span>
+                    </div>
+                </div>
+                <div class="window-body">
+                    <p class="window-text">
+                        Hi Senthil,<br><br>
+                        I'd love to get in touch to discuss research, machine learning projects, or simply connect and say hello!
+                    </p>
+                    <div class="window-actions">
+                        <a href="mailto:senthilcaesar@gmail.com" class="macos-btn-primary" aria-label="Send Email">
+                            <span>Send Message</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="send-icon" aria-hidden="true">
+                                <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l20.587-6.862c.522-.174.747.079.536.585L16.2 22.996c-.21.506-.5.485-.637-.029l-3.396-12.74-10.22-1.912z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
             </div>
         </article>
     </main>

@@ -186,4 +186,57 @@ themeToggle.addEventListener('click', () => {
             orb2.style.transform = `translate(${x2}px, ${y2}px)`;
         });
     }
+
+    // macOS Dock Magnification Effect
+    const dockGrid = document.querySelector('.quick-links-grid');
+    const dockCards = document.querySelectorAll('.quick-link-card');
+
+    if (dockGrid && dockCards.length > 0) {
+        document.body.classList.add('js-enabled');
+
+        const isHoverSupported = window.matchMedia('(hover: hover)').matches;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (isHoverSupported && !prefersReducedMotion) {
+            const maxScale = 1.48;
+            const range = 160; // range of influence in pixels
+
+            dockGrid.addEventListener('mousemove', (e) => {
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+
+                dockCards.forEach(card => {
+                    const mark = card.querySelector('.card-mark');
+                    if (!mark) return;
+
+                    const rect = card.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+
+                    // Calculate 2D distance from cursor to icon center
+                    const dist = Math.sqrt(Math.pow(mouseX - centerX, 2) + Math.pow(mouseY - centerY, 2));
+
+                    if (dist < range) {
+                        const ratio = dist / range;
+                        const factor = Math.cos(ratio * Math.PI / 2); // 1 when close, 0 when far
+                        
+                        const scale = 1 + (maxScale - 1) * Math.pow(factor, 1.8);
+                        const y = -16 * Math.pow(factor, 1.8);
+                        mark.style.transform = `translateY(${y}px) scale(${scale})`;
+                    } else {
+                        mark.style.transform = '';
+                    }
+                });
+            });
+
+            dockGrid.addEventListener('mouseleave', () => {
+                dockCards.forEach(card => {
+                    const mark = card.querySelector('.card-mark');
+                    if (mark) {
+                        mark.style.transform = '';
+                    }
+                });
+            });
+        }
+    }
 })();
