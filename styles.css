@@ -1206,6 +1206,16 @@ body.dark-mode .contact-pill {
   z-index: 100000 !important;
 }
 
+#terminal-window.maximized .terminal-output div {
+  max-width: 90ch;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+#terminal-window.maximized .terminal-output div.full-width {
+  max-width: none;
+}
+
 .terminal-header {
   background: #181825;
   padding: 8px 12px;
@@ -1311,6 +1321,30 @@ body.dark-mode .contact-pill {
 .terminal-output .link {
   color: #00ff66;
   text-decoration: underline;
+  font-weight: bold;
+}
+
+.terminal-output .term-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 6px 0;
+}
+
+.terminal-output .term-table th,
+.terminal-output .term-table td {
+  border: 1px solid #45475a;
+  padding: 5px 10px;
+  text-align: left;
+  vertical-align: top;
+  word-break: normal;
+}
+
+.terminal-output .term-table th {
+  color: #f9e2af;
+}
+
+.terminal-output .term-table td:first-child {
+  color: #cba6f7;
   font-weight: bold;
 }
 

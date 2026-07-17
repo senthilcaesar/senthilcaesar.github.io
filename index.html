@@ -1,540 +1,766 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Senthil Palanivelu</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Senthil Palanivelu's personal website">
-    <link class="favicon" rel="icon" type="image/png" href="images/sp.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Senthil Palanivelu's personal website" />
+    <link class="favicon" rel="icon" type="image/png" href="images/sp.png" />
 
     <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
-        rel="stylesheet">
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
 
     <!-- Three.js -->
-    <script id="three-js-script" defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script
+      id="three-js-script"
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+    ></script>
 
     <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<body id="page-body">
+  <body id="page-body">
     <!-- Glowing Orbs -->
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
 
     <!-- Navigation Header -->
     <header>
-        <div class="header-container">
-            <div class="header-left">
-                <a class="site-logo" href="#">Senthil Palanivelu</a>
-            </div>
-            <nav class="header-middle">
-                <a class="nav-link active" href="#">About</a>
-                <a class="nav-link" href="#quick-links">Links</a>
-                <a class="nav-link" href="#contact">Contact</a>
-            </nav>
-            <div class="header-right">
-                <!-- Weather Selector Dropdown -->
-                <div class="weather-dropdown-container">
-                    <button class="weather-dropdown-btn" id="weather-btn" aria-label="Select Weather" title="Select Preferred Weather">
-                        <span class="weather-icon-current">⏰</span>
-                        <span class="weather-text">Auto (Time Sync)</span>
-                        <svg class="dropdown-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"></polyline>
-                        </svg>
-                    </button>
-                    <div class="weather-dropdown-menu" id="weather-menu">
-                        <button class="weather-option active" data-weather="auto">
-                            <span class="option-icon">⏰</span>
-                            <span class="option-label">Auto (Time Sync)</span>
-                        </button>
-                        <button class="weather-option" data-weather="none">
-                            <span class="option-icon">✨</span>
-                            <span class="option-label">Clear</span>
-                        </button>
-                        <button class="weather-option" data-weather="rain">
-                            <span class="option-icon">🌧️</span>
-                            <span class="option-label">Rain</span>
-                        </button>
-                        <button class="weather-option" data-weather="sun-rising">
-                            <span class="option-icon">🌅</span>
-                            <span class="option-label">Sun Rising</span>
-                        </button>
-                        <button class="weather-option" data-weather="snowing">
-                            <span class="option-icon">❄️</span>
-                            <span class="option-label">Snowing</span>
-                        </button>
-                        <button class="weather-option" data-weather="summer">
-                            <span class="option-icon">☀️</span>
-                            <span class="option-label">Summer</span>
-                        </button>
-                        <button class="weather-option" data-weather="windy">
-                            <span class="option-icon">💨</span>
-                            <span class="option-label">Windy</span>
-                        </button>
-                        <button class="weather-option" data-weather="cloudy">
-                            <span class="option-icon">☁️</span>
-                            <span class="option-label">Cloudy</span>
-                        </button>
-                        <button class="weather-option" data-weather="fall">
-                            <span class="option-icon">🍁</span>
-                            <span class="option-label">Fall</span>
-                        </button>
-                        <button class="weather-option" data-weather="moon">
-                            <span class="option-icon">🌙</span>
-                            <span class="option-label">Moon</span>
-                        </button>
-                    </div>
-                </div>
-                <button class="icon-btn" id="terminal-trigger" title="Open Interactive Console" aria-label="Open Terminal">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;" aria-hidden="true">
-                        <polyline points="4 17 10 11 4 5"></polyline>
-                        <line x1="12" y1="19" x2="20" y2="19"></line>
-                    </svg>
-                </button>
-                <!-- Theme Toggle Button -->
-                <button class="icon-btn" id="theme-toggle" aria-label="Toggle Dark Mode" title="Toggle Theme">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
-                        <path
-                            d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-8.9 8.2-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-2.8 1.9-4.3 5.3-3.6 8.7.7 3.5 3.6 6.1 7.2 6.4 1 .1 1.9-.2 2.7-.8.4-.3.9-.3 1.2.1.3.4.3.9 0 1.2-1.7 1.4-3.9 2.1-6.2 2.1z" />
-                    </svg>
-                </button>
-                <!-- Mobile Menu Toggle Button -->
-                <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle Navigation Menu" title="Toggle Navigation Menu">
-                    <svg class="hamburger-icon" viewBox="0 0 24 24">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                    <svg class="close-icon hidden" viewBox="0 0 24 24">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
+      <div class="header-container">
+        <div class="header-left">
+          <a class="site-logo" href="#">Senthil Palanivelu</a>
         </div>
+        <nav class="header-middle">
+          <a class="nav-link active" href="#">About</a>
+          <a class="nav-link" href="#quick-links">Links</a>
+          <a class="nav-link" href="#contact">Contact</a>
+        </nav>
+        <div class="header-right">
+          <!-- Weather Selector Dropdown -->
+          <div class="weather-dropdown-container">
+            <button
+              class="weather-dropdown-btn"
+              id="weather-btn"
+              aria-label="Select Weather"
+              title="Select Preferred Weather"
+            >
+              <span class="weather-icon-current">⏰</span>
+              <span class="weather-text">Auto (Time Sync)</span>
+              <svg
+                class="dropdown-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="weather-dropdown-menu" id="weather-menu">
+              <button class="weather-option active" data-weather="auto">
+                <span class="option-icon">⏰</span>
+                <span class="option-label">Auto (Time Sync)</span>
+              </button>
+              <button class="weather-option" data-weather="none">
+                <span class="option-icon">✨</span>
+                <span class="option-label">Clear</span>
+              </button>
+              <button class="weather-option" data-weather="rain">
+                <span class="option-icon">🌧️</span>
+                <span class="option-label">Rain</span>
+              </button>
+              <button class="weather-option" data-weather="sun-rising">
+                <span class="option-icon">🌅</span>
+                <span class="option-label">Sun Rising</span>
+              </button>
+              <button class="weather-option" data-weather="snowing">
+                <span class="option-icon">❄️</span>
+                <span class="option-label">Snowing</span>
+              </button>
+              <button class="weather-option" data-weather="summer">
+                <span class="option-icon">☀️</span>
+                <span class="option-label">Summer</span>
+              </button>
+              <button class="weather-option" data-weather="windy">
+                <span class="option-icon">💨</span>
+                <span class="option-label">Windy</span>
+              </button>
+              <button class="weather-option" data-weather="cloudy">
+                <span class="option-icon">☁️</span>
+                <span class="option-label">Cloudy</span>
+              </button>
+              <button class="weather-option" data-weather="fall">
+                <span class="option-icon">🍁</span>
+                <span class="option-label">Fall</span>
+              </button>
+              <button class="weather-option" data-weather="moon">
+                <span class="option-icon">🌙</span>
+                <span class="option-label">Moon</span>
+              </button>
+            </div>
+          </div>
+          <button
+            class="icon-btn"
+            id="terminal-trigger"
+            title="Open Interactive Console"
+            aria-label="Open Terminal"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              style="
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2.5;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+              "
+              aria-hidden="true"
+            >
+              <polyline points="4 17 10 11 4 5"></polyline>
+              <line x1="12" y1="19" x2="20" y2="19"></line>
+            </svg>
+          </button>
+          <!-- Theme Toggle Button -->
+          <button
+            class="icon-btn"
+            id="theme-toggle"
+            aria-label="Toggle Dark Mode"
+            title="Toggle Theme"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+            >
+              <path
+                d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-8.9 8.2-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-2.8 1.9-4.3 5.3-3.6 8.7.7 3.5 3.6 6.1 7.2 6.4 1 .1 1.9-.2 2.7-.8.4-.3.9-.3 1.2.1.3.4.3.9 0 1.2-1.7 1.4-3.9 2.1-6.2 2.1z"
+              />
+            </svg>
+          </button>
+          <!-- Mobile Menu Toggle Button -->
+          <button
+            class="mobile-menu-toggle"
+            id="mobile-menu-toggle"
+            aria-label="Toggle Navigation Menu"
+            title="Toggle Navigation Menu"
+          >
+            <svg class="hamburger-icon" viewBox="0 0 24 24">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <svg class="close-icon hidden" viewBox="0 0 24 24">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
     </header>
 
     <!-- Mobile Navigation Menu Overlay -->
     <div id="mobile-nav-overlay" class="mobile-nav-overlay">
-        <nav class="mobile-nav-links">
-            <a class="mobile-nav-link active" href="#">About</a>
-            <a class="mobile-nav-link" href="#quick-links">Links</a>
-            <a class="mobile-nav-link" href="#contact">Contact</a>
-        </nav>
+      <nav class="mobile-nav-links">
+        <a class="mobile-nav-link active" href="#">About</a>
+        <a class="mobile-nav-link" href="#quick-links">Links</a>
+        <a class="mobile-nav-link" href="#contact">Contact</a>
+      </nav>
     </div>
 
     <!-- Main Content Area -->
     <main>
-        <!-- Rising Sun element for Sun Rising weather -->
-        <div class="weather-sun"></div>
-        
-        <!-- Rising Moon element for Moon weather -->
-        <div class="weather-moon-element"></div>
-        
+      <!-- Rising Sun element for Sun Rising weather -->
+      <div class="weather-sun"></div>
 
-        <!-- Drifting Clouds for Cloudy weather -->
-        <div class="weather-cloud-container">
-            <svg class="weather-cloud-item cloud-1" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 20, 20 a 15,15 0 0,1 22,-8 a 15,15 0 0,1 25,-4 a 12,12 0 0,1 18,12 a 12,12 0 0,1 -8,11.5 l -57,0 a 12,12 0 0,1 0,-11.5 z"/>
-            </svg>
-            <svg class="weather-cloud-item cloud-2" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 20, 20 a 15,15 0 0,1 22,-8 a 15,15 0 0,1 25,-4 a 12,12 0 0,1 18,12 a 12,12 0 0,1 -8,11.5 l -57,0 a 12,12 0 0,1 0,-11.5 z"/>
-            </svg>
-            <svg class="weather-cloud-item cloud-3" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 20, 20 a 15,15 0 0,1 22,-8 a 15,15 0 0,1 25,-4 a 12,12 0 0,1 18,12 a 12,12 0 0,1 -8,11.5 l -57,0 a 12,12 0 0,1 0,-11.5 z"/>
-            </svg>
-        </div>
+      <!-- Rising Moon element for Moon weather -->
+      <div class="weather-moon-element"></div>
 
-        <div class="main-layout">
-            <!-- Left Sidebar -->
-            <aside class="sidebar">
-                <div class="profile-container">
-                    <div class="speech-bubble">Hola!</div>
-                    <img src="images/me.jpg" alt="Senthil Palanivelu" class="profile-img">
-                </div>
+      <!-- Drifting Clouds for Cloudy weather -->
+      <div class="weather-cloud-container">
+        <svg
+          class="weather-cloud-item cloud-1"
+          viewBox="0 0 100 40"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M 20, 20 a 15,15 0 0,1 22,-8 a 15,15 0 0,1 25,-4 a 12,12 0 0,1 18,12 a 12,12 0 0,1 -8,11.5 l -57,0 a 12,12 0 0,1 0,-11.5 z"
+          />
+        </svg>
+        <svg
+          class="weather-cloud-item cloud-2"
+          viewBox="0 0 100 40"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M 20, 20 a 15,15 0 0,1 22,-8 a 15,15 0 0,1 25,-4 a 12,12 0 0,1 18,12 a 12,12 0 0,1 -8,11.5 l -57,0 a 12,12 0 0,1 0,-11.5 z"
+          />
+        </svg>
+        <svg
+          class="weather-cloud-item cloud-3"
+          viewBox="0 0 100 40"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M 20, 20 a 15,15 0 0,1 22,-8 a 15,15 0 0,1 25,-4 a 12,12 0 0,1 18,12 a 12,12 0 0,1 -8,11.5 l -57,0 a 12,12 0 0,1 0,-11.5 z"
+          />
+        </svg>
+      </div>
 
-                <h1 class="profile-name">Senthil Palanivelu</h1>
-                <p class="profile-title">CS Graduate @ UMass Boston</p>
-                <a class="profile-affiliation" href="https://www.umb.edu" target="_blank">University of Massachusetts
-                    Boston</a>
+      <div class="main-layout">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+          <div class="profile-container">
+            <div class="speech-bubble">Hola!</div>
+            <img
+              src="images/me.jpg"
+              alt="Senthil Palanivelu"
+              class="profile-img"
+            />
+          </div>
 
-                <div class="social-links">
-                    <a href="https://github.com/SenthilCaesar" target="_blank" class="social-icon" title="GitHub">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-                        </svg>
-                    </a>
-                    <a href="https://www.linkedin.com/in/senthil-palanivelu-0ba38844/" target="_blank"
-                        class="social-icon" title="LinkedIn">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                        </svg>
-                    </a>
-                    <a href="https://www.instagram.com/senthil_p89" target="_blank" class="social-icon"
-                        title="Instagram">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                        </svg>
-                    </a>
-                </div>
+          <p class="profile-title">CS Graduate @ UMass Boston</p>
+          <a
+            class="profile-affiliation"
+            href="https://www.umb.edu"
+            target="_blank"
+            >University of Massachusetts Boston</a
+          >
 
-                <!-- 3D Interactive Gear Canvas Widget -->
-                <div id="gear-canvas-container" title="Click to spin the gears! Hover to tilt."></div>
-            </aside>
+          <div class="social-links">
+            <a
+              href="https://github.com/SenthilCaesar"
+              target="_blank"
+              class="social-icon"
+              title="GitHub"
+            >
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/senthil-palanivelu-0ba38844/"
+              target="_blank"
+              class="social-icon"
+              title="LinkedIn"
+            >
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://www.instagram.com/senthil_p89"
+              target="_blank"
+              class="social-icon"
+              title="Instagram"
+            >
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                />
+              </svg>
+            </a>
+          </div>
 
-            <!-- Right Content -->
-            <section class="content-column">
-                <!-- Biography Section -->
-                <article class="content-section">
-                    <p class="bio-paragraph">Hi <span class="wave" title="Hello!">👋</span> I'm <strong>Senthil
-                            Palanivelu</strong>. I’m a Computer Science graduate from UMass Boston.</p>
-                    <p class="bio-paragraph">I have a strong background in Data Analytics, AI Engineering, and Machine
-                        Learning. I’m passionate about exploring data to uncover meaningful patterns and trends, using
-                        evidence-based analysis and data-driven insights to guide informed decision-making. My work
-                        focuses on applying AI and advanced analytics to solve real-world problems, optimize processes,
-                        and deliver clear, measurable business value.</p>
-                </article>
+          <!-- 3D Interactive Gear Canvas Widget -->
+          <div
+            id="gear-canvas-container"
+            title="Click to spin the gears! Hover to tilt."
+          ></div>
+        </aside>
 
-                <!-- Interests & Education sub-grid -->
-                <div class="sub-grid">
-                    <!-- Interests Column -->
-                    <div class="sub-list-col">
-                        <h3 class="sub-section-title">Interests</h3>
-                        <ul class="sub-list">
-                            <li class="sub-list-item">
-                                <span class="sub-list-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path
-                                            d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z" />
-                                    </svg>
-                                </span>
-                                <div class="sub-list-text">
-                                    <strong>AI & Machine Learning Systems</strong>
-                                    <div class="sub-list-subtext">Building efficient, scalable intelligence
-                                        applications.</div>
-                                </div>
-                            </li>
-                            <li class="sub-list-item">
-                                <span class="sub-list-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path
-                                            d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z" />
-                                    </svg>
-                                </span>
-                                <div class="sub-list-text">
-                                    <strong>Data Analytics & Insights</strong>
-                                    <div class="sub-list-subtext">Uncovering patterns and trends using evidence-based
-                                        analysis.</div>
-                                </div>
-                            </li>
-                            <li class="sub-list-item">
-                                <span class="sub-list-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path
-                                            d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z" />
-                                    </svg>
-                                </span>
-                                <div class="sub-list-text">
-                                    <strong>AI Agentic Frameworks</strong>
-                                    <div class="sub-list-subtext">Developing autonomous software agents and coding
-                                        automation.</div>
-                                </div>
-                            </li>
-                        </ul>
+        <!-- Right Content -->
+        <section class="content-column">
+          <!-- Biography Section -->
+          <article class="content-section">
+            <p class="bio-paragraph">
+              Hi <span class="wave" title="Hello!">👋</span> I'm
+              <strong>Senthil Palanivelu</strong>. I’m a Computer Science
+              graduate from UMass Boston.
+            </p>
+            <p class="bio-paragraph">
+              I have a strong background in Data Analytics, AI Engineering, and
+              Machine Learning. I’m passionate about exploring data to uncover
+              meaningful patterns and trends, using evidence-based analysis and
+              data-driven insights to guide informed decision-making. My work
+              focuses on applying AI and advanced analytics to solve real-world
+              problems, optimize processes, and deliver clear, measurable
+              business value.
+            </p>
+          </article>
+
+          <!-- Interests & Education sub-grid -->
+          <div class="sub-grid">
+            <!-- Interests Column -->
+            <div class="sub-list-col">
+              <h3 class="sub-section-title">Interests</h3>
+              <ul class="sub-list">
+                <li class="sub-list-item">
+                  <span class="sub-list-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"
+                      />
+                    </svg>
+                  </span>
+                  <div class="sub-list-text">
+                    <strong>AI & Machine Learning Systems</strong>
+                    <div class="sub-list-subtext">
+                      Building efficient, scalable intelligence applications.
                     </div>
-
-                    <!-- Education Column -->
-                    <div class="sub-list-col">
-                        <h3 class="sub-section-title">Education</h3>
-                        <ul class="sub-list">
-                            <li class="sub-list-item">
-                                <span class="sub-list-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
-                                        <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
-                                    </svg>
-                                </span>
-                                <div class="sub-list-text">
-                                    <strong>M.S. in Computer Science</strong>
-                                    <div class="sub-list-subtext">University of Massachusetts Boston</div>
-                                </div>
-                            </li>
-                            <li class="sub-list-item">
-                                <span class="sub-list-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
-                                        <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
-                                    </svg>
-                                </span>
-                                <div class="sub-list-text">
-                                    <strong>B.E. in Electronics & Communications</strong>
-                                    <div class="sub-list-subtext">Anna University</div>
-                                </div>
-                            </li>
-                        </ul>
+                  </div>
+                </li>
+                <li class="sub-list-item">
+                  <span class="sub-list-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"
+                      />
+                    </svg>
+                  </span>
+                  <div class="sub-list-text">
+                    <strong>Data Analytics & Insights</strong>
+                    <div class="sub-list-subtext">
+                      Uncovering patterns and trends using evidence-based
+                      analysis.
                     </div>
-                </div>
-
-            </section>
-        </div>
-
-        <hr class="section-divider">
-
-        <!-- Quick Links Section -->
-        <article class="content-section" id="quick-links">
-            <h2 class="section-title">Quick Links</h2>
-            <p class="quick-links-intro">A compact map of projects, notes, tools, and things I keep building.</p>
-            <div class="quick-links-box">
-                <ul class="quick-links-grid">
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/portfolio/" target="_blank" aria-label="Open Portfolio">
-                            <span class="card-topline">
-                                <span class="card-mark">💼</span>
-                                <span class="card-kicker">Work</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">Portfolio</span>
-                                <span class="card-description">Projects, case studies, and work samples.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/my-reading/" target="_blank" aria-label="Open Readings">
-                            <span class="card-topline">
-                                <span class="card-mark">📖</span>
-                                <span class="card-kicker">Learn</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">Readings</span>
-                                <span class="card-description">Books and essays I keep close.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/knowledgelab/" target="_blank" aria-label="Open KnowledgeLab">
-                            <span class="card-topline">
-                                <span class="card-mark">🧠</span>
-                                <span class="card-kicker">Research</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">KnowledgeLab</span>
-                                <span class="card-description">AI and learning notes, organized for recall.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/resources/" target="_blank" aria-label="Open URL Library">
-                            <span class="card-topline">
-                                <span class="card-mark">🔗</span>
-                                <span class="card-kicker">Save</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">URL Library</span>
-                                <span class="card-description">Useful references, saved with context.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/contents/" target="_blank" aria-label="Open PodTube">
-                            <span class="card-topline">
-                                <span class="card-mark">🎙️</span>
-                                <span class="card-kicker">Media</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">PodTube</span>
-                                <span class="card-description">Audio and video notes in one place.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/commands/" target="_blank" aria-label="Open Commands">
-                            <span class="card-topline">
-                                <span class="card-mark">⌘</span>
-                                <span class="card-kicker">Tools</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">Commands</span>
-                                <span class="card-description">Small command-line patterns I reuse.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/promptshelf/" target="_blank" aria-label="Open Prompt Shelf">
-                            <span class="card-topline">
-                                <span class="card-mark">🗄️</span>
-                                <span class="card-kicker">AI</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">Prompt Shelf</span>
-                                <span class="card-description">Prompts, agents, and workflow ideas.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/notebook/" target="_blank" aria-label="Open Notebook">
-                            <span class="card-topline">
-                                <span class="card-mark">📓</span>
-                                <span class="card-kicker">Notes</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">Notebook</span>
-                                <span class="card-description">Loose notes and working thoughts.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/url-content-tracker/" target="_blank" aria-label="Open Content Tracker">
-                            <span class="card-topline">
-                                <span class="card-mark">📡</span>
-                                <span class="card-kicker">Watch</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">Content Tracker</span>
-                                <span class="card-description">Watch links and follow changes.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/blogs/" target="_blank" aria-label="Open Blogs">
-                            <span class="card-topline">
-                                <span class="card-mark">✍️</span>
-                                <span class="card-kicker">Write</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">Blogs</span>
-                                <span class="card-description">Longer writing and public notes.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/tech-stack/" target="_blank" aria-label="Open Tech Stack">
-                            <span class="card-topline">
-                                <span class="card-mark">🛠️</span>
-                                <span class="card-kicker">Build</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">Tech Stack</span>
-                                <span class="card-description">Tools, frameworks, and setup choices.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                    <li class="quick-link-card">
-                        <a href="https://senthilcaesar.github.io/wander-list/" target="_blank" aria-label="Open Wanderlist">
-                            <span class="card-topline">
-                                <span class="card-mark">✈️</span>
-                                <span class="card-kicker">Travel</span>
-                            </span>
-                            <span class="card-copy">
-                                <span class="card-title">Wanderlist</span>
-                                <span class="card-description">Places and travel ideas to revisit.</span>
-                            </span>
-                            <span class="card-arrow" aria-hidden="true">→</span>
-                        </a>
-                    </li>
-                </ul>
+                  </div>
+                </li>
+                <li class="sub-list-item">
+                  <span class="sub-list-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path
+                        d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"
+                      />
+                    </svg>
+                  </span>
+                  <div class="sub-list-text">
+                    <strong>AI Agentic Frameworks</strong>
+                    <div class="sub-list-subtext">
+                      Developing autonomous software agents and coding
+                      automation.
+                    </div>
+                  </div>
+                </li>
+              </ul>
             </div>
-        </article>
 
-        <hr class="section-divider">
-
-        <!-- Contact Info Section -->
-        <article class="content-section" id="contact">
-            <h2 class="section-title">Contact</h2>
-            <div class="contact-window">
-                <div class="window-header">
-                    <div class="window-controls">
-                        <span class="control close"></span>
-                        <span class="control minimize"></span>
-                        <span class="control zoom"></span>
+            <!-- Education Column -->
+            <div class="sub-list-col">
+              <h3 class="sub-section-title">Education</h3>
+              <ul class="sub-list">
+                <li class="sub-list-item">
+                  <span class="sub-list-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
+                      <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
+                    </svg>
+                  </span>
+                  <div class="sub-list-text">
+                    <strong>M.S. in Computer Science</strong>
+                    <div class="sub-list-subtext">
+                      University of Massachusetts Boston
                     </div>
-                    <div class="window-title">New Message</div>
-                    <div class="window-header-spacer"></div>
-                </div>
-                <div class="window-fields">
-                    <div class="field-row">
-                        <span class="field-label">To:</span>
-                        <span class="field-value">
-                            <span class="contact-pill">
-                                Senthil Palanivelu &lt;senthilcaesar@gmail.com&gt;
-                            </span>
-                        </span>
-                    </div>
-                    <div class="field-row">
-                        <span class="field-label">Subject:</span>
-                        <span class="field-value highlight-subject">Hello! Let's connect</span>
-                    </div>
-                </div>
-                <div class="window-body">
-                    <p class="window-text">
-                        Hi Senthil,<br><br>
-                        I'd love to get in touch to discuss research, machine learning projects, or simply connect and say hello!
-                    </p>
-                    <div class="window-actions">
-                        <a href="mailto:senthilcaesar@gmail.com" class="macos-btn-primary" aria-label="Send Email">
-                            <span>Send Message</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="send-icon" aria-hidden="true">
-                                <path d="M1.946 9.315c-.522-.174-.527-.455.01-.634l20.587-6.862c.522-.174.747.079.536.585L16.2 22.996c-.21.506-.5.485-.637-.029l-3.396-12.74-10.22-1.912z" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
+                  </div>
+                </li>
+                <li class="sub-list-item">
+                  <span class="sub-list-icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
+                      <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
+                    </svg>
+                  </span>
+                  <div class="sub-list-text">
+                    <strong>B.E. in Electronics & Communications</strong>
+                    <div class="sub-list-subtext">Anna University</div>
+                  </div>
+                </li>
+              </ul>
             </div>
-        </article>
+          </div>
+        </section>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- Quick Links Section -->
+      <article class="content-section" id="quick-links">
+        <h2 class="section-title">Quick Links</h2>
+        <p class="quick-links-intro">
+          A compact map of projects, notes, tools, and things I keep building.
+        </p>
+        <div class="quick-links-box">
+          <ul class="quick-links-grid">
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/portfolio/"
+                target="_blank"
+                aria-label="Open Portfolio"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">💼</span>
+                  <span class="card-kicker">Work</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">Portfolio</span>
+                  <span class="card-description"
+                    >Projects, case studies, and work samples.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/my-reading/"
+                target="_blank"
+                aria-label="Open Readings"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">📖</span>
+                  <span class="card-kicker">Learn</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">Readings</span>
+                  <span class="card-description"
+                    >Books and essays I keep close.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/knowledgelab/"
+                target="_blank"
+                aria-label="Open KnowledgeLab"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">🧠</span>
+                  <span class="card-kicker">Research</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">KnowledgeLab</span>
+                  <span class="card-description"
+                    >AI and learning notes, organized for recall.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/resources/"
+                target="_blank"
+                aria-label="Open URL Library"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">🔗</span>
+                  <span class="card-kicker">Save</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">URL Library</span>
+                  <span class="card-description"
+                    >Useful references, saved with context.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/contents/"
+                target="_blank"
+                aria-label="Open PodTube"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">🎙️</span>
+                  <span class="card-kicker">Media</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">PodTube</span>
+                  <span class="card-description"
+                    >Audio and video notes in one place.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/commands/"
+                target="_blank"
+                aria-label="Open Commands"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">⌘</span>
+                  <span class="card-kicker">Tools</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">Commands</span>
+                  <span class="card-description"
+                    >Small command-line patterns I reuse.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/promptshelf/"
+                target="_blank"
+                aria-label="Open Prompt Shelf"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">🗄️</span>
+                  <span class="card-kicker">AI</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">Prompt Shelf</span>
+                  <span class="card-description"
+                    >Prompts, agents, and workflow ideas.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/notebook/"
+                target="_blank"
+                aria-label="Open Notebook"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">📓</span>
+                  <span class="card-kicker">Notes</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">Notebook</span>
+                  <span class="card-description"
+                    >Loose notes and working thoughts.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/url-content-tracker/"
+                target="_blank"
+                aria-label="Open Content Tracker"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">📡</span>
+                  <span class="card-kicker">Watch</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">Content Tracker</span>
+                  <span class="card-description"
+                    >Watch links and follow changes.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/blogs/"
+                target="_blank"
+                aria-label="Open Blogs"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">✍️</span>
+                  <span class="card-kicker">Write</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">Blogs</span>
+                  <span class="card-description"
+                    >Longer writing and public notes.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/tech-stack/"
+                target="_blank"
+                aria-label="Open Tech Stack"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">🛠️</span>
+                  <span class="card-kicker">Build</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">Tech Stack</span>
+                  <span class="card-description"
+                    >Tools, frameworks, and setup choices.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+            <li class="quick-link-card">
+              <a
+                href="https://senthilcaesar.github.io/wander-list/"
+                target="_blank"
+                aria-label="Open Wanderlist"
+              >
+                <span class="card-topline">
+                  <span class="card-mark">✈️</span>
+                  <span class="card-kicker">Travel</span>
+                </span>
+                <span class="card-copy">
+                  <span class="card-title">Wanderlist</span>
+                  <span class="card-description"
+                    >Places and travel ideas to revisit.</span
+                  >
+                </span>
+                <span class="card-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <hr class="section-divider" />
+
+      <!-- Contact Info Section -->
+      <article class="content-section" id="contact">
+        <h2 class="section-title">Contact</h2>
+        <div class="contact-window">
+          <div class="window-header">
+            <div class="window-controls">
+              <span class="control close"></span>
+              <span class="control minimize"></span>
+              <span class="control zoom"></span>
+            </div>
+            <div class="window-title">New Message</div>
+            <div class="window-header-spacer"></div>
+          </div>
+          <div class="window-fields">
+            <div class="field-row">
+              <span class="field-label">To:</span>
+              <span class="field-value">
+                <span class="contact-pill">
+                  Senthil Palanivelu &lt;senthilcaesar@gmail.com&gt;
+                </span>
+              </span>
+            </div>
+            <div class="field-row">
+              <span class="field-label">Subject:</span>
+              <span class="field-value highlight-subject"
+                >Hello! Let's connect</span
+              >
+            </div>
+          </div>
+          <div class="window-body">
+            <p class="window-text">
+              Hi Senthil,<br /><br />
+              I'd love to get in touch to discuss research, machine learning
+              projects, or simply connect and say hello!
+            </p>
+            <div class="window-actions">
+              <a
+                href="mailto:senthilcaesar@gmail.com"
+                class="macos-btn-primary"
+                aria-label="Send Email"
+              >
+                <span>Send Message</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  class="send-icon"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l20.587-6.862c.522-.174.747.079.536.585L16.2 22.996c-.21.506-.5.485-.637-.029l-3.396-12.74-10.22-1.912z"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
     </main>
 
     <!-- Retro Terminal Widget HTML -->
     <div id="terminal-window" class="hidden">
-        <div class="terminal-header">
-            <div class="terminal-buttons">
-                <span class="btn close"></span>
-                <span class="btn minimize"></span>
-                <span class="btn maximize"></span>
-            </div>
-            <div class="terminal-title">senthil@portfolio:~</div>
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <span class="btn close"></span>
+          <span class="btn minimize"></span>
+          <span class="btn maximize"></span>
         </div>
-        <div class="terminal-body" id="terminal-body">
-            <div class="terminal-output">
-                <div>Welcome to Senthil's interactive console v1.0.0.</div>
-                <div>Type <span class="highlight">help</span> to see a list of commands.</div>
-                <br>
-            </div>
-            <div class="terminal-input-line">
-                <span class="prompt">senthil:~$</span>
-                <input type="text" id="terminal-input" autocomplete="off" spellcheck="false">
-            </div>
+        <div class="terminal-title">senthil@portfolio:~</div>
+      </div>
+      <div class="terminal-body" id="terminal-body">
+        <div class="terminal-output">
+          <div>Welcome to Senthil's interactive console v1.0.0.</div>
+          <div>
+            Type <span class="highlight">help</span> to see a list of commands.
+          </div>
+          <br />
         </div>
-        <div class="terminal-resize-handle"></div>
+        <div class="terminal-input-line">
+          <span class="prompt">senthil:~$</span>
+          <input
+            type="text"
+            id="terminal-input"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+      </div>
+      <div class="terminal-resize-handle"></div>
     </div>
 
     <!-- Glitch Screen Overlay for Easter Eggs -->
     <div id="glitch-screen" class="glitch-overlay">
-        <div class="glitch-title">⚠️ SYSTEM CRASH DETECTED ⚠️</div>
-        <div class="glitch-details">
-            A critical core override command (sudo destroy) was executed.<br>
-            All website structures, physics models, and layout components have collapsed.<br>
-            Please execute the system recovery sequence.
-        </div>
-        <button id="glitch-reboot-btn" class="glitch-reboot-btn">REBOOT SYSTEM</button>
+      <div class="glitch-title">⚠️ SYSTEM CRASH DETECTED ⚠️</div>
+      <div class="glitch-details">
+        A critical core override command (sudo destroy) was executed.<br />
+        All website structures, physics models, and layout components have
+        collapsed.<br />
+        Please execute the system recovery sequence.
+      </div>
+      <button id="glitch-reboot-btn" class="glitch-reboot-btn">
+        REBOOT SYSTEM
+      </button>
     </div>
 
     <!-- Modular Scripts -->
@@ -542,6 +768,5 @@
     <script defer src="js/gears.js"></script>
     <script defer src="js/terminal.js"></script>
     <script defer src="js/weather.js"></script>
-</body>
-
+  </body>
 </html>
