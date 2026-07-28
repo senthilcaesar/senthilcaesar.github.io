@@ -272,6 +272,7 @@
         "contact",
         "theme",
         "clear",
+        "exit",
         "help",
         "matrix",
         "gravity",
@@ -325,7 +326,7 @@
       case "hey":
         return `Hello! How can I help you today? To see the list of available commands type <span class="highlight">help</span>`;
       case "help":
-        return `Available commands:<br>• <span class="highlight">about</span>          - Brief bio<br>• <span class="highlight">skills</span>         - Technical proficiencies bar chart<br>• <span class="highlight">experience</span>     - Career timeline<br>• <span class="highlight">education</span>      - Education history and courses<br>• <span class="highlight">certifications</span> - Professional certificates<br>• <span class="highlight">projects</span>       - List major project directories<br>• <span class="highlight">weather</span>        - Canvas weather control (e.g. "weather rain")<br>• <span class="highlight">links</span>          - Quick links list<br>• <span class="highlight">contact</span>        - Contact and social accounts<br>• <span class="highlight">theme</span>          - Toggle dark/light mode<br>• <span class="highlight">clear</span>          - Clear terminal window<br>• <span class="highlight">help</span>           - Show this screen<br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
+        return `Available commands:<br>• <span class="highlight">about</span>          - Brief bio<br>• <span class="highlight">skills</span>         - Technical proficiencies bar chart<br>• <span class="highlight">experience</span>     - Career timeline<br>• <span class="highlight">education</span>      - Education history and courses<br>• <span class="highlight">certifications</span> - Professional certificates<br>• <span class="highlight">projects</span>       - List major project directories<br>• <span class="highlight">weather</span>        - Canvas weather control (e.g. "weather rain")<br>• <span class="highlight">links</span>          - Quick links list<br>• <span class="highlight">contact</span>        - Contact and social accounts<br>• <span class="highlight">theme</span>          - Toggle dark/light mode<br>• <span class="highlight">clear</span>          - Clear terminal window<br>• <span class="highlight">exit</span>           - Close the terminal<br>• <span class="highlight">help</span>           - Show this screen<br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
       case "education":
         return `<b>Education History:</b><br><br>
 • <span class="highlight">[Jan 2015 - Jan 2019]</span> <b>Master of Science in Computer Science</b>, <span class="error">University of Massachusetts Boston</span> (USA)<br>
@@ -364,34 +365,125 @@
 <tr><td>Data Science & Analytics</td><td>Data Analysis, Statistical Modeling, Hypothesis Testing, Time Series Analysis, Signal Processing, Bayesian Statistics, Pandas, NumPy, Matplotlib/Seaborn, Data Visualization, Linear/Logistic Regression, Probability Theory</td></tr>
 <tr><td>Tools & Platforms</td><td>AWS, Docker, Linux, Git/GitHub, CI/CD, GitHub Actions, VS Code, Jupyter, Netlify, PyMuPDF, Pinecone</td></tr>
 </table>`;
-      case "experience":
-        const pastMonths = 121; // Total months from all past roles
-        const now = new Date();
-        const currentDiffMonths = Math.max(
-          0,
-          (now.getFullYear() - 2026) * 12 + (now.getMonth() - 3),
-        );
-        const totalYears = ((pastMonths + currentDiffMonths) / 12).toFixed(1);
+      case "experience": {
+        const MONTH_NAMES = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
 
-        const currentYrs = Math.floor(currentDiffMonths / 12);
-        const currentMos = currentDiffMonths % 12;
-        let currentDur = "";
-        if (currentYrs > 0)
-          currentDur += `${currentYrs} yr${currentYrs > 1 ? "s" : ""} `;
-        if (currentMos > 0 || currentYrs === 0)
-          currentDur += `${currentMos} mo${currentMos !== 1 ? "s" : ""}`;
+        // start/end are [year, month] with month 1-12; end: null means "Present"
+        const roles = [
+          {
+            start: [2026, 4],
+            end: null,
+            title: "Senior Innovation Engineer",
+            org: "Tarento Group",
+            loc: "Bengaluru, India",
+          },
+          {
+            start: [2025, 7],
+            end: [2026, 4],
+            title: "Member of Technical Staff",
+            org: "Amudham Naturals",
+            loc: "Chennai, India",
+          },
+          {
+            start: [2022, 9],
+            end: [2024, 12],
+            title: "Bioinformatician I",
+            org: "Brigham & Women's Hospital",
+            loc: "Boston, USA",
+          },
+          {
+            start: [2021, 9],
+            end: [2022, 7],
+            title: "Research Associate - Research Math",
+            org: "Nationwide Children's Hospital",
+            loc: "Columbus, USA",
+          },
+          {
+            start: [2020, 4],
+            end: [2021, 8],
+            title: "Research Data Analyst I",
+            org: "Boston University",
+            loc: "Boston, USA",
+          },
+          {
+            start: [2019, 1],
+            end: [2020, 3],
+            title: "Clinical Research Coordinator II",
+            org: "Mass General Hospital",
+            loc: "Boston, USA",
+          },
+          {
+            start: [2016, 7],
+            end: [2017, 8],
+            title: "Research Assistant",
+            org: "University of Massachusetts Boston",
+            loc: "Boston, USA",
+          },
+          {
+            start: [2015, 9],
+            end: [2016, 5],
+            title: "IT Assistant",
+            org: "University of Massachusetts Boston",
+            loc: "Boston, USA",
+          },
+          {
+            start: [2012, 10],
+            end: [2014, 2],
+            title: "IT Specialist",
+            org: "MphasiS",
+            loc: "Pune, India",
+          },
+        ];
+
+        const now = new Date();
+        const nowYM = [now.getFullYear(), now.getMonth() + 1];
+
+        // Inclusive month count: both the start and end month count as worked.
+        const monthsBetween = ([sy, sm], [ey, em]) =>
+          Math.max(0, (ey - sy) * 12 + (em - sm) + 1);
+
+        const formatDuration = (months) => {
+          const yrs = Math.floor(months / 12);
+          const mos = months % 12;
+          let dur = "";
+          if (yrs > 0) dur += `${yrs} yr${yrs > 1 ? "s" : ""} `;
+          if (mos > 0 || yrs === 0) dur += `${mos} mo${mos !== 1 ? "s" : ""}`;
+          return dur.trim();
+        };
+
+        let totalMonths = 0;
+        const rolesHtml = roles
+          .map((role) => {
+            const endYM = role.end || nowYM;
+            const months = monthsBetween(role.start, endYM);
+            totalMonths += months;
+            const startLabel = `${MONTH_NAMES[role.start[1] - 1]} ${role.start[0]}`;
+            const endLabel = role.end
+              ? `${MONTH_NAMES[role.end[1] - 1]} ${role.end[0]}`
+              : "Present";
+            return `• <span class="highlight">[${startLabel} - ${endLabel}]</span> ${role.title}, ${role.org} (${role.loc}) - <span class="success">(${formatDuration(months)})</span>`;
+          })
+          .join("<br>\n");
+
+        const totalYears = (totalMonths / 12).toFixed(1);
 
         return `Work Experience Timeline:<br>
-• <span class="highlight">[Apr 2026 - Present]</span> Senior Innovation Engineer, Tarento Group (Bengaluru, India) - <span class="success">(${currentDur})</span><br>
-• <span class="highlight">[Jul 2025 - Apr 2026]</span> Member of Technical Staff, Amudham Naturals (Chennai, India) - <span class="success">(10 mos)</span><br>
-• <span class="highlight">[Sep 2022 - Dec 2024]</span> Bioinformatician I, Brigham & Women's Hospital (Boston, USA) - <span class="success">(2 yrs 4 mos)</span><br>
-• <span class="highlight">[Sep 2021 - Jul 2022]</span> Research Associate - Research Math, Nationwide Children's Hospital (Columbus, USA) - <span class="success">(11 mos)</span><br>
-• <span class="highlight">[Apr 2020 - Aug 2021]</span> Research Data Analyst I, Boston University (Boston, USA) - <span class="success">(1 yr 5 mos)</span><br>
-• <span class="highlight">[Jan 2019 - Mar 2020]</span> Clinical Research Coordinator II, Mass General Hospital (Boston, USA) - <span class="success">(1 yr 3 mos)</span><br>
-• <span class="highlight">[Jul 2016 - Aug 2017]</span> Research Assistant, University of Massachusetts Boston (Boston, USA) - <span class="success">(1 yr 2 mos)</span><br>
-• <span class="highlight">[Sep 2015 - May 2016]</span> IT Assistant, University of Massachusetts Boston (Boston, USA) - <span class="success">(9 mos)</span><br>
-• <span class="highlight">[Oct 2012 - Feb 2014]</span> IT Specialist, MphasiS (Pune, India) - <span class="success">(1 yr 5 mos)</span><br><br>
+${rolesHtml}<br><br>
 Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Experience)</span>`;
+      }
       case "projects":
         return `List of Projects (Type <span class="highlight">project [1-3]</span> for details):<br>
   1. <span class="highlight">AI Agentic Coder</span> - Autonomous refactoring agent framework<br>
@@ -482,6 +574,15 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
       case "clear":
         outputContainer.innerHTML = "";
         return "";
+      case "exit":
+        setTimeout(() => {
+          windowDiv.classList.add("hidden");
+          windowDiv.classList.remove("minimized", "maximized");
+          if (typeof window.updateWeatherObstacles === "function") {
+            window.updateWeatherObstacles();
+          }
+        }, 300);
+        return `<span class="success">Goodbye, Senthil out. 👋</span>`;
       case "matrix":
         if (typeof window.setWeather === "function") {
           window.setWeather("matrix", "📟", "Matrix");
