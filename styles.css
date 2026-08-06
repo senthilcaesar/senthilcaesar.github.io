@@ -165,7 +165,8 @@ header {
 }
 
 .site-logo {
-  font-size: 1.15rem;
+  font-family: "Doto", sans-serif;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--heading-color);
   text-decoration: none;
@@ -292,7 +293,7 @@ body.dark-mode .mountain-background {
 
 .profile-container {
   position: relative;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 .profile-img {
@@ -300,13 +301,13 @@ body.dark-mode .mountain-background {
   height: 200px;
   border-radius: 40px;
   object-fit: cover;
-  border: 6px solid #ffffff;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border: 2px solid var(--card-bg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   transition: border-color var(--transition-speed);
 }
 
 .profile-container:hover .profile-img {
-  border-color: var(--link-color);
+  border-color: var(--border-color);
 }
 
 .speech-bubble {
@@ -370,7 +371,7 @@ body.dark-mode .mountain-background {
 .profile-title {
   font-size: 0.95rem;
   color: var(--text-muted);
-  margin: 0 0 4px 0;
+  margin: 0 0 12px 0;
 }
 
 .profile-affiliation {
@@ -378,8 +379,7 @@ body.dark-mode .mountain-background {
   font-weight: 500;
   color: var(--link-color);
   text-decoration: none;
-  margin-bottom: 12px;
-  display: inline-block;
+  display: inline;
 }
 
 .profile-affiliation:hover {
@@ -495,12 +495,22 @@ body.dark-mode .mountain-background {
   }
 }
 
-.sub-section-title {
-  font-size: 1.25rem;
+.sub-section-title,
+.sub-grid .sub-section-title {
+  display: inline-block;
+  font-family: "Doto", sans-serif;
+  font-size: 1.35rem;
   font-weight: 700;
   color: var(--heading-color);
   margin: 0 0 16px 0;
-  letter-spacing: -0.3px;
+  padding-bottom: 6px;
+  border-bottom: 1.5px solid rgba(15, 23, 42, 0.35);
+  letter-spacing: 0;
+}
+
+body.dark-mode .sub-section-title,
+body.dark-mode .sub-grid .sub-section-title {
+  border-bottom-color: rgba(248, 250, 252, 0.28);
 }
 
 .sub-list {
@@ -566,11 +576,16 @@ body.dark-mode .mountain-background {
   text-align: center;
   color: var(--heading-color);
   margin-bottom: 8px;
+  font-family: "Doto", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .quick-links-intro {
   max-width: 520px;
-  margin: 0 auto 12px;
+  margin: 0 auto 8px;
   color: var(--text-muted);
   font-size: 0.98rem;
   line-height: 1.6;
@@ -581,7 +596,8 @@ body.dark-mode .mountain-background {
   width: 100%;
   overflow-x: auto;
   overflow-y: visible;
-  padding: 24px 8px 12px;
+  padding: 24px 8px 10px;
+  margin-top: 0;
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -623,6 +639,12 @@ body.dark-mode .mountain-background {
   position: relative;
   flex: 0 0 auto;
   min-width: 0;
+  z-index: 1;
+}
+
+.quick-link-card:hover,
+.quick-link-card:focus-within {
+  z-index: 10;
 }
 
 .quick-link-card a {
@@ -705,18 +727,19 @@ body.js-enabled .quick-link-card .card-mark {
 .card-title {
   position: absolute;
   left: 50%;
-  bottom: 76px;
-  z-index: 2;
-  max-width: 150px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.92);
+  bottom: 88px;
+  z-index: 20;
+  max-width: 170px;
+  padding: 7px 13px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.94);
   color: #ffffff;
   box-shadow: 0 12px 24px -16px rgba(15, 23, 42, 0.64);
-  font-size: 0.75rem;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 0.9rem;
   font-weight: 700;
   line-height: 1;
-  letter-spacing: 0;
+  letter-spacing: 0.02em;
   opacity: 0;
   pointer-events: none;
   white-space: nowrap;
@@ -724,6 +747,18 @@ body.js-enabled .quick-link-card .card-mark {
   transition:
     opacity 0.18s ease,
     transform 0.18s ease;
+}
+
+.card-title::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background: rgba(15, 23, 42, 0.94);
+  transform: translateX(-50%) rotate(45deg);
+  border-bottom-right-radius: 2px;
 }
 
 .quick-link-card a:hover .card-title,
@@ -791,6 +826,19 @@ body.dark-mode .quick-link-card .card-mark {
     inset 0 1px 0 rgba(255, 255, 255, 0.13);
 }
 
+body.dark-mode .card-title {
+  background: rgba(30, 41, 59, 0.96);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 12px 24px -16px rgba(0, 0, 0, 0.82);
+}
+
+body.dark-mode .card-title::after {
+  background: rgba(30, 41, 59, 0.96);
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
 @media (max-width: 1080px) {
   .quick-links-grid {
     justify-content: flex-start;
@@ -830,7 +878,8 @@ body.dark-mode .quick-link-card .card-mark {
   }
 
   .card-title {
-    bottom: 72px;
+    bottom: 88px;
+    font-size: 0.82rem;
   }
 }
 
@@ -873,6 +922,11 @@ body.dark-mode .quick-link-card .card-mark {
 #contact .section-title {
   text-align: center;
   margin-bottom: 16px;
+  font-family: "Doto", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .contact-window {
@@ -1073,7 +1127,7 @@ body.dark-mode .contact-pill {
   border: 0;
   height: 2px;
   background: var(--divider-gradient);
-  margin: 32px auto;
+  margin: 18px auto;
   width: 100%;
   transition:
     opacity 0.3s ease,
