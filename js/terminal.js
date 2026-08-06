@@ -326,11 +326,11 @@
       case "hey":
         return `Hello! How can I help you today? To see the list of available commands type <span class="highlight">help</span>`;
       case "help":
-        return `Available commands:<br>• <span class="highlight">about</span>          - Brief bio<br>• <span class="highlight">skills</span>         - Technical proficiencies bar chart<br>• <span class="highlight">experience</span>     - Career timeline<br>• <span class="highlight">education</span>      - Education history and courses<br>• <span class="highlight">certifications</span> - Professional certificates<br>• <span class="highlight">projects</span>       - List major project directories<br>• <span class="highlight">weather</span>        - Canvas weather control (e.g. "weather rain")<br>• <span class="highlight">links</span>          - Quick links list<br>• <span class="highlight">contact</span>        - Contact and social accounts<br>• <span class="highlight">theme</span>          - Toggle dark/light mode<br>• <span class="highlight">clear</span>          - Clear terminal window<br>• <span class="highlight">exit</span>           - Close the terminal<br>• <span class="highlight">help</span>           - Show this screen<br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
+        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">List major project directories</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
       case "education":
         return `<b>Education History:</b><br><br>
 • <span class="highlight">[Jan 2015 - Jan 2019]</span> <b>Master of Science in Computer Science</b>, <span class="error">University of Massachusetts Boston</span> (USA)<br>
-  <i>Courses:</i><br>
+  <span class="gray"><i>Courses:</i><br>
   - Advanced Algorithms<br>
   - Algorithms in Bioinformatics<br>
   - Analysis of Algorithm<br>
@@ -340,30 +340,32 @@
   - Software Development and Design<br>
   - Database Management<br>
   - Computing Data Structure<br>
-  - Mathematical Logic<br><br>
+  - Mathematical Logic</span><br><br>
 • <span class="highlight">[Sep 2007 - Sep 2011]</span> <b>Bachelor of Engineering in Electronics and Communication</b>, <span class="error">Anna University</span> (India)<br>
-  <i>Courses:</i><br>
+  <span class="gray"><i>Courses:</i><br>
   - Signal Processing<br>
   - Microprocessor<br>
   - Satellite communication<br>
-  - Control Systems Design`;
+  - Control Systems Design</span>`;
       case "certifications":
         return `<b>Professional Certifications:</b><br><br>
-• <span class="highlight">[July 2024]</span> <span class="purple">Mathematics for Machine Learning and Data Science</span>, DeepLearning.AI on Coursera<br>
-  A comprehensive course covering fundamental mathematics toolkit of machine learning: calculus, linear algebra, statistics, and probability.<br><br>
-• <span class="highlight">[February 2025]</span> <span class="purple">Google Prompting Essentials</span>, Google on Coursera<br>
-  AI agent design, Multimodal prompting, Prompt chaining, Prompt Design, Prompt evaluation and iteration, Responsible AI.<br><br>
-• <span class="highlight">[March 2025]</span> <span class="purple">Supervised Machine Learning: Regression and Classification</span>, DeepLearning.AI on Coursera | Stanford Online<br>
-  Build & train supervised machine learning models in Python using popular libraries NumPy & scikit-learn for prediction & binary classification tasks, including linear regression & logistic regression.`;
+• <span class="highlight">[August 2026]</span> <span class="purple">Introduction to Git and Github</span>, Google | Coursera<br>
+  <span class="gray">Foundational concepts of version control, Git workflow, repository management, branching, merging, and collaborative software development on GitHub.</span><br><br>
+• <span class="highlight">[March 2025]</span> <span class="purple">Supervised Machine Learning: Regression and Classification</span>, DeepLearning.AI | Coursera | Stanford Online<br>
+  <span class="gray">Build & train supervised machine learning models in Python using popular libraries NumPy & scikit-learn for prediction & binary classification tasks, including linear regression & logistic regression.</span><br><br>
+• <span class="highlight">[February 2025]</span> <span class="purple">Google Prompting Essentials</span>, Google | Coursera<br>
+  <span class="gray">AI agent design, Multimodal prompting, Prompt chaining, Prompt Design, Prompt evaluation and iteration, Responsible AI.</span><br><br>
+• <span class="highlight">[July 2024]</span> <span class="purple">Mathematics for Machine Learning and Data Science</span>, DeepLearning.AI | Coursera<br>
+  <span class="gray">A comprehensive course covering fundamental mathematics toolkit of machine learning: calculus, linear algebra, statistics, and probability.</span>`;
       case "skills":
         return `<b>Technical Skills & Proficiencies:</b><br>
 <table class="term-table">
 <tr><th>Category</th><th>Skills</th></tr>
-<tr><td>Languages</td><td>Python, R Programming, R Shiny, SQL, JavaScript, TypeScript, HTML, CSS, Shell Scripting, MATLAB</td></tr>
-<tr><td>Full Stack Development</td><td>Next.js, React, Tailwind CSS, Framer Motion, Zustand, Node.js, REST APIs, Streamlit, FastAPI</td></tr>
-<tr><td>Machine Learning & AI</td><td>Machine Learning, Deep Learning, LLMs & RAG, AI Agents, Computer Vision, NLP, PyTorch, Scikit-learn, XGBoost, OpenAI API, Prompt Engineering, Random Forest, SVM, Gradient Descent, PCA, Neural Networks</td></tr>
-<tr><td>Data Science & Analytics</td><td>Data Analysis, Statistical Modeling, Hypothesis Testing, Time Series Analysis, Signal Processing, Bayesian Statistics, Pandas, NumPy, Matplotlib/Seaborn, Data Visualization, Linear/Logistic Regression, Probability Theory</td></tr>
-<tr><td>Tools & Platforms</td><td>AWS, Docker, Linux, Git/GitHub, CI/CD, GitHub Actions, VS Code, Jupyter, Netlify, PyMuPDF, Pinecone</td></tr>
+<tr><td>Languages</td><td><span class="gray">Python, R Programming, R Shiny, SQL, JavaScript, TypeScript, HTML, CSS, Shell Scripting, MATLAB</span></td></tr>
+<tr><td>Full Stack Development</td><td><span class="gray">Next.js, React, Tailwind CSS, Framer Motion, Zustand, Node.js, REST APIs, Streamlit, FastAPI</span></td></tr>
+<tr><td>Machine Learning & AI</td><td><span class="gray">Machine Learning, Deep Learning, LLMs & RAG, AI Agents, Computer Vision, NLP, PyTorch, Scikit-learn, XGBoost, OpenAI API, Prompt Engineering, Random Forest, SVM, Gradient Descent, PCA, Neural Networks</span></td></tr>
+<tr><td>Data Science & Analytics</td><td><span class="gray">Data Analysis, Statistical Modeling, Hypothesis Testing, Time Series Analysis, Signal Processing, Bayesian Statistics, Pandas, NumPy, Matplotlib/Seaborn, Data Visualization, Linear/Logistic Regression, Probability Theory</span></td></tr>
+<tr><td>Tools & Platforms</td><td><span class="gray">AWS, Docker, Linux, Git/GitHub, CI/CD, GitHub Actions, VS Code, Jupyter, Netlify, PyMuPDF, Pinecone</span></td></tr>
 </table>`;
       case "experience": {
         const MONTH_NAMES = [
@@ -474,7 +476,7 @@
             const endLabel = role.end
               ? `${MONTH_NAMES[role.end[1] - 1]} ${role.end[0]}`
               : "Present";
-            return `• <span class="highlight">[${startLabel} - ${endLabel}]</span> ${role.title}, ${role.org} (${role.loc}) - <span class="success">(${formatDuration(months)})</span>`;
+            return `• <span class="highlight">[${startLabel} - ${endLabel}]</span> <span class="gray">${role.title}, ${role.org} (${role.loc})</span> - <span class="success">(${formatDuration(months)})</span>`;
           })
           .join("<br>\n");
 
@@ -486,27 +488,27 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
       }
       case "projects":
         return `List of Projects (Type <span class="highlight">project [1-3]</span> for details):<br>
-  1. <span class="highlight">AI Agentic Coder</span> - Autonomous refactoring agent framework<br>
-  2. <span class="highlight">Sales Predictor</span>   - Time-series analytics model<br>
-  3. <span class="highlight">ThreeJS Gears</span>    - WebGL geometric animation engine`;
+  1. <span class="highlight">AI Agentic Coder</span> - <span class="gray">Autonomous refactoring agent framework</span><br>
+  2. <span class="highlight">Sales Predictor</span>   - <span class="gray">Time-series analytics model</span><br>
+  3. <span class="highlight">ThreeJS Gears</span>    - <span class="gray">WebGL geometric animation engine</span>`;
       case "project":
         const num = parts[1];
         if (num === "1") {
           return `<b>AI Agentic Coder</b>:<br>
   - Role: Lead Developer<br>
-  - Details: Developed an AI framework that refactors HTML and CSS modules synchronously.<br>
+  - <span class="gray">Details: Developed an AI framework that refactors HTML and CSS modules synchronously.</span><br>
   - Tech Stack: Python, LangGraph, Ollama.<br>
   - Link: <a class="link" href="https://github.com/SenthilCaesar" target="_blank">GitHub Repository</a>`;
         } else if (num === "2") {
           return `<b>Sales Predictor</b>:<br>
   - Role: Data Analyst<br>
-  - Details: Built XGBoost algorithms to predict monthly client sales indices.<br>
+  - <span class="gray">Details: Built XGBoost algorithms to predict monthly client sales indices.</span><br>
   - Tech Stack: R, XGBoost, Shiny.<br>
   - Link: <a class="link" href="https://github.com/SenthilCaesar" target="_blank">GitHub Repository</a>`;
         } else if (num === "3") {
           return `<b>ThreeJS Gears</b>:<br>
   - Role: Frontend Architect<br>
-  - Details: Designed 3D flat-shaded mechanical gears that react to drag resizes and clicks.<br>
+  - <span class="gray">Details: Designed 3D flat-shaded mechanical gears that react to drag resizes and clicks.</span><br>
   - Tech Stack: JavaScript, WebGL, ThreeJS.<br>
   - Link: <a class="link" href="https://github.com/SenthilCaesar" target="_blank">GitHub Repository</a>`;
         }
@@ -556,7 +558,7 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
         }
         return `<span class="error">Unknown weather mode: "${modeArg}". Type "weather" to see options.</span>`;
       case "about":
-        return `I'm Senthil Palanivelu, a CS graduate from UMass Boston with a strong background in Data Analytics, AI Engineering, and Machine Learning. I build tools that apply AI and advanced analytics to solve real-world problems.`;
+        return `<span class="gray">I'm Senthil Palanivelu, a CS graduate from UMass Boston with a strong background in Data Analytics, AI Engineering, and Machine Learning. I build tools that apply AI and advanced analytics to solve real-world problems.</span>`;
       case "blog":
         return `Check out my latest thoughts, guides, and learnings:<br><a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">senthilcaesar.github.io/blogs/</a>`;
       case "links":
