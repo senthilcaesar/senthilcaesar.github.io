@@ -188,6 +188,7 @@ header {
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 500;
+  cursor: pointer;
   transition: color var(--transition-speed);
 }
 
@@ -409,6 +410,7 @@ body.dark-mode .mountain-background {
   justify-content: center;
   color: var(--text-color);
   text-decoration: none;
+  cursor: pointer;
   transition: all var(--transition-speed);
 }
 
@@ -654,12 +656,16 @@ body.dark-mode .sub-grid .sub-section-title {
   align-items: center;
   justify-content: flex-end;
   width: 68px;
-  height: 76px;
+  /* Extra top area (offset by the negative margin) so the dock-magnified icon,
+     which lifts ~16px and scales to 1.48, stays inside the link's hit region. */
+  height: 104px;
+  margin-top: -28px;
   padding: 0 0 4px;
   text-decoration: none;
   color: var(--text-color);
   box-sizing: border-box;
   outline: none;
+  cursor: pointer;
 }
 
 .quick-link-card a:focus-visible .card-mark {
@@ -735,7 +741,13 @@ body.js-enabled .quick-link-card .card-mark {
   background: rgba(15, 23, 42, 0.94);
   color: #ffffff;
   box-shadow: 0 12px 24px -16px rgba(15, 23, 42, 0.64);
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    "Plus Jakarta Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   font-size: 0.9rem;
   font-weight: 700;
   line-height: 1;
@@ -867,7 +879,9 @@ body.dark-mode .card-title::after {
 
   .quick-link-card a {
     width: 62px;
+    /* No dock magnification on small screens, so no extended hit area needed. */
     height: 72px;
+    margin-top: 0;
   }
 
   .quick-link-card .card-mark {
@@ -1283,7 +1297,9 @@ body.dark-mode .contact-pill {
   align-items: center;
   border-bottom: 1px solid #cbd5e1;
   user-select: none;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .terminal-buttons {
@@ -1301,7 +1317,9 @@ body.dark-mode .contact-pill {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    filter 0.15s ease;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
 }
 
@@ -2077,6 +2095,7 @@ body.dark-mode .weather-cloud-item {
   width: 100%;
   text-align: center;
   padding: 4px 0;
+  cursor: pointer;
 }
 
 .mobile-nav-link:hover,

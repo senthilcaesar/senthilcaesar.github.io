@@ -2,10 +2,92 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Senthil Palanivelu</title>
+    <title>Senthil Palanivelu — AI Engineering &amp; Data Analytics</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Senthil Palanivelu's personal website" />
+    <meta
+      name="description"
+      content="Senthil Palanivelu — CS graduate from UMass Boston working in data analytics, AI engineering, and machine learning."
+    />
+    <meta name="author" content="Senthil Palanivelu" />
+    <link rel="canonical" href="https://senthilcaesar.github.io/" />
     <link class="favicon" rel="icon" type="image/png" href="images/sp.png" />
+
+    <!-- Open Graph (LinkedIn, Slack, Discord, iMessage, WhatsApp) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Senthil Palanivelu" />
+    <meta property="og:url" content="https://senthilcaesar.github.io/" />
+    <meta
+      property="og:title"
+      content="Senthil Palanivelu — AI Engineering &amp; Data Analytics"
+    />
+    <meta
+      property="og:description"
+      content="CS graduate from UMass Boston, applying machine learning and evidence-based analysis to real-world problems."
+    />
+    <!-- Crawlers do not resolve relative paths; this must stay absolute. -->
+    <meta
+      property="og:image"
+      content="https://senthilcaesar.github.io/images/og-card.jpg"
+    />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Senthil Palanivelu — AI Engineering and Data Analytics"
+    />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter/X: falls back to Open Graph, but needs its own card type -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Senthil Palanivelu — AI Engineering &amp; Data Analytics"
+    />
+    <meta
+      name="twitter:description"
+      content="CS graduate from UMass Boston, applying machine learning and evidence-based analysis to real-world problems."
+    />
+    <meta
+      name="twitter:image"
+      content="https://senthilcaesar.github.io/images/og-card.jpg"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="Senthil Palanivelu — AI Engineering and Data Analytics"
+    />
+
+    <!-- Structured data for search results -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Senthil Palanivelu",
+        "url": "https://senthilcaesar.github.io/",
+        "image": "https://senthilcaesar.github.io/images/og-card.jpg",
+        "jobTitle": "AI Engineer",
+        "description": "CS graduate from UMass Boston, applying machine learning and evidence-based analysis to real-world problems.",
+        "alumniOf": [
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "University of Massachusetts Boston",
+            "url": "https://www.umb.edu"
+          },
+          { "@type": "CollegeOrUniversity", "name": "Anna University" }
+        ],
+        "knowsAbout": [
+          "Data Analytics",
+          "Machine Learning",
+          "AI Engineering",
+          "AI Agentic Frameworks"
+        ],
+        "sameAs": [
+          "https://github.com/SenthilCaesar",
+          "https://www.linkedin.com/in/senthil-palanivelu-0ba38844/",
+          "https://www.instagram.com/senthil_p89"
+        ]
+      }
+    </script>
 
     <!-- Google Fonts: Space Mono, Lato, Plus Jakarta Sans & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -47,7 +129,7 @@
         margin-top: 0.7em;
         margin-bottom: 0.3em;
         padding-bottom: 0.2em;
-        line-height: 1.0;
+        line-height: 1;
         padding-top: 0.5em;
         border-bottom: 1px solid #aaaaaa;
       }
@@ -89,7 +171,13 @@
       /* Original font override for Interests & Education section */
       .sub-grid,
       .sub-grid * {
-        font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-family:
+          "Plus Jakarta Sans",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
       }
     </style>
   </head>
@@ -793,17 +881,42 @@
       <div class="terminal-header">
         <div class="terminal-buttons">
           <span class="btn close" title="Close">
-            <svg viewBox="0 0 12 12" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <svg
+              viewBox="0 0 12 12"
+              width="9"
+              height="9"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            >
               <path d="M 3 3 L 9 9 M 9 3 L 3 9" />
             </svg>
           </span>
           <span class="btn minimize" title="Minimize">
-            <svg viewBox="0 0 12 12" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <svg
+              viewBox="0 0 12 12"
+              width="9"
+              height="9"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            >
               <path d="M 2.5 6 L 9.5 6" />
             </svg>
           </span>
           <span class="btn maximize" title="Expand">
-            <svg viewBox="0 0 12 12" width="9" height="9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              viewBox="0 0 12 12"
+              width="9"
+              height="9"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M 3 8 L 8 3 M 4 3 H 8 V 7" />
             </svg>
           </span>
