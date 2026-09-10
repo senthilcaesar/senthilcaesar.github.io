@@ -211,11 +211,21 @@
   });
 
   body.addEventListener("click", () => {
+    // Don't steal focus while the user is selecting output text,
+    // focusing the input would collapse the selection.
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed && selection.toString().trim()) {
+      return;
+    }
     input.focus();
   });
 
   input.addEventListener("keydown", (e) => {
     if (isTyping) {
+      // Let copy/select-all shortcuts through while output is animating.
+      if ((e.metaKey || e.ctrlKey) && ["c", "a", "x"].includes(e.key.toLowerCase())) {
+        return;
+      }
       e.preventDefault();
       return;
     }
@@ -349,6 +359,8 @@
   - Control Systems Design</span>`;
       case "certifications":
         return `<b>Professional Certifications:</b><br><br>
+• <span class="highlight">[September 2026]</span> <span class="purple">Introduction to REST APIs for Absolute Beginners</span>, Valentin Despa | Udemy<br>
+  <span class="gray">Core REST API concepts: HTTP methods and status codes, request/response structure, JSON payloads, endpoints and resources, authentication basics, and testing APIs with tools like Postman.</span><br><br>
 • <span class="highlight">[August 2026]</span> <span class="purple">Introduction to Git and Github</span>, Google | Coursera<br>
   <span class="gray">Foundational concepts of version control, Git workflow, repository management, branching, merging, and collaborative software development on GitHub.</span><br><br>
 • <span class="highlight">[March 2025]</span> <span class="purple">Supervised Machine Learning: Regression and Classification</span>, DeepLearning.AI | Coursera | Stanford Online<br>
