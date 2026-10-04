@@ -625,7 +625,7 @@ body.dark-mode .sub-grid .sub-section-title {
   width: 100%;
   overflow-x: auto;
   overflow-y: visible;
-  padding: 24px 8px 10px;
+  padding: 24px 16px 12px;
   margin-top: 0;
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
@@ -641,15 +641,13 @@ body.dark-mode .sub-grid .sub-section-title {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   list-style: none;
-  padding: 14px;
+  padding: 12px 14px;
   margin: 0 auto;
   width: max-content;
-  min-width: max-content;
-  max-width: 100%;
   border: 1px solid var(--quick-card-border);
-  border-radius: 28px;
+  border-radius: 26px;
   background:
     linear-gradient(
       135deg,
@@ -682,11 +680,11 @@ body.dark-mode .sub-grid .sub-section-title {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  width: 68px;
+  width: 62px;
   /* Extra top area (offset by the negative margin) so the dock-magnified icon,
      which lifts ~16px and scales to 1.48, stays inside the link's hit region. */
-  height: 104px;
-  margin-top: -28px;
+  height: 100px;
+  margin-top: -26px;
   padding: 0 0 4px;
   text-decoration: none;
   color: var(--text-color);
@@ -719,14 +717,14 @@ body.dark-mode .sub-grid .sub-section-title {
 }
 
 .quick-link-card .card-mark {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   border: 1px solid rgba(255, 255, 255, 0.58);
-  border-radius: 16px;
+  border-radius: 15px;
   background:
     radial-gradient(
       circle at 30% 20%,
@@ -739,7 +737,7 @@ body.dark-mode .sub-grid .sub-section-title {
     0 14px 26px -16px rgba(15, 23, 42, 0.58),
     inset 0 1px 0 rgba(255, 255, 255, 0.66);
   color: var(--heading-color);
-  font-size: 1.72rem;
+  font-size: 1.62rem;
   line-height: 1;
   letter-spacing: 0;
   transform-origin: center bottom;
@@ -878,10 +876,16 @@ body.dark-mode .card-title::after {
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 980px) {
+  .quick-links-box {
+    display: flex;
+    justify-content: flex-start;
+  }
+
   .quick-links-grid {
     justify-content: flex-start;
-    max-width: none;
+    margin: 0 auto;
+    flex-shrink: 0;
   }
 }
 
