@@ -563,6 +563,7 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
               modeArg.toLowerCase(),
               selection.icon,
               selection.label,
+              true,
             );
             return `<span class="success">Atmosphere set to ${selection.label}.</span>`;
           }

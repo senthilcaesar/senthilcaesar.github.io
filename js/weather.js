@@ -147,6 +147,7 @@
         selected,
         opt.querySelector(".option-icon").textContent,
         opt.querySelector(".option-label").textContent,
+        true
       );
     });
   });
@@ -209,26 +210,31 @@
 
     // Night (Moon) automatically switches to Dark Mode
     // Morning (Sun Rising) and Afternoon (Summer) switch to Light Mode
-    const shouldBeDark = targetMode === "moon";
-    const isDarkCurrent = document.body.classList.contains("dark-mode");
+    // ONLY if the user hasn't explicitly chosen a manual theme preference
+    const isManualTheme = localStorage.getItem("themeManual") === "true";
 
-    if (shouldBeDark !== isDarkCurrent) {
-      if (shouldBeDark) {
-        document.body.classList.add("dark-mode");
-        localStorage.setItem("theme", "dark");
-      } else {
-        document.body.classList.remove("dark-mode");
-        localStorage.setItem("theme", "light");
-      }
+    if (!isManualTheme) {
+      const shouldBeDark = targetMode === "moon";
+      const isDarkCurrent = document.body.classList.contains("dark-mode");
 
-      // Update theme button icon
-      if (typeof window.updateThemeIcon === "function") {
-        window.updateThemeIcon(shouldBeDark);
-      }
+      if (shouldBeDark !== isDarkCurrent) {
+        if (shouldBeDark) {
+          document.body.classList.add("dark-mode");
+          localStorage.setItem("theme", "dark");
+        } else {
+          document.body.classList.remove("dark-mode");
+          localStorage.setItem("theme", "light");
+        }
 
-      // Update three.js gears
-      if (typeof window.updateGearTheme === "function") {
-        window.updateGearTheme(shouldBeDark);
+        // Update theme button icon
+        if (typeof window.updateThemeIcon === "function") {
+          window.updateThemeIcon(shouldBeDark);
+        }
+
+        // Update three.js gears
+        if (typeof window.updateGearTheme === "function") {
+          window.updateGearTheme(shouldBeDark);
+        }
       }
     }
 
@@ -238,13 +244,16 @@
     runSimulation(targetMode);
   }
 
-  function setWeather(mode, icon, label) {
+  function setWeather(mode, icon, label, isUserInitiated = false) {
     if (autoInterval) {
       clearInterval(autoInterval);
       autoInterval = null;
     }
 
     if (mode === "auto") {
+      if (isUserInitiated) {
+        localStorage.removeItem("themeManual");
+      }
       applyAutoWeather();
       autoInterval = setInterval(applyAutoWeather, 30000); // Check every 30 seconds
     } else {

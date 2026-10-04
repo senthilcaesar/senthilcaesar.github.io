@@ -623,10 +623,9 @@ body.dark-mode .sub-grid .sub-section-title {
 
 .quick-links-box {
   width: 100%;
-  overflow-x: auto;
-  overflow-y: visible;
-  padding: 24px 16px 12px;
-  margin-top: 0;
+  overflow: visible;
+  padding: 50px 16px 12px;
+  margin-top: -24px;
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -758,11 +757,11 @@ body.js-enabled .quick-link-card .card-mark {
 .card-title {
   position: absolute;
   left: 50%;
-  bottom: 88px;
-  z-index: 20;
+  bottom: 96px;
+  z-index: 50;
   max-width: 170px;
-  padding: 7px 13px;
-  border-radius: 10px;
+  padding: 6px 12px;
+  border-radius: 9px;
   background: rgba(15, 23, 42, 0.94);
   color: #ffffff;
   box-shadow: 0 12px 24px -16px rgba(15, 23, 42, 0.64);
@@ -773,9 +772,9 @@ body.js-enabled .quick-link-card .card-mark {
     "Segoe UI",
     Roboto,
     sans-serif;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.25;
   letter-spacing: 0.02em;
   opacity: 0;
   pointer-events: none;
@@ -880,6 +879,7 @@ body.dark-mode .card-title::after {
   .quick-links-box {
     display: flex;
     justify-content: flex-start;
+    overflow-x: auto;
   }
 
   .quick-links-grid {

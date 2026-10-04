@@ -21,11 +21,27 @@ window.updateThemeIcon = updateThemeIcon;
 
 // Check for saved theme preference
 const savedTheme = localStorage.getItem('theme');
-if (savedTheme === 'dark') {
-    body.classList.add('dark-mode');
-    updateThemeIcon(true);
+const themeManual = localStorage.getItem('themeManual');
+
+if (themeManual === 'true' && savedTheme) {
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        updateThemeIcon(true);
+    } else {
+        body.classList.remove('dark-mode');
+        updateThemeIcon(false);
+    }
 } else {
-    updateThemeIcon(false);
+    // If no manual preference, default based on time of day (night = dark mode)
+    const hour = new Date().getHours();
+    const isNight = hour < 6 || hour >= 18;
+    if (isNight) {
+        body.classList.add('dark-mode');
+        updateThemeIcon(true);
+    } else {
+        body.classList.remove('dark-mode');
+        updateThemeIcon(false);
+    }
 }
 
 themeToggle.addEventListener('click', () => {
@@ -33,6 +49,7 @@ themeToggle.addEventListener('click', () => {
     const isDark = body.classList.contains('dark-mode');
     updateThemeIcon(isDark);
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    localStorage.setItem('themeManual', 'true');
 
     // Trigger gear theme update if function exists
     if (typeof window.updateGearTheme === 'function') {
