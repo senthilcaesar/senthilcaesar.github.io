@@ -2440,12 +2440,11 @@ body.screen-shake {
 /* Semantic Site Footer */
 .site-footer {
   width: 100%;
-  border-top: 1px solid var(--border-color);
+  border-top: none;
   padding: 36px 24px 48px;
   margin-top: 32px;
   position: relative;
   z-index: 10;
-  transition: border-color var(--transition-speed) ease;
 }
 
 .footer-container {
