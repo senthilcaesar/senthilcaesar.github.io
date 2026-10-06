@@ -9,8 +9,23 @@
       content="Senthil Palanivelu — CS graduate from UMass Boston working in data analytics, AI engineering, and machine learning."
     />
     <meta name="author" content="Senthil Palanivelu" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#090d16" media="(prefers-color-scheme: dark)" />
     <link rel="canonical" href="https://senthilcaesar.github.io/" />
     <link class="favicon" rel="icon" type="image/png" href="images/sp.png" />
+    <link rel="apple-touch-icon" href="images/sp.png" />
+
+    <!-- Prevent theme flash before initial render -->
+    <script>
+      (function () {
+        const theme = localStorage.getItem("theme");
+        const manual = localStorage.getItem("themeManual");
+        const isNight = new Date().getHours() < 6 || new Date().getHours() >= 18;
+        if ((manual === "true" && theme === "dark") || (manual !== "true" && isNight)) {
+          document.documentElement.classList.add("dark-mode");
+        }
+      })();
+    </script>
 
     <!-- Open Graph (LinkedIn, Slack, Discord, iMessage, WhatsApp) -->
     <meta property="og:type" content="website" />
@@ -89,11 +104,11 @@
       }
     </script>
 
-    <!-- Google Fonts: Space Mono, Lato, Plus Jakarta Sans & JetBrains Mono -->
+    <!-- Google Fonts: Doto, Plus Jakarta Sans, JetBrains Mono & Space Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&family=Rampart+One&family=Doto:wght@400;600;700;800;900&family=Playpen+Sans:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Lato:ital,wght@0,400;0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Doto:wght@700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
 
@@ -107,12 +122,9 @@
     <!-- Stylesheet -->
     <link rel="stylesheet" href="styles.css" />
 
-    <!-- Custom Font Styles -->
+    <!-- Typography Custom Styles -->
     <style>
       body,
-      td,
-      th,
-      tr,
       p,
       a {
         font-family: 'Space Mono', 'Courier New', monospace;
@@ -124,51 +136,7 @@
         font-size: 16px;
       }
 
-      h2 {
-        color: rgb(34, 15, 18);
-        margin-top: 0.7em;
-        margin-bottom: 0.3em;
-        padding-bottom: 0.2em;
-        line-height: 1;
-        padding-top: 0.5em;
-        border-bottom: 1px solid #aaaaaa;
-      }
-
-      heading {
-        font-family: 'Space Mono', 'Courier New', monospace;
-        font-size: 22px;
-        /* color: #e3225c; */
-        color: rgb(180, 16, 44);
-        /* color: rgb(117, 15, 109); */
-      }
-
-      subheading {
-        font-family: 'Space Mono', 'Courier New', monospace;
-        font-size: 18px;
-        font-style: italic;
-        /* color: #e3225c; */
-        color: rgb(180, 16, 44);
-      }
-
-      papertitle {
-        font-family: 'Space Mono', 'Courier New', monospace;
-        font-size: 16px;
-        font-weight: bold;
-      }
-
-      name {
-        font-family: 'Space Mono', 'Courier New', monospace;
-        font-size: 32px;
-      }
-
-      .footer {
-        font-family: 'Space Mono', 'Courier New', monospace;
-        font-size: 14px;
-        opacity: 0.75;
-        color: #777;
-      }
-
-      /* Original font override for Interests & Education section */
+      /* Clean font for Interests & Education section */
       .sub-grid,
       .sub-grid * {
         font-family:
@@ -183,6 +151,9 @@
   </head>
 
   <body id="page-body">
+    <!-- Accessible Skip to Content Link -->
+    <a href="#about" class="skip-link">Skip to main content</a>
+
     <!-- Glowing Orbs -->
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
@@ -191,10 +162,10 @@
     <header>
       <div class="header-container">
         <div class="header-left">
-          <a class="site-logo" href="#">Senthil Palanivelu</a>
+          <a class="site-logo" href="#about">Senthil Palanivelu</a>
         </div>
         <nav class="header-middle">
-          <a class="nav-link active" href="#">About</a>
+          <a class="nav-link active" href="#about">About</a>
           <a class="nav-link" href="#quick-links">Links</a>
           <a class="nav-link" href="#contact">Contact</a>
         </nav>
@@ -327,14 +298,14 @@
     <!-- Mobile Navigation Menu Overlay -->
     <div id="mobile-nav-overlay" class="mobile-nav-overlay">
       <nav class="mobile-nav-links">
-        <a class="mobile-nav-link active" href="#">About</a>
+        <a class="mobile-nav-link active" href="#about">About</a>
         <a class="mobile-nav-link" href="#quick-links">Links</a>
         <a class="mobile-nav-link" href="#contact">Contact</a>
       </nav>
     </div>
 
     <!-- Main Content Area -->
-    <main>
+    <main id="main-content">
       <!-- Rising Sun element for Sun Rising weather -->
       <div class="weather-sun"></div>
 
@@ -372,7 +343,7 @@
         </svg>
       </div>
 
-      <div class="main-layout">
+      <div class="main-layout" id="about">
         <!-- Left Sidebar -->
         <aside class="sidebar">
           <div class="profile-container">
@@ -381,6 +352,10 @@
               src="images/me.jpg"
               alt="Senthil Palanivelu"
               class="profile-img"
+              width="180"
+              height="180"
+              loading="eager"
+              fetchpriority="high"
             />
           </div>
 
@@ -390,6 +365,7 @@
               class="profile-affiliation"
               href="https://www.umb.edu"
               target="_blank"
+              rel="noopener noreferrer"
               >UMass Boston</a
             >
           </p>
@@ -398,10 +374,12 @@
             <a
               href="https://github.com/SenthilCaesar"
               target="_blank"
+              rel="noopener noreferrer"
               class="social-icon"
               title="GitHub"
+              aria-label="GitHub Profile"
             >
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path
                   d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
                 />
@@ -410,10 +388,12 @@
             <a
               href="https://www.linkedin.com/in/senthil-palanivelu-0ba38844/"
               target="_blank"
+              rel="noopener noreferrer"
               class="social-icon"
               title="LinkedIn"
+              aria-label="LinkedIn Profile"
             >
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path
                   d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
                 />
@@ -422,10 +402,12 @@
             <a
               href="https://www.instagram.com/senthil_p89"
               target="_blank"
+              rel="noopener noreferrer"
               class="social-icon"
               title="Instagram"
+              aria-label="Instagram Profile"
             >
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                 <path
                   d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
                 />
@@ -467,17 +449,6 @@
               <h3 class="sub-section-title">Interests</h3>
               <ul class="sub-list">
                 <li class="sub-list-item">
-                  <span class="sub-list-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path
-                        d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"
-                      />
-                    </svg>
-                  </span>
                   <div class="sub-list-text">
                     <strong>AI & Machine Learning Systems</strong>
                     <div class="sub-list-subtext">
@@ -486,17 +457,6 @@
                   </div>
                 </li>
                 <li class="sub-list-item">
-                  <span class="sub-list-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path
-                        d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"
-                      />
-                    </svg>
-                  </span>
                   <div class="sub-list-text">
                     <strong>Data Analytics & Insights</strong>
                     <div class="sub-list-subtext">
@@ -506,17 +466,6 @@
                   </div>
                 </li>
                 <li class="sub-list-item">
-                  <span class="sub-list-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path
-                        d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"
-                      />
-                    </svg>
-                  </span>
                   <div class="sub-list-text">
                     <strong>AI Agentic Frameworks</strong>
                     <div class="sub-list-subtext">
@@ -532,16 +481,6 @@
               <h3 class="sub-section-title">Education</h3>
               <ul class="sub-list">
                 <li class="sub-list-item">
-                  <span class="sub-list-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
-                      <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
-                    </svg>
-                  </span>
                   <div class="sub-list-text">
                     <strong>M.S. in Computer Science</strong>
                     <div class="sub-list-subtext">
@@ -550,16 +489,6 @@
                   </div>
                 </li>
                 <li class="sub-list-item">
-                  <span class="sub-list-icon">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
-                      <path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
-                    </svg>
-                  </span>
                   <div class="sub-list-text">
                     <strong>B.E. in Electronics & Communications</strong>
                     <div class="sub-list-subtext">Anna University</div>
@@ -582,6 +511,7 @@
               <a
                 href="https://senthilcaesar.github.io/portfolio/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open Portfolio"
               >
                 <span class="card-topline">
@@ -601,6 +531,7 @@
               <a
                 href="https://senthilcaesar.github.io/my-reading/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open Readings"
               >
                 <span class="card-topline">
@@ -620,6 +551,7 @@
               <a
                 href="https://senthilcaesar.github.io/knowledgelab/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open KnowledgeLab"
               >
                 <span class="card-topline">
@@ -639,6 +571,7 @@
               <a
                 href="https://senthilcaesar.github.io/resources/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open URL Library"
               >
                 <span class="card-topline">
@@ -658,6 +591,7 @@
               <a
                 href="https://senthilcaesar.github.io/contents/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open PodTube"
               >
                 <span class="card-topline">
@@ -677,6 +611,7 @@
               <a
                 href="https://senthilcaesar.github.io/commands/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open Commands"
               >
                 <span class="card-topline">
@@ -696,6 +631,7 @@
               <a
                 href="https://senthilcaesar.github.io/promptshelf/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open Prompt Shelf"
               >
                 <span class="card-topline">
@@ -715,6 +651,7 @@
               <a
                 href="https://senthilcaesar.github.io/notebook/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open Notebook"
               >
                 <span class="card-topline">
@@ -734,6 +671,7 @@
               <a
                 href="https://senthilcaesar.github.io/url-content-tracker/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open Content Tracker"
               >
                 <span class="card-topline">
@@ -753,6 +691,7 @@
               <a
                 href="https://senthilcaesar.github.io/blogs/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open Blogs"
               >
                 <span class="card-topline">
@@ -772,6 +711,7 @@
               <a
                 href="https://senthilcaesar.github.io/study/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open Study"
               >
                 <span class="card-topline">
@@ -791,6 +731,7 @@
               <a
                 href="https://senthilcaesar.github.io/tech-stack/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open Tech Stack"
               >
                 <span class="card-topline">
@@ -810,6 +751,7 @@
               <a
                 href="https://senthilcaesar.github.io/wander-list/"
                 target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Open Wanderlist"
               >
                 <span class="card-topline">
@@ -868,7 +810,7 @@
             </p>
             <div class="window-actions">
               <a
-                href="mailto:senthilcaesar@gmail.com"
+                href="mailto:senthilcaesar@gmail.com?subject=Hello!%20Let's%20connect"
                 class="macos-btn-primary"
                 aria-label="Send Email"
               >
@@ -891,11 +833,23 @@
       </article>
     </main>
 
+    <!-- Semantic Site Footer -->
+    <footer class="site-footer">
+      <div class="footer-container">
+        <p class="footer-copy">
+          &copy; <span id="current-year">2026</span> Senthil Palanivelu. Built with HTML, CSS, JavaScript &amp; Three.js.
+        </p>
+        <a href="#about" class="back-to-top" aria-label="Back to top of page">
+          Back to top &uarr;
+        </a>
+      </div>
+    </footer>
+
     <!-- Retro Terminal Widget HTML -->
     <div id="terminal-window" class="hidden">
       <div class="terminal-header">
         <div class="terminal-buttons">
-          <span class="btn close" title="Close">
+          <span class="btn close" title="Close" role="button" tabindex="0" aria-label="Close terminal">
             <svg
               viewBox="0 0 12 12"
               width="9"
@@ -904,11 +858,12 @@
               stroke="currentColor"
               stroke-width="1.8"
               stroke-linecap="round"
+              aria-hidden="true"
             >
               <path d="M 3 3 L 9 9 M 9 3 L 3 9" />
             </svg>
           </span>
-          <span class="btn minimize" title="Minimize">
+          <span class="btn minimize" title="Minimize" role="button" tabindex="0" aria-label="Minimize terminal">
             <svg
               viewBox="0 0 12 12"
               width="9"
@@ -917,11 +872,12 @@
               stroke="currentColor"
               stroke-width="1.8"
               stroke-linecap="round"
+              aria-hidden="true"
             >
               <path d="M 2.5 6 L 9.5 6" />
             </svg>
           </span>
-          <span class="btn maximize" title="Expand">
+          <span class="btn maximize" title="Expand" role="button" tabindex="0" aria-label="Expand terminal">
             <svg
               viewBox="0 0 12 12"
               width="9"
@@ -931,6 +887,7 @@
               stroke-width="1.6"
               stroke-linecap="round"
               stroke-linejoin="round"
+              aria-hidden="true"
             >
               <path d="M 3 8 L 8 3 M 4 3 H 8 V 7" />
             </svg>
@@ -953,6 +910,7 @@
             id="terminal-input"
             autocomplete="off"
             spellcheck="false"
+            aria-label="Terminal command input"
           />
         </div>
       </div>

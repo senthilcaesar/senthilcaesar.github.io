@@ -68,9 +68,9 @@ themeToggle.addEventListener('click', () => {
 
     const sections = [
         { 
-            id: 'about-section', 
-            link: document.querySelector('.header-middle a[href="#"]'),
-            mobileLink: document.querySelector('.mobile-nav-link[href="#"]')
+            id: 'about', 
+            link: document.querySelector('.header-middle a[href="#about"]'),
+            mobileLink: document.querySelector('.mobile-nav-link[href="#about"]')
         },
         { 
             id: 'quick-links', 
@@ -85,7 +85,13 @@ themeToggle.addEventListener('click', () => {
     ];
 
     const aboutSec = document.querySelector('.main-layout');
-    if (aboutSec) aboutSec.id = 'about-section';
+    if (aboutSec && !aboutSec.id) aboutSec.id = 'about';
+
+    // Update dynamic footer year
+    const yearSpan = document.getElementById('current-year');
+    if (yearSpan) {
+        yearSpan.textContent = new Date().getFullYear();
+    }
 
     let isScrollingFromClick = false;
     let clickTimeout = null;
