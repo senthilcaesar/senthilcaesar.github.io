@@ -1,23 +1,58 @@
         (function () {
+            function isWebGLAvailable() {
+                try {
+                    const canvas = document.createElement('canvas');
+                    return !!(window.WebGLRenderingContext && 
+                        (canvas.getContext('webgl') || canvas.getContext('experimental-webgl')));
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            function showFallback(container) {
+                if (!container) return;
+                container.innerHTML = `
+                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; opacity: 0.65;">
+                        <svg viewBox="0 0 100 100" width="80" height="80" style="animation: spin 14s linear infinite; transform-origin: center;">
+                            <circle cx="50" cy="50" r="32" fill="none" stroke="currentColor" stroke-width="7" stroke-dasharray="14 7" />
+                            <circle cx="50" cy="50" r="14" fill="none" stroke="currentColor" stroke-width="4" />
+                        </svg>
+                    </div>
+                `;
+            }
+
             function initGears() {
                 const container = document.getElementById('gear-canvas-container');
                 if (!container) return;
+
+                if (typeof THREE === 'undefined' || !isWebGLAvailable()) {
+                    showFallback(container);
+                    return;
+                }
+
+                const width = container.clientWidth || 200;
+                const height = container.clientHeight || 200;
+
+                // Renderer with safe try-catch
+                let renderer;
+                try {
+                    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, failIfMajorPerformanceCaveat: false });
+                    renderer.setSize(width, height);
+                    const isMobileDevice = window.innerWidth < 768;
+                    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobileDevice ? 1.5 : 2));
+                    container.appendChild(renderer.domElement);
+                } catch (err) {
+                    console.warn('WebGL initialization failed, using fallback:', err);
+                    showFallback(container);
+                    return;
+                }
 
                 // Scene Setup
                 const scene = new THREE.Scene();
 
                 // Camera
-                const width = container.clientWidth || 200;
-                const height = container.clientHeight || 200;
                 const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
                 camera.position.set(0, 0, 12);
-
-                // Renderer
-                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-                renderer.setSize(width, height);
-                const isMobileDevice = window.innerWidth < 768;
-                renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobileDevice ? 1.5 : 2));
-                container.appendChild(renderer.domElement);
 
             // Group to hold all gears for the mouse hover tilt effect
             const gearGroup = new THREE.Group();
@@ -245,7 +280,7 @@
             function animate() {
                 requestAnimationFrame(animate);
 
-                const delta = clock.getDelta();
+                const delta = Math.min(clock.getDelta(), 0.1);
                 spinVelocity += (0 - spinVelocity) * 0.05;
                 const weatherSpeed = window.weatherGearSpeed || 0;
                 const currentSpeed = baseSpeedScale + spinVelocity + weatherSpeed;
@@ -284,6 +319,11 @@
             const s = document.getElementById('three-js-script');
             if (s) {
                 s.addEventListener('load', initGears);
+                s.addEventListener('error', () => {
+                    showFallback(document.getElementById('gear-canvas-container'));
+                });
+            } else {
+                showFallback(document.getElementById('gear-canvas-container'));
             }
         }
     })();

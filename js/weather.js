@@ -211,7 +211,10 @@
     // Night (Moon) automatically switches to Dark Mode
     // Morning (Sun Rising) and Afternoon (Summer) switch to Light Mode
     // ONLY if the user hasn't explicitly chosen a manual theme preference
-    const isManualTheme = localStorage.getItem("themeManual") === "true";
+    let isManualTheme = false;
+    try {
+      isManualTheme = localStorage.getItem("themeManual") === "true";
+    } catch (e) {}
 
     if (!isManualTheme) {
       const shouldBeDark = targetMode === "moon";
@@ -220,10 +223,14 @@
       if (shouldBeDark !== isDarkCurrent) {
         if (shouldBeDark) {
           document.body.classList.add("dark-mode");
-          localStorage.setItem("theme", "dark");
+          try {
+            localStorage.setItem("theme", "dark");
+          } catch (e) {}
         } else {
           document.body.classList.remove("dark-mode");
-          localStorage.setItem("theme", "light");
+          try {
+            localStorage.setItem("theme", "light");
+          } catch (e) {}
         }
 
         // Update theme button icon
@@ -252,7 +259,9 @@
 
     if (mode === "auto") {
       if (isUserInitiated) {
-        localStorage.removeItem("themeManual");
+        try {
+          localStorage.removeItem("themeManual");
+        } catch (e) {}
       }
       applyAutoWeather();
       autoInterval = setInterval(applyAutoWeather, 30000); // Check every 30 seconds
@@ -1096,24 +1105,34 @@
 
   function setupCanvas() {
     if (canvas) return;
-    canvas = document.createElement("canvas");
-    canvas.id = "weather-canvas";
-    document.body.appendChild(canvas);
-    ctx = canvas.getContext("2d");
-    resizeCanvas();
+    try {
+      canvas = document.createElement("canvas");
+      canvas.id = "weather-canvas";
+      document.body.appendChild(canvas);
+      ctx = canvas.getContext("2d");
+      if (!ctx) {
+        console.warn("2D canvas context not available.");
+        return;
+      }
+      resizeCanvas();
+    } catch (err) {
+      console.warn("Error initializing weather canvas:", err);
+      ctx = null;
+    }
   }
 
   // High-DPI Canvas Scaling
   function resizeCanvas() {
-    if (!canvas) return;
+    if (!canvas || !ctx) return;
     width = window.innerWidth;
     height = window.innerHeight;
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
+    // Cap DPR to 1.5 to prevent massive memory allocations on 4K/high-DPI Windows displays
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    canvas.width = Math.floor(width * dpr);
+    canvas.height = Math.floor(height * dpr);
     canvas.style.width = width + "px";
     canvas.style.height = height + "px";
-    ctx.scale(dpr, dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const isMobile = width < 768;
     const densityMultiplier = isMobile ? 0.45 : 1.0;
@@ -1211,7 +1230,7 @@
 
   // --- ANIMATION LOOP ---
   function loop() {
-    if (!active) return;
+    if (!active || !ctx) return;
 
     ctx.clearRect(0, 0, width, height);
 

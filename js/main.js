@@ -19,9 +19,24 @@ function updateThemeIcon(isDark) {
 }
 window.updateThemeIcon = updateThemeIcon;
 
+// Safe localStorage helper
+function safeStorageGet(key) {
+    try {
+        return localStorage.getItem(key);
+    } catch (e) {
+        return null;
+    }
+}
+
+function safeStorageSet(key, value) {
+    try {
+        localStorage.setItem(key, value);
+    } catch (e) {}
+}
+
 // Check for saved theme preference
-const savedTheme = localStorage.getItem('theme');
-const themeManual = localStorage.getItem('themeManual');
+const savedTheme = safeStorageGet('theme');
+const themeManual = safeStorageGet('themeManual');
 
 if (themeManual === 'true' && savedTheme) {
     if (savedTheme === 'dark') {
@@ -44,18 +59,20 @@ if (themeManual === 'true' && savedTheme) {
     }
 }
 
-themeToggle.addEventListener('click', () => {
-    body.classList.toggle('dark-mode');
-    const isDark = body.classList.contains('dark-mode');
-    updateThemeIcon(isDark);
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    localStorage.setItem('themeManual', 'true');
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const isDark = body.classList.contains('dark-mode');
+        updateThemeIcon(isDark);
+        safeStorageSet('theme', isDark ? 'dark' : 'light');
+        safeStorageSet('themeManual', 'true');
 
-    // Trigger gear theme update if function exists
-    if (typeof window.updateGearTheme === 'function') {
-        window.updateGearTheme(isDark);
-    }
-});
+        // Trigger gear theme update if function exists
+        if (typeof window.updateGearTheme === 'function') {
+            window.updateGearTheme(isDark);
+        }
+    });
+}
 
 // --- NAVIGATION & INTERACTIVE CONTROLLERS ---
 (function () {
@@ -63,6 +80,7 @@ themeToggle.addEventListener('click', () => {
     const mobileLinks = document.querySelectorAll('.mobile-nav-link');
     const mobileToggle = document.getElementById('mobile-menu-toggle');
     const mobileOverlay = document.getElementById('mobile-nav-overlay');
+    if (!mobileToggle || !mobileOverlay) return;
     const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
     const closeIcon = mobileToggle.querySelector('.close-icon');
 

@@ -1,6 +1,7 @@
 (function () {
   const trigger = document.getElementById("terminal-trigger");
   const windowDiv = document.getElementById("terminal-window");
+  if (!trigger || !windowDiv) return;
   const closeBtn = windowDiv.querySelector(".btn.close");
   const minimizeBtn = windowDiv.querySelector(".btn.minimize");
   const maximizeBtn = windowDiv.querySelector(".btn.maximize");

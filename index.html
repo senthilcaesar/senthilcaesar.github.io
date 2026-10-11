@@ -15,14 +15,23 @@
     <link class="favicon" rel="icon" type="image/png" href="images/sp.png" />
     <link rel="apple-touch-icon" href="images/sp.png" />
 
-    <!-- Prevent theme flash before initial render -->
+    <!-- Prevent theme flash before initial render (storage-safe for restricted environments) -->
     <script>
       (function () {
-        const theme = localStorage.getItem("theme");
-        const manual = localStorage.getItem("themeManual");
-        const isNight = new Date().getHours() < 6 || new Date().getHours() >= 18;
-        if ((manual === "true" && theme === "dark") || (manual !== "true" && isNight)) {
-          document.documentElement.classList.add("dark-mode");
+        try {
+          const theme = localStorage.getItem("theme");
+          const manual = localStorage.getItem("themeManual");
+          const isNight = new Date().getHours() < 6 || new Date().getHours() >= 18;
+          if ((manual === "true" && theme === "dark") || (manual !== "true" && isNight)) {
+            document.documentElement.classList.add("dark-mode");
+          }
+        } catch (e) {
+          try {
+            const isNight = new Date().getHours() < 6 || new Date().getHours() >= 18;
+            if (isNight) {
+              document.documentElement.classList.add("dark-mode");
+            }
+          } catch (_) {}
         }
       })();
     </script>
@@ -112,11 +121,12 @@
       rel="stylesheet"
     />
 
-    <!-- Three.js -->
+    <!-- Three.js (with CDN fallback for blocked networks/regions) -->
     <script
       id="three-js-script"
       defer
       src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+      onerror="if(!window.THREE){this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';}"
     ></script>
 
     <!-- Stylesheet -->
