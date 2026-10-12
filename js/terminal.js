@@ -337,7 +337,7 @@
       case "hey":
         return `Hello! How can I help you today? To see the list of available commands type <span class="highlight">help</span>`;
       case "help":
-        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">List major project directories</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
+        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">date</span>           - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">List major project directories</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
       case "education":
         return `<b>Education History:</b><br><br>
 • <span class="highlight">[Jan 2015 - Jan 2019]</span> <b>Master of Science in Computer Science</b>, <span class="error">University of Massachusetts Boston</span> (USA)<br>
@@ -573,6 +573,16 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
         return `<span class="error">Unknown weather mode: "${modeArg}". Type "weather" to see options.</span>`;
       case "about":
         return `<span class="gray">I'm Senthil Palanivelu, a CS graduate from UMass Boston with a strong background in Data Analytics, AI Engineering, and Machine Learning. I build tools that apply AI and advanced analytics to solve real-world problems.</span>`;
+      case "date":
+      case "day":
+      case "today": {
+        const now = new Date();
+        const dayOfWeek = now.toLocaleDateString("en-US", { weekday: "long" });
+        const monthLong = now.toLocaleDateString("en-US", { month: "long" });
+        const dayNum = now.getDate();
+        const year = now.getFullYear();
+        return `<span class="success">Today is <b>${dayOfWeek}, ${monthLong} ${dayNum}, ${year}</b></span>`;
+      }
       case "blog":
         return `Check out my latest thoughts, guides, and learnings:<br><a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">senthilcaesar.github.io/blogs/</a>`;
       case "links":

@@ -173,9 +173,9 @@ header {
 }
 
 .header-container {
-  max-width: 1080px;
+  max-width: 1160px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 32px;
   height: 64px;
   display: flex;
   justify-content: space-between;
@@ -185,6 +185,7 @@ header {
 .header-left {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .site-logo {
@@ -207,7 +208,8 @@ header {
 .header-middle {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 28px;
+  margin: 0 24px;
 }
 
 .nav-link {
@@ -231,7 +233,16 @@ header {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+}
+
+.header-divider {
+  width: 1px;
+  height: 20px;
+  background-color: var(--border-color);
+  margin: 0 4px;
+  flex-shrink: 0;
+  transition: background-color var(--transition-speed);
 }
 
 .icon-btn {
@@ -1798,6 +1809,303 @@ body.dark-mode #terminal-input {
   display: block;
 }
 
+/* Current Date & Day of Week Badges */
+.header-date-badge,
+.sidebar-date-badge,
+.mobile-date-badge {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 5px 12px;
+  color: var(--text-color);
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family:
+    "Plus Jakarta Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition:
+    background-color var(--transition-speed),
+    border-color var(--transition-speed),
+    color var(--transition-speed),
+    box-shadow var(--transition-speed),
+    transform 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+  user-select: none;
+  white-space: nowrap;
+}
+
+.header-date-badge:hover,
+.sidebar-date-badge:hover,
+.mobile-date-badge:hover {
+  border-color: var(--link-color);
+  color: var(--link-color);
+  background-color: var(--bg-secondary);
+  transform: translateY(-1px);
+}
+
+.date-icon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  stroke: var(--accent-color);
+  transition: stroke var(--transition-speed);
+}
+
+.date-text {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.82rem;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.date-day {
+  font-weight: 700;
+  color: var(--heading-color);
+  transition: color var(--transition-speed);
+}
+
+.date-sep,
+.date-year-sep {
+  color: var(--text-muted);
+}
+
+.date-month-long,
+.date-month-short,
+.date-day-num,
+.date-year {
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color var(--transition-speed);
+}
+
+/* In header, show day, date, and year (e.g. Monday, Oct 12, 2026) */
+.header-date-badge .date-month-long {
+  display: none;
+}
+
+.header-date-badge .date-month-short {
+  display: inline;
+}
+
+.header-date-badge .date-year,
+.header-date-badge .date-year-sep {
+  display: inline;
+}
+
+.date-month-short {
+  display: none;
+}
+
+/* Sidebar date badge is hidden on desktop by default */
+.sidebar-date-badge {
+  display: none;
+}
+
+/* Mobile overlay date container */
+.mobile-date-container {
+  display: flex;
+  justify-content: center;
+  padding: 16px 0 4px 0;
+}
+
+/* Date Dropdown Container & Interactive Calendar */
+.date-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.date-dropdown-btn {
+  cursor: pointer;
+}
+
+.date-dropdown-container.open .dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.calendar-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 295px;
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.14);
+  padding: 16px;
+  display: none;
+  flex-direction: column;
+  z-index: 1000;
+  transform-origin: top right;
+  animation: dropdown-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.date-dropdown-container.open .calendar-dropdown-menu {
+  display: flex;
+}
+
+/* Calendar Header */
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.cal-title {
+  font-family:
+    "Plus Jakarta Sans",
+    -apple-system,
+    sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--heading-color);
+  letter-spacing: -0.01em;
+}
+
+.cal-nav-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.cal-nav-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--link-color);
+  border-color: var(--link-color);
+  transform: translateY(-1px);
+}
+
+.cal-nav-btn:active {
+  transform: scale(0.95);
+}
+
+/* Weekday Labels */
+.cal-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.cal-weekdays span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 0;
+}
+
+/* Days Grid */
+.cal-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  margin-bottom: 12px;
+}
+
+.cal-day-cell {
+  background: none;
+  border: none;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-color);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+}
+
+.cal-day-cell:hover {
+  background-color: var(--bg-secondary);
+  color: var(--link-color);
+  transform: scale(1.08);
+}
+
+.cal-day-other {
+  color: var(--text-muted);
+  opacity: 0.35;
+}
+
+.cal-day-other:hover {
+  opacity: 0.75;
+}
+
+.cal-day-today {
+  font-weight: 800;
+  color: #ffffff !important;
+  background: var(--accent-color) !important;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}
+
+.cal-day-selected:not(.cal-day-today) {
+  border: 1.5px solid var(--accent-color);
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+/* Calendar Footer */
+.cal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.78rem;
+}
+
+.cal-selected-label {
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 170px;
+}
+
+.cal-today-btn {
+  background: none;
+  border: 1px solid var(--border-color);
+  color: var(--accent-color);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.cal-today-btn:hover {
+  background: var(--accent-color);
+  color: #ffffff;
+  border-color: var(--accent-color);
+}
+
 /* Weather Selector Dropdown & Styles */
 .weather-dropdown-container {
   position: relative;
@@ -1807,15 +2115,15 @@ body.dark-mode #terminal-input {
 .weather-dropdown-btn {
   background: none;
   border: 1px solid var(--border-color);
-  padding: 6px 12px;
+  padding: 5px 12px;
   cursor: pointer;
   color: var(--text-color);
   border-radius: 20px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   transition: all var(--transition-speed) ease;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -2215,7 +2523,7 @@ body.dark-mode .weather-cloud-item {
 }
 
 .mobile-nav-overlay.open {
-  height: 190px;
+  height: 245px;
 }
 
 .mobile-nav-links {
@@ -2223,8 +2531,8 @@ body.dark-mode .weather-cloud-item {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px 0;
-  gap: 20px;
+  padding: 16px 0 20px 0;
+  gap: 16px;
 }
 
 .mobile-nav-link {
@@ -2250,7 +2558,21 @@ body.mobile-menu-open {
 }
 
 /* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .date-month-long {
+    display: none;
+  }
+
+  .date-month-short {
+    display: inline;
+  }
+}
+
 @media (max-width: 900px) {
+  .header-container {
+    padding: 0 20px;
+  }
+
   .header-middle {
     display: none !important;
   }
@@ -2259,17 +2581,43 @@ body.mobile-menu-open {
     display: flex;
   }
 
+  .header-right {
+    gap: 10px;
+  }
+
+  .header-date-badge .date-year,
+  .header-date-badge .date-year-sep {
+    display: none;
+  }
+
+  .header-date-badge {
+    padding: 5px 10px;
+    gap: 6px;
+  }
+
   .weather-dropdown-btn .weather-text {
     display: none !important;
   }
 
   .weather-dropdown-btn {
-    padding: 6px 10px;
+    padding: 5px 10px;
     gap: 4px;
   }
 }
 
 @media (max-width: 600px) {
+  .header-container {
+    padding: 0 16px;
+  }
+
+  .header-right {
+    gap: 8px;
+  }
+
+  .header-divider {
+    display: none;
+  }
+
   main {
     padding: 20px 16px;
   }
@@ -2280,6 +2628,34 @@ body.mobile-menu-open {
 
   .section-title {
     font-size: 1.45rem;
+  }
+
+  /* On small screens, hide header date to keep top bar uncluttered; show in sidebar & menu */
+  .header-date-badge {
+    display: none !important;
+  }
+
+  .sidebar-date-badge {
+    display: inline-flex;
+    margin: 6px 0 16px 0;
+    cursor: pointer;
+  }
+
+  .mobile-date-badge {
+    cursor: pointer;
+  }
+
+  /* Centered mobile calendar modal */
+  .date-dropdown-container.open .calendar-dropdown-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(320px, calc(100vw - 32px));
+    right: auto;
+    z-index: 10000;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+    animation: modal-pop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .weather-dropdown-btn {
@@ -2299,6 +2675,17 @@ body.mobile-menu-open {
     width: calc(100vw - 48px);
     right: -24px;
     transform-origin: top right;
+  }
+}
+
+@keyframes modal-pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -46%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 

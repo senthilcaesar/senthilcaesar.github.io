@@ -180,6 +180,98 @@
           <a class="nav-link" href="#contact">Contact</a>
         </nav>
         <div class="header-right">
+          <!-- Current Date Display & Interactive Calendar Dropdown -->
+          <div class="date-dropdown-container" id="date-dropdown-container">
+            <button
+              class="header-date-badge date-dropdown-btn"
+              id="header-date"
+              type="button"
+              aria-label="Toggle Calendar"
+              aria-haspopup="dialog"
+              aria-expanded="false"
+              title="Click to view calendar"
+            >
+              <svg
+                class="date-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span class="date-text">
+                <span class="date-day"></span><span class="date-sep">, </span><span class="date-month-long"></span><span class="date-month-short"></span> <span class="date-day-num"></span><span class="date-year-sep">, </span><span class="date-year"></span>
+              </span>
+              <svg
+                class="dropdown-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+
+            <!-- Calendar Dropdown Popover -->
+            <div
+              class="calendar-dropdown-menu"
+              id="calendar-menu"
+              role="dialog"
+              aria-label="Interactive Calendar"
+            >
+              <div class="calendar-header">
+                <button
+                  type="button"
+                  class="cal-nav-btn"
+                  id="cal-prev-btn"
+                  aria-label="Previous Month"
+                  title="Previous Month"
+                >
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+                <div class="cal-title" id="cal-month-year">October 2026</div>
+                <button
+                  type="button"
+                  class="cal-nav-btn"
+                  id="cal-next-btn"
+                  aria-label="Next Month"
+                  title="Next Month"
+                >
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+              </div>
+              <div class="cal-weekdays">
+                <span>Su</span>
+                <span>Mo</span>
+                <span>Tu</span>
+                <span>We</span>
+                <span>Th</span>
+                <span>Fr</span>
+                <span>Sa</span>
+              </div>
+              <div class="cal-days-grid" id="cal-days-grid"></div>
+              <div class="cal-footer">
+                <span class="cal-selected-label" id="cal-selected-label">Today</span>
+                <button type="button" class="cal-today-btn" id="cal-today-btn" title="Jump to Today">Today</button>
+              </div>
+            </div>
+          </div>
+
           <!-- Weather Selector Dropdown -->
           <div class="weather-dropdown-container">
             <button
@@ -245,6 +337,7 @@
               </button>
             </div>
           </div>
+          <div class="header-divider" aria-hidden="true"></div>
           <button
             class="icon-btn"
             id="terminal-trigger"
@@ -307,6 +400,33 @@
 
     <!-- Mobile Navigation Menu Overlay -->
     <div id="mobile-nav-overlay" class="mobile-nav-overlay">
+      <div class="mobile-date-container">
+        <time
+          class="mobile-date-badge"
+          id="mobile-date"
+          aria-label="Current Date"
+          title="Current Date"
+        >
+          <svg
+            class="date-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <span class="date-text">
+            <span class="date-day"></span><span class="date-sep">, </span><span class="date-month-long"></span><span class="date-month-short"></span> <span class="date-day-num"></span><span class="date-year-sep">, </span><span class="date-year"></span>
+          </span>
+        </time>
+      </div>
       <nav class="mobile-nav-links">
         <a class="mobile-nav-link active" href="#about">About</a>
         <a class="mobile-nav-link" href="#quick-links">Links</a>
@@ -379,6 +499,33 @@
               >UMass Boston</a
             >
           </p>
+
+          <!-- Mobile-Optimized Sidebar Date Display -->
+          <time
+            class="sidebar-date-badge"
+            id="sidebar-date"
+            aria-label="Current Date"
+            title="Current Date"
+          >
+            <svg
+              class="date-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span class="date-text">
+              <span class="date-day"></span><span class="date-sep">, </span><span class="date-month-long"></span><span class="date-month-short"></span> <span class="date-day-num"></span><span class="date-year-sep">, </span><span class="date-year"></span>
+            </span>
+          </time>
 
           <div class="social-links">
             <a

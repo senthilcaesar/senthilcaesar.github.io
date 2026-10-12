@@ -123,6 +123,8 @@
     e.stopPropagation();
     const parent = weatherBtn.parentElement;
     parent.classList.toggle("open");
+    const dateContainer = document.getElementById("date-dropdown-container");
+    if (dateContainer) dateContainer.classList.remove("open");
   });
 
   document.addEventListener("click", (e) => {

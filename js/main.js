@@ -111,6 +111,259 @@ if (themeToggle) {
         yearSpan.textContent = new Date().getFullYear();
     }
 
+    // Update live Date & Day of Week displays (no time included)
+    function updateDateDisplays() {
+        const now = new Date();
+        const dayOfWeek = now.toLocaleDateString('en-US', { weekday: 'long' });
+        const monthLong = now.toLocaleDateString('en-US', { month: 'long' });
+        const monthShort = now.toLocaleDateString('en-US', { month: 'short' });
+        const dayNum = now.getDate();
+        const year = now.getFullYear();
+
+        const isoDate = `${year}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+        const accessibleLabel = `Today is ${dayOfWeek}, ${monthLong} ${dayNum}, ${year}`;
+
+        const dateBadges = document.querySelectorAll('.header-date-badge, .mobile-date-badge, .sidebar-date-badge');
+        dateBadges.forEach(badge => {
+            if (badge.tagName.toLowerCase() === 'time') {
+                badge.setAttribute('datetime', isoDate);
+            }
+            badge.setAttribute('title', accessibleLabel);
+            badge.setAttribute('aria-label', accessibleLabel);
+
+            const dayEl = badge.querySelector('.date-day');
+            if (dayEl) dayEl.textContent = dayOfWeek;
+
+            const monthLongEl = badge.querySelector('.date-month-long');
+            if (monthLongEl) monthLongEl.textContent = monthLong;
+
+            const monthShortEl = badge.querySelector('.date-month-short');
+            if (monthShortEl) monthShortEl.textContent = monthShort;
+
+            const dayNumEl = badge.querySelector('.date-day-num');
+            if (dayNumEl) dayNumEl.textContent = dayNum;
+
+            const yearEl = badge.querySelector('.date-year');
+            if (yearEl) yearEl.textContent = year;
+        });
+    }
+
+    updateDateDisplays();
+    // Periodic check to update automatically if day changes across midnight
+    setInterval(updateDateDisplays, 60000);
+
+    // --- INTERACTIVE CALENDAR CONTROLLER ---
+    const dateDropdownContainer = document.getElementById("date-dropdown-container");
+    const headerDateBtn = document.getElementById("header-date");
+    const sidebarDateBtn = document.getElementById("sidebar-date");
+    const mobileDateBtn = document.getElementById("mobile-date");
+    const weatherContainer = document.querySelector(".weather-dropdown-container");
+
+    let calViewYear = new Date().getFullYear();
+    let calViewMonth = new Date().getMonth(); // 0-11
+    let calSelectedDate = new Date();
+
+    function renderCalendarGrid(year, month) {
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        const monthYearTitle = document.getElementById("cal-month-year");
+        if (monthYearTitle) {
+            monthYearTitle.textContent = `${monthNames[month]} ${year}`;
+        }
+
+        const grid = document.getElementById("cal-days-grid");
+        if (!grid) return;
+        grid.innerHTML = "";
+
+        const today = new Date();
+        const isCurrentMonth = today.getFullYear() === year && today.getMonth() === month;
+        const todayDate = today.getDate();
+
+        const firstDayIndex = new Date(year, month, 1).getDay(); // 0 = Sun
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        const prevMonthDays = new Date(year, month, 0).getDate();
+
+        // 1. Previous month trailing days
+        for (let i = firstDayIndex - 1; i >= 0; i--) {
+            const dayNum = prevMonthDays - i;
+            const cell = document.createElement("button");
+            cell.type = "button";
+            cell.className = "cal-day-cell cal-day-other";
+            cell.textContent = dayNum;
+            cell.setAttribute("aria-label", `Previous month, day ${dayNum}`);
+            cell.addEventListener("click", (e) => {
+                e.stopPropagation();
+                calViewMonth--;
+                if (calViewMonth < 0) {
+                    calViewMonth = 11;
+                    calViewYear--;
+                }
+                renderCalendarGrid(calViewYear, calViewMonth);
+            });
+            grid.appendChild(cell);
+        }
+
+        // 2. Current month days
+        for (let day = 1; day <= totalDays; day++) {
+            const cell = document.createElement("button");
+            cell.type = "button";
+            cell.className = "cal-day-cell";
+            cell.textContent = day;
+
+            const isToday = isCurrentMonth && day === todayDate;
+            if (isToday) {
+                cell.classList.add("cal-day-today");
+                cell.setAttribute("title", "Today");
+            }
+
+            const isSelected = calSelectedDate &&
+                calSelectedDate.getFullYear() === year &&
+                calSelectedDate.getMonth() === month &&
+                calSelectedDate.getDate() === day;
+            if (isSelected) {
+                cell.classList.add("cal-day-selected");
+            }
+
+            cell.setAttribute("aria-label", `${monthNames[month]} ${day}, ${year}${isToday ? " (Today)" : ""}`);
+
+            cell.addEventListener("click", (e) => {
+                e.stopPropagation();
+                calSelectedDate = new Date(year, month, day);
+                const dayOfWeek = calSelectedDate.toLocaleDateString("en-US", { weekday: "long" });
+                const monthShort = calSelectedDate.toLocaleDateString("en-US", { month: "short" });
+
+                const selectedLabel = document.getElementById("cal-selected-label");
+                if (selectedLabel) {
+                    selectedLabel.textContent = isToday ? `Today: ${dayOfWeek}, ${monthShort} ${day}` : `${dayOfWeek}, ${monthShort} ${day}`;
+                }
+
+                grid.querySelectorAll(".cal-day-selected").forEach(el => el.classList.remove("cal-day-selected"));
+                cell.classList.add("cal-day-selected");
+            });
+
+            grid.appendChild(cell);
+        }
+
+        // 3. Next month leading days (to complete 7-day row)
+        const totalRendered = firstDayIndex + totalDays;
+        const remainder = (7 - (totalRendered % 7)) % 7;
+        for (let day = 1; day <= remainder; day++) {
+            const cell = document.createElement("button");
+            cell.type = "button";
+            cell.className = "cal-day-cell cal-day-other";
+            cell.textContent = day;
+            cell.setAttribute("aria-label", `Next month, day ${day}`);
+            cell.addEventListener("click", (e) => {
+                e.stopPropagation();
+                calViewMonth++;
+                if (calViewMonth > 11) {
+                    calViewMonth = 0;
+                    calViewYear++;
+                }
+                renderCalendarGrid(calViewYear, calViewMonth);
+            });
+            grid.appendChild(cell);
+        }
+    }
+
+    function toggleCalendarDropdown(open) {
+        if (!dateDropdownContainer) return;
+        const shouldOpen = open !== undefined ? open : !dateDropdownContainer.classList.contains("open");
+        if (shouldOpen) {
+            if (weatherContainer) weatherContainer.classList.remove("open");
+            dateDropdownContainer.classList.add("open");
+            if (headerDateBtn) headerDateBtn.setAttribute("aria-expanded", "true");
+            renderCalendarGrid(calViewYear, calViewMonth);
+        } else {
+            dateDropdownContainer.classList.remove("open");
+            if (headerDateBtn) headerDateBtn.setAttribute("aria-expanded", "false");
+        }
+    }
+
+    if (headerDateBtn) {
+        headerDateBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggleCalendarDropdown();
+        });
+    }
+
+    if (sidebarDateBtn) {
+        sidebarDateBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggleCalendarDropdown(true);
+        });
+    }
+
+    if (mobileDateBtn) {
+        mobileDateBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            toggleCalendarDropdown(true);
+        });
+    }
+
+    const prevMonthBtn = document.getElementById("cal-prev-btn");
+    if (prevMonthBtn) {
+        prevMonthBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            calViewMonth--;
+            if (calViewMonth < 0) {
+                calViewMonth = 11;
+                calViewYear--;
+            }
+            renderCalendarGrid(calViewYear, calViewMonth);
+        });
+    }
+
+    const nextMonthBtn = document.getElementById("cal-next-btn");
+    if (nextMonthBtn) {
+        nextMonthBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            calViewMonth++;
+            if (calViewMonth > 11) {
+                calViewMonth = 0;
+                calViewYear++;
+            }
+            renderCalendarGrid(calViewYear, calViewMonth);
+        });
+    }
+
+    const todayJumpBtn = document.getElementById("cal-today-btn");
+    if (todayJumpBtn) {
+        todayJumpBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const now = new Date();
+            calViewYear = now.getFullYear();
+            calViewMonth = now.getMonth();
+            calSelectedDate = now;
+            renderCalendarGrid(calViewYear, calViewMonth);
+            const selectedLabel = document.getElementById("cal-selected-label");
+            if (selectedLabel) {
+                const dayOfWeek = now.toLocaleDateString("en-US", { weekday: "long" });
+                const monthShort = now.toLocaleDateString("en-US", { month: "short" });
+                selectedLabel.textContent = `Today: ${dayOfWeek}, ${monthShort} ${now.getDate()}`;
+            }
+        });
+    }
+
+    // Close calendar on outside click
+    document.addEventListener("click", (e) => {
+        if (dateDropdownContainer && !dateDropdownContainer.contains(e.target)) {
+            toggleCalendarDropdown(false);
+        }
+    });
+
+    // Close calendar on Escape key
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && dateDropdownContainer && dateDropdownContainer.classList.contains("open")) {
+            toggleCalendarDropdown(false);
+        }
+    });
+
+    // Initial render
+    renderCalendarGrid(calViewYear, calViewMonth);
+
     let isScrollingFromClick = false;
     let clickTimeout = null;
 
