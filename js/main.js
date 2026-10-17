@@ -492,7 +492,7 @@ if (themeToggle) {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (isHoverSupported && !prefersReducedMotion) {
-            const maxScale = 1.48;
+            const maxScale = 1.4;
             const range = 160; // range of influence in pixels
 
             dockGrid.addEventListener('mousemove', (e) => {

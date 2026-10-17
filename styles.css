@@ -694,7 +694,7 @@ body.dark-mode .sub-grid .sub-section-title {
   position: relative;
   display: flex;
   align-items: flex-end;
-  gap: 8px;
+  gap: 16px;
   list-style: none;
   padding: 12px 14px;
   margin: 0;
@@ -736,7 +736,7 @@ body.dark-mode .sub-grid .sub-section-title {
   justify-content: flex-end;
   width: 62px;
   /* Extra top area (offset by the negative margin) so the dock-magnified icon,
-     which lifts ~16px and scales to 1.48, stays inside the link's hit region. */
+     which lifts ~16px and scales to 1.4, stays inside the link's hit region. */
   height: 100px;
   margin-top: -26px;
   padding: 0 0 4px;
@@ -860,7 +860,7 @@ body.js-enabled .quick-link-card .card-mark {
 
 /* Focus styles for keyboard navigation */
 .quick-link-card a:focus-visible .card-mark {
-  transform: translateY(-16px) scale(1.48);
+  transform: translateY(-16px) scale(1.4);
   box-shadow:
     0 24px 42px -22px rgba(37, 99, 235, 0.76),
     inset 0 1px 0 rgba(255, 255, 255, 0.82);
@@ -868,7 +868,7 @@ body.js-enabled .quick-link-card .card-mark {
 
 /* Fallback hover styles if JS is not enabled */
 body:not(.js-enabled) .quick-link-card a:hover .card-mark {
-  transform: translateY(-16px) scale(1.48);
+  transform: translateY(-16px) scale(1.4);
   box-shadow:
     0 24px 42px -22px rgba(37, 99, 235, 0.76),
     inset 0 1px 0 rgba(255, 255, 255, 0.82);
