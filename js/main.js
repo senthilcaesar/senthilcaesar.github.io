@@ -540,10 +540,16 @@ if (themeToggle) {
     const greeting = document.getElementById('bio-greeting');
     if (!greeting) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    greeting.classList.add('tw-armed');
 
-    // Wrap every character in a hidden span, keeping the wave/strong markup intact
+    // Wrap every character in a hidden span, keeping the wave markup intact.
+    // The name is skipped: the pen writes it out once typing finishes.
     const chars = [];
-    const walker = document.createTreeWalker(greeting, NodeFilter.SHOW_TEXT);
+    const walker = document.createTreeWalker(greeting, NodeFilter.SHOW_TEXT, {
+        acceptNode: node => node.parentElement.closest('.bio-name')
+            ? NodeFilter.FILTER_REJECT
+            : NodeFilter.FILTER_ACCEPT
+    });
     const textNodes = [];
     while (walker.nextNode()) textNodes.push(walker.currentNode);
 
@@ -571,7 +577,8 @@ if (themeToggle) {
     let i = 0;
     function typeNext() {
         if (i >= chars.length) {
-            setTimeout(() => caret.remove(), 1800);
+            caret.remove();
+            greeting.classList.add('typed');
             return;
         }
         const span = chars[i++];
