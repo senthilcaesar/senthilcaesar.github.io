@@ -538,7 +538,7 @@ body.dark-mode .mountain-background {
 }
 
 .bio-paragraph {
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   line-height: 1.7;
   color: var(--text-color);
   margin: 0 0 16px 0;
@@ -546,6 +546,52 @@ body.dark-mode .mountain-background {
 
 .bio-paragraph strong {
   color: var(--heading-color);
+}
+
+.bio-greeting {
+  display: block;
+  font-family: "Work Sans", sans-serif;
+  font-size: 1.6rem;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.bio-greeting strong {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: #6b8a5e; /* sage green */
+}
+
+body.dark-mode .bio-greeting strong {
+  color: #9cb88f;
+}
+
+@media (max-width: 600px) {
+  .bio-greeting {
+    font-size: 1.35rem;
+  }
+}
+
+/* Typewriter: characters keep their space while hidden, so nothing shifts */
+.tw-char.tw-hidden {
+  visibility: hidden;
+}
+
+.tw-caret {
+  display: inline-block;
+  width: 0;
+  height: 1.1em;
+  margin-right: -2px;
+  border-right: 2px solid currentColor;
+  vertical-align: text-bottom;
+  animation: tw-blink 0.9s step-end infinite;
+}
+
+@keyframes tw-blink {
+  50% {
+    border-color: transparent;
+  }
 }
 
 .bio-paragraph a {

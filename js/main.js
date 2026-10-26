@@ -534,3 +534,53 @@ if (themeToggle) {
         }
     }
 })();
+
+// --- GREETING TYPEWRITER ---
+(function () {
+    const greeting = document.getElementById('bio-greeting');
+    if (!greeting) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    // Wrap every character in a hidden span, keeping the wave/strong markup intact
+    const chars = [];
+    const walker = document.createTreeWalker(greeting, NodeFilter.SHOW_TEXT);
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    textNodes.forEach(node => {
+        const text = node.textContent.replace(/\s+/g, ' ');
+        const frag = document.createDocumentFragment();
+        Array.from(text).forEach(ch => {
+            const span = document.createElement('span');
+            span.className = 'tw-char tw-hidden';
+            span.textContent = ch;
+            frag.appendChild(span);
+            chars.push(span);
+        });
+        node.replaceWith(frag);
+    });
+
+    // Drop the leading space left over from HTML indentation
+    while (chars.length && chars[0].textContent === ' ') chars.shift().remove();
+
+    const caret = document.createElement('span');
+    caret.className = 'tw-caret';
+    caret.setAttribute('aria-hidden', 'true');
+    greeting.setAttribute('aria-label', greeting.textContent.trim());
+
+    let i = 0;
+    function typeNext() {
+        if (i >= chars.length) {
+            setTimeout(() => caret.remove(), 1800);
+            return;
+        }
+        const span = chars[i++];
+        span.classList.remove('tw-hidden');
+        span.after(caret);
+        const delay = span.textContent === ' ' ? 60 : 70 + Math.random() * 70;
+        setTimeout(typeNext, delay);
+    }
+
+    chars[0].before(caret);
+    setTimeout(typeNext, 400);
+})();
