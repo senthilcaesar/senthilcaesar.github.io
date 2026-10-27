@@ -273,6 +273,7 @@
       const commands = [
         "about",
         "skills",
+        "softskills",
         "experience",
         "education",
         "certifications",
@@ -337,7 +338,7 @@
       case "hey":
         return `Hello! How can I help you today? To see the list of available commands type <span class="highlight">help</span>`;
       case "help":
-        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">date</span>           - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">List major project directories</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
+        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">date</span>           - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
       case "education":
         return `<b>Education History:</b><br><br>
 • <span class="highlight">[Jan 2015 - Jan 2019]</span> <b>Master of Science in Computer Science</b>, <span class="error">University of Massachusetts Boston</span> (USA)<br>
@@ -380,6 +381,13 @@
 <tr><td>Data Science & Analytics</td><td><span class="gray">Data Analysis, Statistical Modeling, Hypothesis Testing, Time Series Analysis, Signal Processing, Bayesian Statistics, Pandas, NumPy, Matplotlib/Seaborn, Data Visualization, Linear/Logistic Regression, Probability Theory</span></td></tr>
 <tr><td>Tools & Platforms</td><td><span class="gray">AWS, Docker, Linux, Git/GitHub, CI/CD, GitHub Actions, VS Code, Jupyter, Netlify, PyMuPDF, Pinecone</span></td></tr>
 </table>`;
+      case "softskills":
+        return `<b>Essential Soft Skills:</b><br><br>
+<span class="highlight">1.</span> Asking the Right Questions<br>
+<span class="highlight">2.</span> Clear and Articulate Communication<br>
+<span class="highlight">3.</span> Storytelling and Narrative Building<br>
+<span class="highlight">4.</span> A Research Oriented Mindset<br>
+<span class="highlight">5.</span> Polished Presentation Skills`;
       case "experience": {
         const MONTH_NAMES = [
           "Jan",
@@ -500,10 +508,8 @@ ${rolesHtml}<br><br>
 Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Experience)</span>`;
       }
       case "projects":
-        return `List of Projects (Type <span class="highlight">project [1-3]</span> for details):<br>
-  1. <span class="highlight">AI Agentic Coder</span> - <span class="gray">Autonomous refactoring agent framework</span><br>
-  2. <span class="highlight">Sales Predictor</span>   - <span class="gray">Time-series analytics model</span><br>
-  3. <span class="highlight">ThreeJS Gears</span>    - <span class="gray">WebGL geometric animation engine</span>`;
+        window.open("https://senthilcaesar.github.io/projects/", "_blank", "noopener");
+        return `Opening Projects in a new tab...<br>If it didn't open, visit <a class="link" href="https://senthilcaesar.github.io/projects/" target="_blank">senthilcaesar.github.io/projects/</a>`;
       case "project":
         const num = parts[1];
         if (num === "1") {
@@ -586,7 +592,7 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
       case "blog":
         return `Check out my latest thoughts, guides, and learnings:<br><a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">senthilcaesar.github.io/blogs/</a>`;
       case "links":
-        return `Quick Links:<br>• <a class="link" href="https://senthilcaesar.github.io/portfolio/" target="_blank">Portfolio</a><br>• <a class="link" href="https://senthilcaesar.github.io/projects/" target="_blank">Projects</a><br>• <a class="link" href="https://senthilcaesar.github.io/my-reading/" target="_blank">Readings</a><br>• <a class="link" href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">KnowledgeLab</a><br>• <a class="link" href="https://senthilcaesar.github.io/resources/" target="_blank">URL Library</a><br>• <a class="link" href="https://senthilcaesar.github.io/commands/" target="_blank">Commands</a><br>• <a class="link" href="https://senthilcaesar.github.io/promptshelf/" target="_blank">Prompt Shelf</a><br>• <a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">Blogs</a><br>• <a class="link" href="https://senthilcaesar.github.io/study/" target="_blank">Study</a><br>•<a class="link" href="https://senthilcaesar.github.io/tech-stack/" target="_blank">Tech Stack</a><br>• <a class="link" href="https://senthilcaesar.github.io/wander-list/" target="_blank">Wanderlist</a>`;
+        return `Quick Links:<br>• <a class="link" href="https://senthilcaesar.github.io/portfolio/" target="_blank">Portfolio</a><br>• <a class="link" href="https://senthilcaesar.github.io/projects/" target="_blank">Projects</a><br>• <a class="link" href="https://senthilcaesar.github.io/my-reading/" target="_blank">Readings</a><br>• <a class="link" href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">KnowledgeLab</a><br>• <a class="link" href="https://senthilcaesar.github.io/resources/" target="_blank">URL Library</a><br>• <a class="link" href="https://senthilcaesar.github.io/commands/" target="_blank">Commands</a><br>• <a class="link" href="https://senthilcaesar.github.io/promptshelf/" target="_blank">Prompt Shelf</a><br>• <a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">Blogs</a><br>• <a class="link" href="https://senthilcaesar.github.io/study/" target="_blank">Study</a><br>• <a class="link" href="https://senthilcaesar.github.io/tech-stack/" target="_blank">Tech Stack</a><br>• <a class="link" href="https://senthilcaesar.github.io/wander-list/" target="_blank">Wanderlist</a>`;
       case "contact":
         return `Let's connect!<br>• Email: <span class="highlight">senthilcaesar@gmail.com</span><br>• LinkedIn: <a class="link" href="https://www.linkedin.com/in/senthil-palanivelu-0ba38844/" target="_blank">LinkedIn Profile</a><br>• GitHub: <a class="link" href="https://github.com/SenthilCaesar" target="_blank">GitHub Profile</a><br>• Instagram: <a class="link" href="https://www.instagram.com/senthil_p89" target="_blank">Instagram Profile</a>`;
       case "theme":

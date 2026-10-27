@@ -536,20 +536,16 @@ if (themeToggle) {
 })();
 
 // --- GREETING TYPEWRITER ---
+// Types the greeting one key strike at a time, like an old manual typewriter:
+// uneven rhythm, a pause after words, and slightly misaligned letters.
 (function () {
     const greeting = document.getElementById('bio-greeting');
     if (!greeting) return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    greeting.classList.add('tw-armed');
 
-    // Wrap every character in a hidden span, keeping the wave markup intact.
-    // The name is skipped: the pen writes it out once typing finishes.
+    // Wrap every character in a hidden span, keeping the wave and name markup intact
     const chars = [];
-    const walker = document.createTreeWalker(greeting, NodeFilter.SHOW_TEXT, {
-        acceptNode: node => node.parentElement.closest('.bio-name')
-            ? NodeFilter.FILTER_REJECT
-            : NodeFilter.FILTER_ACCEPT
-    });
+    const walker = document.createTreeWalker(greeting, NodeFilter.SHOW_TEXT);
     const textNodes = [];
     while (walker.nextNode()) textNodes.push(walker.currentNode);
 
@@ -560,14 +556,18 @@ if (themeToggle) {
             const span = document.createElement('span');
             span.className = 'tw-char tw-hidden';
             span.textContent = ch;
+            span.style.setProperty('--tw-r', `${(Math.random() - 0.5) * 3}deg`);
+            span.style.setProperty('--tw-y', `${(Math.random() - 0.5) * 0.06}em`);
+            span.style.setProperty('--tw-ink', (0.82 + Math.random() * 0.18).toFixed(2));
             frag.appendChild(span);
             chars.push(span);
         });
         node.replaceWith(frag);
     });
 
-    // Drop the leading space left over from HTML indentation
+    // Drop leading/trailing spaces left over from HTML indentation
     while (chars.length && chars[0].textContent === ' ') chars.shift().remove();
+    while (chars.length && chars[chars.length - 1].textContent === ' ') chars.pop().remove();
 
     const caret = document.createElement('span');
     caret.className = 'tw-caret';
@@ -577,17 +577,21 @@ if (themeToggle) {
     let i = 0;
     function typeNext() {
         if (i >= chars.length) {
-            caret.remove();
-            greeting.classList.add('typed');
+            setTimeout(() => caret.remove(), 1200);
             return;
         }
         const span = chars[i++];
         span.classList.remove('tw-hidden');
+        span.classList.add('tw-struck');
         span.after(caret);
-        const delay = span.textContent === ' ' ? 60 : 70 + Math.random() * 70;
+
+        // A typist's rhythm: quick strikes, a beat after each word, the odd hesitation
+        let delay = 110 + Math.random() * 110;
+        if (span.textContent === ' ') delay = 260 + Math.random() * 160;
+        else if (Math.random() < 0.08) delay += 250;
         setTimeout(typeNext, delay);
     }
 
     chars[0].before(caret);
-    setTimeout(typeNext, 400);
+    setTimeout(typeNext, 600);
 })();
