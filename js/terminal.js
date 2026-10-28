@@ -715,12 +715,18 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
     window.addEventListener("mouseup", stopResizing, false);
   }
 
-  function startResizing(e) {
-    const newWidth = window.innerWidth - 20 - e.clientX;
-    const newHeight = e.clientY - 75;
+  // The handle sits bottom-left, so resizing keeps the right edge and top
+  // edge fixed wherever the window has been dragged to.
+  function resizeTo(clientX, clientY) {
+    const rect = windowDiv.getBoundingClientRect();
+    const newWidth = rect.right - clientX;
+    const newHeight = clientY - rect.top;
 
     if (newWidth > 260 && newWidth < window.innerWidth * 0.95) {
       windowDiv.style.width = newWidth + "px";
+      if (windowDiv.style.left) {
+        windowDiv.style.left = rect.right - newWidth + "px";
+      }
     }
     if (newHeight > 180 && newHeight < window.innerHeight * 0.85) {
       windowDiv.style.height = newHeight + "px";
@@ -728,6 +734,10 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
     if (typeof window.updateWeatherObstacles === "function") {
       window.updateWeatherObstacles();
     }
+  }
+
+  function startResizing(e) {
+    resizeTo(e.clientX, e.clientY);
   }
 
   function stopResizing(e) {
@@ -746,18 +756,7 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
 
   function startResizingTouch(e) {
     const touch = e.touches[0];
-    const newWidth = window.innerWidth - 20 - touch.clientX;
-    const newHeight = touch.clientY - 75;
-
-    if (newWidth > 260 && newWidth < window.innerWidth * 0.95) {
-      windowDiv.style.width = newWidth + "px";
-    }
-    if (newHeight > 180 && newHeight < window.innerHeight * 0.85) {
-      windowDiv.style.height = newHeight + "px";
-    }
-    if (typeof window.updateWeatherObstacles === "function") {
-      window.updateWeatherObstacles();
-    }
+    resizeTo(touch.clientX, touch.clientY);
   }
 
   function stopResizingTouch(e) {
@@ -767,6 +766,72 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
       window.updateWeatherObstacles();
     }
   }
+
+  // Drag Handler: move the window by its title bar
+  const DRAG_MARGIN = 40; // px of title bar that must stay on screen
+  let dragOffsetX = 0;
+  let dragOffsetY = 0;
+
+  function canDrag() {
+    return (
+      !windowDiv.classList.contains("minimized") &&
+      !windowDiv.classList.contains("maximized") &&
+      !window.matchMedia("(max-width: 576px)").matches
+    );
+  }
+
+  function moveTo(left, top) {
+    const width = windowDiv.offsetWidth;
+    const maxLeft = window.innerWidth - DRAG_MARGIN;
+    const minLeft = DRAG_MARGIN - width;
+    const maxTop = window.innerHeight - header.offsetHeight;
+    windowDiv.style.left = Math.min(Math.max(left, minLeft), maxLeft) + "px";
+    windowDiv.style.top = Math.min(Math.max(top, 0), maxTop) + "px";
+  }
+
+  header.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0 || !canDrag()) return;
+    if (e.target.closest(".terminal-buttons")) return;
+    e.preventDefault();
+
+    const rect = windowDiv.getBoundingClientRect();
+    dragOffsetX = e.clientX - rect.left;
+    dragOffsetY = e.clientY - rect.top;
+    windowDiv.style.right = "auto";
+    windowDiv.style.bottom = "auto";
+    moveTo(rect.left, rect.top);
+
+    header.setPointerCapture(e.pointerId);
+    windowDiv.classList.add("dragging");
+    header.addEventListener("pointermove", onDragMove);
+    header.addEventListener("pointerup", onDragEnd);
+    header.addEventListener("pointercancel", onDragEnd);
+  });
+
+  function onDragMove(e) {
+    moveTo(e.clientX - dragOffsetX, e.clientY - dragOffsetY);
+    if (typeof window.updateWeatherObstacles === "function") {
+      window.updateWeatherObstacles();
+    }
+  }
+
+  function onDragEnd(e) {
+    header.releasePointerCapture(e.pointerId);
+    windowDiv.classList.remove("dragging");
+    header.removeEventListener("pointermove", onDragMove);
+    header.removeEventListener("pointerup", onDragEnd);
+    header.removeEventListener("pointercancel", onDragEnd);
+    if (typeof window.updateWeatherObstacles === "function") {
+      window.updateWeatherObstacles();
+    }
+  }
+
+  // Keep a dragged window reachable when the browser is resized
+  window.addEventListener("resize", () => {
+    if (!windowDiv.style.left) return;
+    const rect = windowDiv.getBoundingClientRect();
+    moveTo(rect.left, rect.top);
+  });
 
   // Glitch Reboot Event Handler
   const rebootBtn = document.getElementById("glitch-reboot-btn");
