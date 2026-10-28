@@ -1608,23 +1608,65 @@ body.dark-mode .contact-pill {
 
 .terminal-resize-handle {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 16px;
-  height: 16px;
-  cursor: nesw-resize;
   z-index: 10000;
+  touch-action: none;
 }
 
-.terminal-resize-handle::after {
+/* Edges: thin strips along each side */
+.terminal-resize-handle[data-dir="n"],
+.terminal-resize-handle[data-dir="s"] {
+  left: 12px;
+  right: 12px;
+  height: 6px;
+  cursor: ns-resize;
+}
+.terminal-resize-handle[data-dir="n"] { top: 0; }
+.terminal-resize-handle[data-dir="s"] { bottom: 0; }
+
+.terminal-resize-handle[data-dir="e"],
+.terminal-resize-handle[data-dir="w"] {
+  top: 12px;
+  bottom: 12px;
+  width: 6px;
+  cursor: ew-resize;
+}
+.terminal-resize-handle[data-dir="e"] { right: 0; }
+.terminal-resize-handle[data-dir="w"] { left: 0; }
+
+/* Corners: larger squares so they are easy to grab */
+.terminal-resize-handle[data-dir="ne"],
+.terminal-resize-handle[data-dir="nw"],
+.terminal-resize-handle[data-dir="se"],
+.terminal-resize-handle[data-dir="sw"] {
+  width: 16px;
+  height: 16px;
+}
+.terminal-resize-handle[data-dir="ne"] { top: 0; right: 0; cursor: nesw-resize; }
+.terminal-resize-handle[data-dir="nw"] { top: 0; left: 0; cursor: nwse-resize; }
+.terminal-resize-handle[data-dir="se"] { bottom: 0; right: 0; cursor: nwse-resize; }
+.terminal-resize-handle[data-dir="sw"] { bottom: 0; left: 0; cursor: nesw-resize; }
+
+/* Visible grips on the two bottom corners */
+.terminal-resize-handle[data-dir="sw"]::after,
+.terminal-resize-handle[data-dir="se"]::after {
   content: "";
   position: absolute;
-  left: 3px;
   bottom: 3px;
   width: 6px;
   height: 6px;
-  border-left: 1.5px solid #0078d4;
   border-bottom: 1.5px solid #0078d4;
+}
+.terminal-resize-handle[data-dir="sw"]::after {
+  left: 3px;
+  border-left: 1.5px solid #0078d4;
+}
+.terminal-resize-handle[data-dir="se"]::after {
+  right: 3px;
+  border-right: 1.5px solid #0078d4;
+}
+
+#terminal-window.resizing {
+  user-select: none;
 }
 
 #terminal-window.hidden {
@@ -1646,7 +1688,8 @@ body.dark-mode .contact-pill {
 }
 
 #terminal-window.minimized .terminal-body,
-#terminal-window.minimized .terminal-resize-handle {
+#terminal-window.minimized .terminal-resize-handle,
+#terminal-window.maximized .terminal-resize-handle {
   display: none !important;
 }
 
@@ -1914,8 +1957,7 @@ body.dark-mode #terminal-window {
 }
 
 body.dark-mode .terminal-resize-handle::after {
-  border-left-color: rgba(0, 120, 212, 0.6);
-  border-bottom-color: rgba(0, 120, 212, 0.6);
+  border-color: rgba(0, 120, 212, 0.6);
 }
 
 body.dark-mode #terminal-window.minimized {

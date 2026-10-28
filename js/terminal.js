@@ -703,65 +703,80 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
     }
   }
 
-  // Resize Handler
-  const resizeHandle = windowDiv.querySelector(".terminal-resize-handle");
+  // Resize Handler: every edge and corner can be dragged, like a desktop window
+  const MIN_WIDTH = 260;
+  const MIN_HEIGHT = 180;
+  let resizeDir = "";
+  let resizeStart = null;
 
-  resizeHandle.addEventListener("mousedown", initResize, false);
-  resizeHandle.addEventListener("touchstart", initResizeTouch, false);
+  windowDiv.querySelectorAll(".terminal-resize-handle").forEach((handle) => {
+    handle.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      e.stopPropagation();
 
-  function initResize(e) {
-    e.preventDefault();
-    window.addEventListener("mousemove", startResizing, false);
-    window.addEventListener("mouseup", stopResizing, false);
-  }
+      // Switch to explicit left/top/size so any edge can move independently
+      const rect = windowDiv.getBoundingClientRect();
+      Object.assign(windowDiv.style, {
+        left: rect.left + "px",
+        top: rect.top + "px",
+        right: "auto",
+        bottom: "auto",
+        width: rect.width + "px",
+        height: rect.height + "px",
+        maxWidth: "none",
+        maxHeight: "none",
+      });
 
-  // The handle sits bottom-left, so resizing keeps the right edge and top
-  // edge fixed wherever the window has been dragged to.
-  function resizeTo(clientX, clientY) {
-    const rect = windowDiv.getBoundingClientRect();
-    const newWidth = rect.right - clientX;
-    const newHeight = clientY - rect.top;
+      resizeDir = handle.dataset.dir;
+      resizeStart = { x: e.clientX, y: e.clientY, rect };
+      handle.setPointerCapture(e.pointerId);
+      windowDiv.classList.add("resizing");
+      handle.addEventListener("pointermove", onResizeMove);
+      handle.addEventListener("pointerup", onResizeEnd);
+      handle.addEventListener("pointercancel", onResizeEnd);
+    });
+  });
 
-    if (newWidth > 260 && newWidth < window.innerWidth * 0.95) {
-      windowDiv.style.width = newWidth + "px";
-      if (windowDiv.style.left) {
-        windowDiv.style.left = rect.right - newWidth + "px";
-      }
+  function onResizeMove(e) {
+    const { rect } = resizeStart;
+    const dx = e.clientX - resizeStart.x;
+    const dy = e.clientY - resizeStart.y;
+    let { left, top, right, bottom } = rect;
+
+    // Move only the edges this handle owns, clamped to the viewport and
+    // stopping at the minimum size rather than ignoring the movement
+    if (resizeDir.includes("w")) {
+      left = Math.min(Math.max(rect.left + dx, 0), right - MIN_WIDTH);
     }
-    if (newHeight > 180 && newHeight < window.innerHeight * 0.85) {
-      windowDiv.style.height = newHeight + "px";
+    if (resizeDir.includes("e")) {
+      right = Math.max(Math.min(rect.right + dx, window.innerWidth), left + MIN_WIDTH);
     }
+    if (resizeDir.includes("n")) {
+      top = Math.min(Math.max(rect.top + dy, 0), bottom - MIN_HEIGHT);
+    }
+    if (resizeDir.includes("s")) {
+      bottom = Math.max(Math.min(rect.bottom + dy, window.innerHeight), top + MIN_HEIGHT);
+    }
+
+    Object.assign(windowDiv.style, {
+      left: left + "px",
+      top: top + "px",
+      width: right - left + "px",
+      height: bottom - top + "px",
+    });
     if (typeof window.updateWeatherObstacles === "function") {
       window.updateWeatherObstacles();
     }
   }
 
-  function startResizing(e) {
-    resizeTo(e.clientX, e.clientY);
-  }
-
-  function stopResizing(e) {
-    window.removeEventListener("mousemove", startResizing, false);
-    window.removeEventListener("mouseup", stopResizing, false);
-    if (typeof window.updateWeatherObstacles === "function") {
-      window.updateWeatherObstacles();
-    }
-  }
-
-  function initResizeTouch(e) {
-    e.preventDefault();
-    window.addEventListener("touchmove", startResizingTouch, false);
-    window.addEventListener("touchend", stopResizingTouch, false);
-  }
-
-  function startResizingTouch(e) {
-    const touch = e.touches[0];
-    resizeTo(touch.clientX, touch.clientY);
-  }
-
-  function stopResizingTouch(e) {
-    window.removeEventListener("touchmove", startResizingTouch, false);
-    window.removeEventListener("touchend", stopResizingTouch, false);
+  function onResizeEnd(e) {
+    const handle = e.currentTarget;
+    handle.releasePointerCapture(e.pointerId);
+    windowDiv.classList.remove("resizing");
+    handle.removeEventListener("pointermove", onResizeMove);
+    handle.removeEventListener("pointerup", onResizeEnd);
+    handle.removeEventListener("pointercancel", onResizeEnd);
     if (typeof window.updateWeatherObstacles === "function") {
       window.updateWeatherObstacles();
     }
