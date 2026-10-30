@@ -272,6 +272,7 @@
       if (!partial || partial.includes(" ")) return;
       const commands = [
         "about",
+        "identity",
         "skills",
         "softskills",
         "experience",
@@ -338,7 +339,7 @@
       case "hey":
         return `Hello! How can I help you today? To see the list of available commands type <span class="highlight">help</span>`;
       case "help":
-        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">date</span>           - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
+        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">identity</span>       - <span class="gray">Who I am</span><br>• <span class="highlight">date</span>          - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
       case "education":
         return `<b>Education History:</b><br><br>
 • <span class="highlight">[Jan 2015 - Jan 2019]</span> <b>Master of Science in Computer Science</b>, <span class="error">University of Massachusetts Boston</span> (USA)<br>
@@ -579,6 +580,8 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
         return `<span class="error">Unknown weather mode: "${modeArg}". Type "weather" to see options.</span>`;
       case "about":
         return `<span class="gray">I'm Senthil Palanivelu, a CS graduate from UMass Boston with a strong background in Data Analytics, AI Engineering, and Machine Learning. I build tools that apply AI and advanced analytics to solve real-world problems.</span>`;
+      case "identity":
+        return `<span class="gray">My identity is not defined by a single attribute or characteristic. It is the unique manifestation of all my accumulated memories, experiences, lessons, and perspectives, woven together over time to shape who I am today.</span>`;
       case "date":
       case "day":
       case "today": {
