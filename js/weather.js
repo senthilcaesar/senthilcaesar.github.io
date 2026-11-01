@@ -133,6 +133,12 @@
     }
   });
 
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && weatherBtn.parentElement.classList.contains("open")) {
+      weatherBtn.parentElement.classList.remove("open");
+    }
+  });
+
   weatherOptions.forEach((opt) => {
     opt.addEventListener("click", (e) => {
       const selected = opt.getAttribute("data-weather");

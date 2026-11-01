@@ -3659,14 +3659,15 @@ body.mobile-menu-open {
     display: none !important;
   }
 
-  /* Centered 2-column mobile weather selector with backdrop */
+  /* Centered 2-column mobile weather selector */
   .weather-dropdown-menu {
+    display: none !important;
     position: fixed !important;
     top: 72px !important;
     left: 16px !important;
     right: 16px !important;
     width: auto !important;
-    max-width: 340px !important;
+    max-width: 320px !important;
     margin: 0 auto !important;
     max-height: calc(100dvh - 90px);
     overflow-y: auto;
@@ -3675,14 +3676,14 @@ body.mobile-menu-open {
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
     border-radius: 18px;
     padding: 10px;
-    display: grid !important;
     grid-template-columns: 1fr 1fr;
     gap: 6px;
     transform-origin: top center;
   }
 
   .weather-dropdown-container.open .weather-dropdown-menu {
-    transform: translateY(0) scale(1) !important;
+    display: grid !important;
+    animation: dropdown-fade-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .weather-option {
@@ -3691,17 +3692,6 @@ body.mobile-menu-open {
     gap: 8px;
     border-radius: 10px;
     min-height: 42px;
-  }
-
-  .weather-dropdown-container.open::before,
-  .date-dropdown-container.open::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    z-index: 9999;
   }
 }
 
