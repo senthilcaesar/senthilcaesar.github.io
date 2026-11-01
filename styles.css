@@ -2504,6 +2504,98 @@ body.dark-mode .terminal-buttons .btn.maximize {
   caret-color: #059669;
 }
 
+/* Terminal Backdrop for Mobile & Focused Modals */
+.terminal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9998;
+  opacity: 1;
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+.terminal-backdrop.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Dedicated Mobile Close Button in Terminal Header */
+.terminal-mobile-close-btn {
+  display: none;
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  color: #64748b;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+  margin-left: auto;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  touch-action: manipulation;
+}
+
+.terminal-mobile-close-btn:hover,
+.terminal-mobile-close-btn:active {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #0f172a;
+}
+
+/* Quick Commands Chips Bar */
+.terminal-quick-chips {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 8px 2px 8px;
+  margin-top: auto;
+  margin-bottom: 6px;
+  border-top: 1px dashed rgba(148, 163, 184, 0.28);
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+
+.terminal-quick-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.term-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.76rem;
+  font-weight: 600;
+  border-radius: 7px;
+  background: rgba(0, 120, 212, 0.08);
+  border: 1px solid rgba(0, 120, 212, 0.28);
+  color: #0284c7;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+  min-height: 28px;
+}
+
+.term-chip:hover,
+.term-chip:active {
+  background: rgba(0, 120, 212, 0.18);
+  border-color: #0284c7;
+  color: #0369a1;
+  transform: translateY(-1px);
+}
+
 /* Dark Mode Terminal Theme Override */
 body.dark-mode #terminal-window {
   background: rgba(15, 15, 20, 0.95);
@@ -2512,6 +2604,33 @@ body.dark-mode #terminal-window {
     0 10px 40px rgba(0, 0, 0, 0.5),
     0 0 20px rgba(0, 120, 212, 0.35);
   color: #a6e3a1;
+}
+
+body.dark-mode .terminal-mobile-close-btn {
+  color: #94a3b8;
+}
+
+body.dark-mode .terminal-mobile-close-btn:hover,
+body.dark-mode .terminal-mobile-close-btn:active {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+}
+
+body.dark-mode .terminal-quick-chips {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+body.dark-mode .term-chip {
+  background: rgba(166, 227, 161, 0.08);
+  border-color: rgba(166, 227, 161, 0.25);
+  color: #a6e3a1;
+}
+
+body.dark-mode .term-chip:hover,
+body.dark-mode .term-chip:active {
+  background: rgba(166, 227, 161, 0.2);
+  border-color: #a6e3a1;
+  color: #50fa7b;
 }
 
 body.dark-mode .terminal-resize-handle::after {
@@ -2598,16 +2717,6 @@ body.dark-mode .command-text {
 body.dark-mode #terminal-input {
   color: #ffffff;
   caret-color: #00ff66;
-}
-
-@media (max-width: 920px) {
-  #terminal-window {
-    width: calc(100vw - 40px);
-    right: 20px;
-    left: 20px;
-    top: 80px;
-    bottom: auto;
-  }
 }
 
 @media (max-width: 768px) {
@@ -2967,6 +3076,7 @@ body.dark-mode #terminal-input {
 }
 
 .weather-dropdown-btn {
+  position: relative;
   background: none;
   border: 1px solid var(--border-color);
   padding: 5px 12px;
@@ -3328,6 +3438,7 @@ body.dark-mode .weather-cloud-item {
 
 /* Mobile Menu Toggle Button */
 .mobile-menu-toggle {
+  position: relative;
   display: none;
   background: none;
   border: none;
@@ -3337,11 +3448,14 @@ body.dark-mode .weather-cloud-item {
   border-radius: 50%;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
   transition:
     background-color var(--transition-speed),
     color var(--transition-speed);
+  touch-action: manipulation;
 }
 
 .mobile-menu-toggle:hover {
@@ -3362,9 +3476,16 @@ body.dark-mode .weather-cloud-item {
 
 /* Touch Hit Areas for Mobile & Tablet */
 @media (hover: none) or (max-width: 768px) {
-  .icon-btn::after,
-  .mobile-menu-toggle::after,
-  .weather-dropdown-btn::after,
+  .icon-btn,
+  .mobile-menu-toggle {
+    min-width: 38px;
+    min-height: 38px;
+    width: 38px;
+    height: 38px;
+    position: relative;
+    touch-action: manipulation;
+  }
+
   .back-to-top::after {
     content: "";
     position: absolute;
@@ -3486,6 +3607,25 @@ body.dark-mode .weather-cloud-item {
   gap: 10px;
   padding-top: 10px;
   border-top: 1px solid color-mix(in srgb, var(--border-color) 60%, transparent);
+}
+
+.mobile-theme-action {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.mobile-theme-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-theme-icon svg {
+  width: 18px;
+  height: 18px;
 }
 
 .mobile-action-btn {
@@ -3706,11 +3846,50 @@ body.mobile-menu-open {
   }
 }
 
-@media (max-width: 576px) {
+/* Tablet Terminal & Modals (769px to 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
   #terminal-window {
+    width: min(740px, calc(100vw - 48px)) !important;
+    max-width: calc(100vw - 48px) !important;
+    height: min(540px, calc(100dvh - 120px)) !important;
+    max-height: calc(100dvh - 110px) !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    top: 80px !important;
+    border-radius: 16px !important;
+  }
+
+  #terminal-window.hidden {
+    transform: translateX(-50%) translateY(-20px) scale(0.95) !important;
+    opacity: 0 !important;
+  }
+
+  .terminal-buttons {
+    gap: 9px;
+  }
+
+  .terminal-buttons .btn {
+    width: 16px;
+    height: 16px;
+    position: relative;
+  }
+
+  .terminal-buttons .btn::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+  }
+}
+
+/* Mobile & Touch Terminal Optimization (≤ 768px and landscape phones) */
+@media (max-width: 768px), (max-height: 520px) and (orientation: landscape) {
+  #terminal-window {
+    position: fixed !important;
     width: 100% !important;
-    height: min(72dvh, 520px) !important;
-    max-height: 85dvh !important;
+    max-width: 100% !important;
+    height: min(76dvh, 560px) !important;
+    max-height: 88dvh !important;
     left: 0 !important;
     right: 0 !important;
     bottom: 0 !important;
@@ -3721,15 +3900,21 @@ body.mobile-menu-open {
     border-right: none !important;
     box-shadow:
       0 -10px 40px rgba(0, 0, 0, 0.65),
-      0 0 20px rgba(0, 255, 102, 0.15) !important;
+      0 0 20px rgba(0, 120, 212, 0.25) !important;
     transform-origin: bottom center !important;
-    padding-bottom: env(safe-area-inset-bottom, 12px);
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 12px));
+    z-index: 10001 !important;
   }
 
   #terminal-window.hidden {
-    transform: translateY(100%) scale(1) !important;
+    transform: translateY(100%) !important;
     opacity: 0 !important;
-    pointer-events: none;
+    pointer-events: none !important;
+  }
+
+  #terminal-window:not(.hidden) {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
   }
 
   .terminal-resize-handle {
@@ -3739,6 +3924,9 @@ body.mobile-menu-open {
   .terminal-header {
     position: relative;
     padding: 14px 16px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   /* Tactile drag indicator pill */
@@ -3748,28 +3936,71 @@ body.mobile-menu-open {
     top: 6px;
     left: 50%;
     transform: translateX(-50%);
-    width: 36px;
+    width: 38px;
     height: 4px;
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.28);
+    background: rgba(148, 163, 184, 0.45);
   }
 
-  .terminal-buttons .btn {
-    width: 14px;
-    height: 14px;
+  /* On phones, hide minimize/maximize and show clean mobile close button */
+  .terminal-buttons .btn.minimize,
+  .terminal-buttons .btn.maximize {
+    display: none !important;
+  }
+
+  .terminal-buttons .btn.close {
+    width: 22px;
+    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
   }
 
-  .terminal-buttons .btn::after {
+  .terminal-buttons .btn.close::after {
     content: "";
     position: absolute;
-    inset: -12px;
+    inset: -8px;
+  }
+
+  .terminal-mobile-close-btn {
+    display: flex !important;
+  }
+
+  .terminal-title {
+    font-size: 13px;
+  }
+
+  .terminal-body {
+    padding: 12px 16px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
 
   .terminal-output {
-    font-size: 0.82rem;
-    line-height: 1.45;
+    font-size: 0.84rem;
+    line-height: 1.5;
     -webkit-overflow-scrolling: touch;
+  }
+
+  #terminal-input {
+    font-size: 16px !important; /* Prevents iOS auto-zoom */
+  }
+}
+
+@media (max-height: 440px) and (orientation: landscape) {
+  #terminal-window {
+    height: 94dvh !important;
+    max-height: 94dvh !important;
+  }
+
+  .terminal-quick-chips {
+    padding: 4px 0;
+    margin-bottom: 3px;
+  }
+
+  .terminal-header {
+    padding: 8px 14px 6px;
   }
 }
 

@@ -2,13 +2,16 @@
   const trigger = document.getElementById("terminal-trigger");
   const windowDiv = document.getElementById("terminal-window");
   if (!trigger || !windowDiv) return;
+  const backdrop = document.getElementById("terminal-backdrop");
   const closeBtn = windowDiv.querySelector(".btn.close");
+  const mobileCloseBtn = windowDiv.querySelector(".terminal-mobile-close-btn");
   const minimizeBtn = windowDiv.querySelector(".btn.minimize");
   const maximizeBtn = windowDiv.querySelector(".btn.maximize");
   const header = windowDiv.querySelector(".terminal-header");
   const input = document.getElementById("terminal-input");
   const outputContainer = windowDiv.querySelector(".terminal-output");
   const body = document.getElementById("terminal-body");
+  const chips = windowDiv.querySelectorAll(".term-chip");
 
   const commandHistory = [];
   let historyIndex = -1;
@@ -154,33 +157,115 @@
     typeNext();
   }
 
-  trigger.addEventListener("click", (e) => {
-    e.stopPropagation();
-    windowDiv.classList.toggle("hidden");
+  function openTerminal() {
+    windowDiv.classList.remove("hidden");
+    if (backdrop) backdrop.classList.remove("hidden");
     if (typeof window.updateWeatherObstacles === "function") {
       window.updateWeatherObstacles();
     }
-    if (!windowDiv.classList.contains("hidden")) {
+    if (window.innerWidth > 768) {
       input.focus();
-      if (!hasTypedWelcome) {
-        hasTypedWelcome = true;
-        const welcomeHTML = `Welcome to Senthil's interactive console v1.0.0.<br>Type <span class="highlight">help</span> to see a list of commands.<br><br>`;
-        outputContainer.innerHTML = "";
-        isTyping = true;
-        typewrite(outputContainer, welcomeHTML, TYPING_SPEED, () => {
-          isTyping = false;
+    }
+    if (!hasTypedWelcome) {
+      hasTypedWelcome = true;
+      const welcomeHTML = `Welcome to Senthil's interactive console v1.0.0.<br>Type <span class="highlight">help</span> to see a list of commands.<br><br>`;
+      outputContainer.innerHTML = "";
+      isTyping = true;
+      typewrite(outputContainer, welcomeHTML, TYPING_SPEED, () => {
+        isTyping = false;
+        if (window.innerWidth > 768) {
           input.focus();
-        });
-      }
+        }
+      });
+    }
+  }
+
+  function closeTerminal() {
+    windowDiv.classList.add("hidden");
+    windowDiv.classList.remove("minimized", "maximized");
+    if (backdrop) backdrop.classList.add("hidden");
+    if (typeof window.updateWeatherObstacles === "function") {
+      window.updateWeatherObstacles();
+    }
+  }
+
+  trigger.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (windowDiv.classList.contains("hidden")) {
+      openTerminal();
+    } else {
+      closeTerminal();
     }
   });
 
-  closeBtn.addEventListener("click", () => {
-    windowDiv.classList.add("hidden");
-    windowDiv.classList.remove("minimized", "maximized");
-    if (typeof window.updateWeatherObstacles === "function") {
-      window.updateWeatherObstacles();
+  closeBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closeTerminal();
+  });
+
+  if (mobileCloseBtn) {
+    mobileCloseBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeTerminal();
+    });
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeTerminal();
+    });
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !windowDiv.classList.contains("hidden")) {
+      closeTerminal();
     }
+  });
+
+  // Quick Command Chips
+  chips.forEach((chip) => {
+    chip.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const cmdVal = chip.getAttribute("data-cmd");
+      if (!cmdVal) return;
+
+      if (cmdVal === "exit") {
+        closeTerminal();
+        return;
+      }
+
+      if (cmdVal === "clear") {
+        outputContainer.innerHTML = "";
+        return;
+      }
+
+      if (isTyping) return;
+
+      const userLine = document.createElement("div");
+      userLine.innerHTML = `<span class="prompt">senthil:~$</span> <span class="command-text">${cmdVal}</span>`;
+      outputContainer.appendChild(userLine);
+
+      const result = executeCommand(cmdVal);
+      if (result) {
+        const resLine = document.createElement("div");
+        const fullWidthCmds = ["experience", "education", "certifications"];
+        if (fullWidthCmds.includes(cmdVal.toLowerCase().split(" ")[0])) {
+          resLine.classList.add("full-width");
+        }
+        outputContainer.appendChild(resLine);
+
+        isTyping = true;
+        typewrite(resLine, result, TYPING_SPEED, () => {
+          isTyping = false;
+        });
+      }
+
+      setTimeout(() => {
+        outputContainer.scrollTop = outputContainer.scrollHeight;
+        body.scrollTop = body.scrollHeight;
+      }, 20);
+    });
   });
 
   minimizeBtn.addEventListener("click", (e) => {
@@ -623,6 +708,11 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
       case "contact":
         return `Let's connect!<br>• Email: <span class="highlight">senthilcaesar@gmail.com</span><br>• LinkedIn: <a class="link" href="https://www.linkedin.com/in/senthil-palanivelu-0ba38844/" target="_blank">LinkedIn Profile</a><br>• GitHub: <a class="link" href="https://github.com/SenthilCaesar" target="_blank">GitHub Profile</a><br>• Instagram: <a class="link" href="https://www.instagram.com/senthil_p89" target="_blank">Instagram Profile</a>`;
       case "theme":
+        if (typeof window.toggleTheme === "function") {
+          window.toggleTheme();
+          const isDark = document.body.classList.contains("dark-mode");
+          return `<span class="success">Theme toggled to ${isDark ? "Dark Mode" : "Light Mode"}!</span>`;
+        }
         const toggle = document.getElementById("theme-toggle");
         if (toggle) {
           toggle.click();
@@ -635,11 +725,7 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
         return "";
       case "exit":
         setTimeout(() => {
-          windowDiv.classList.add("hidden");
-          windowDiv.classList.remove("minimized", "maximized");
-          if (typeof window.updateWeatherObstacles === "function") {
-            window.updateWeatherObstacles();
-          }
+          closeTerminal();
         }, 300);
         return `<span class="success">Goodbye, Senthil out. 👋</span>`;
       case "matrix":
@@ -818,7 +904,8 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
     return (
       !windowDiv.classList.contains("minimized") &&
       !windowDiv.classList.contains("maximized") &&
-      !window.matchMedia("(max-width: 576px)").matches
+      window.innerWidth > 768 &&
+      !window.matchMedia("(hover: none)").matches
     );
   }
 
@@ -873,6 +960,29 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
     if (!windowDiv.style.left) return;
     const rect = windowDiv.getBoundingClientRect();
     moveTo(rect.left, rect.top);
+  });
+
+  // Mobile virtual keyboard adaptation
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", () => {
+      if (!windowDiv.classList.contains("hidden") && window.innerWidth <= 768) {
+        const offset = window.innerHeight - window.visualViewport.height;
+        if (offset > 60) {
+          windowDiv.style.bottom = `${offset}px`;
+          body.scrollTop = body.scrollHeight;
+        } else {
+          windowDiv.style.bottom = "0px";
+        }
+      }
+    });
+  }
+
+  // Auto scroll into view when input receives focus on mobile/tablet
+  input.addEventListener("focus", () => {
+    setTimeout(() => {
+      outputContainer.scrollTop = outputContainer.scrollHeight;
+      body.scrollTop = body.scrollHeight;
+    }, 280);
   });
 
   // Glitch Reboot Event Handler

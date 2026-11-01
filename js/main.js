@@ -1,23 +1,57 @@
 // --- THEME CONTROLLER ---
 const themeToggle = document.getElementById('theme-toggle');
+const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
 const body = document.body;
 
-function updateThemeIcon(isDark) {
-    if (isDark) {
-        themeToggle.innerHTML = `
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="width: 20px; height: 20px;">
-                <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zM7.05 18.01c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06z"/>
-            </svg>
-        `;
-    } else {
-        themeToggle.innerHTML = `
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="width: 20px; height: 20px;">
-                <path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-8.9 8.2-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-2.8 1.9-4.3 5.3-3.6 8.7.7 3.5 3.6 6.1 7.2 6.4 1 .1 1.9-.2 2.7-.8.4-.3.9-.3 1.2.1.3.4.3.9 0 1.2-1.7 1.4-3.9 2.1-6.2 2.1z"/>
-            </svg>
-        `;
+function updateThemeUI(isDark) {
+    if (themeToggle) {
+        if (isDark) {
+            themeToggle.innerHTML = `
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="width: 20px; height: 20px;">
+                    <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zM7.05 18.01c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06z"/>
+                </svg>
+            `;
+            themeToggle.setAttribute('aria-label', 'Switch to Light Mode');
+            themeToggle.setAttribute('data-tooltip', 'Light Mode');
+        } else {
+            themeToggle.innerHTML = `
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="width: 20px; height: 20px;">
+                    <path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-8.9 8.2-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-2.8 1.9-4.3 5.3-3.6 8.7.7 3.5 3.6 6.1 7.2 6.4 1 .1 1.9-.2 2.7-.8.4-.3.9-.3 1.2.1.3.4.3.9 0 1.2-1.7 1.4-3.9 2.1-6.2 2.1z"/>
+                </svg>
+            `;
+            themeToggle.setAttribute('aria-label', 'Switch to Dark Mode');
+            themeToggle.setAttribute('data-tooltip', 'Dark Mode');
+        }
+    }
+
+    const mToggle = mobileThemeToggle || document.getElementById('mobile-theme-toggle');
+    if (mToggle) {
+        const iconContainer = mToggle.querySelector('.mobile-theme-icon');
+        const textContainer = mToggle.querySelector('.mobile-theme-text');
+        if (isDark) {
+            if (iconContainer) {
+                iconContainer.innerHTML = `
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="width: 18px; height: 18px;">
+                        <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zM7.05 18.01c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06z"/>
+                    </svg>
+                `;
+            }
+            if (textContainer) textContainer.textContent = 'Light Mode';
+            mToggle.setAttribute('aria-label', 'Switch to Light Mode');
+        } else {
+            if (iconContainer) {
+                iconContainer.innerHTML = `
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="width: 18px; height: 18px;">
+                        <path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.8 3.5-8.9 8.2-9.8.5-.1 1 .2 1.2.7.2.5 0 1.1-.4 1.4-2.8 1.9-4.3 5.3-3.6 8.7.7 3.5 3.6 6.1 7.2 6.4 1 .1 1.9-.2 2.7-.8.4-.3.9-.3 1.2.1.3.4.3.9 0 1.2-1.7 1.4-3.9 2.1-6.2 2.1z"/>
+                    </svg>
+                `;
+            }
+            if (textContainer) textContainer.textContent = 'Dark Mode';
+            mToggle.setAttribute('aria-label', 'Switch to Dark Mode');
+        }
     }
 }
-window.updateThemeIcon = updateThemeIcon;
+window.updateThemeIcon = updateThemeUI;
 
 // Safe localStorage helper
 function safeStorageGet(key) {
@@ -34,43 +68,54 @@ function safeStorageSet(key, value) {
     } catch (e) {}
 }
 
-// Check for saved theme preference
+function applyTheme(isDark, saveManual = true) {
+    body.classList.toggle('dark-mode', isDark);
+    document.documentElement.classList.toggle('dark-mode', isDark);
+    updateThemeUI(isDark);
+
+    if (saveManual) {
+        safeStorageSet('theme', isDark ? 'dark' : 'light');
+        safeStorageSet('themeManual', 'true');
+    }
+
+    if (typeof window.updateGearTheme === 'function') {
+        window.updateGearTheme(isDark);
+    }
+    if (typeof window.updateWeatherObstacles === 'function') {
+        window.updateWeatherObstacles();
+    }
+}
+window.setTheme = applyTheme;
+window.toggleTheme = () => applyTheme(!body.classList.contains('dark-mode'), true);
+
+// Initialize theme state
 const savedTheme = safeStorageGet('theme');
 const themeManual = safeStorageGet('themeManual');
 
 if (themeManual === 'true' && savedTheme) {
-    if (savedTheme === 'dark') {
-        body.classList.add('dark-mode');
-        updateThemeIcon(true);
-    } else {
-        body.classList.remove('dark-mode');
-        updateThemeIcon(false);
-    }
+    applyTheme(savedTheme === 'dark', false);
 } else {
-    // If no manual preference, default based on time of day (night = dark mode)
     const hour = new Date().getHours();
     const isNight = hour < 6 || hour >= 18;
-    if (isNight) {
-        body.classList.add('dark-mode');
-        updateThemeIcon(true);
-    } else {
-        body.classList.remove('dark-mode');
-        updateThemeIcon(false);
-    }
+    applyTheme(isNight, false);
 }
 
 if (themeToggle) {
-    themeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-mode');
-        const isDark = body.classList.contains('dark-mode');
-        updateThemeIcon(isDark);
-        safeStorageSet('theme', isDark ? 'dark' : 'light');
-        safeStorageSet('themeManual', 'true');
+    themeToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentlyDark = body.classList.contains('dark-mode');
+        applyTheme(!currentlyDark, true);
+    });
+}
 
-        // Trigger gear theme update if function exists
-        if (typeof window.updateGearTheme === 'function') {
-            window.updateGearTheme(isDark);
-        }
+const mobileThemeBtn = document.getElementById('mobile-theme-toggle');
+if (mobileThemeBtn) {
+    mobileThemeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const currentlyDark = body.classList.contains('dark-mode');
+        applyTheme(!currentlyDark, true);
     });
 }
 

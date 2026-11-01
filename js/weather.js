@@ -229,26 +229,24 @@
       const isDarkCurrent = document.body.classList.contains("dark-mode");
 
       if (shouldBeDark !== isDarkCurrent) {
-        if (shouldBeDark) {
-          document.body.classList.add("dark-mode");
-          try {
-            localStorage.setItem("theme", "dark");
-          } catch (e) {}
+        if (typeof window.setTheme === "function") {
+          window.setTheme(shouldBeDark, false);
         } else {
-          document.body.classList.remove("dark-mode");
+          document.body.classList.toggle("dark-mode", shouldBeDark);
+          document.documentElement.classList.toggle("dark-mode", shouldBeDark);
           try {
-            localStorage.setItem("theme", "light");
+            localStorage.setItem("theme", shouldBeDark ? "dark" : "light");
           } catch (e) {}
-        }
 
-        // Update theme button icon
-        if (typeof window.updateThemeIcon === "function") {
-          window.updateThemeIcon(shouldBeDark);
-        }
+          // Update theme button icon
+          if (typeof window.updateThemeIcon === "function") {
+            window.updateThemeIcon(shouldBeDark);
+          }
 
-        // Update three.js gears
-        if (typeof window.updateGearTheme === "function") {
-          window.updateGearTheme(shouldBeDark);
+          // Update three.js gears
+          if (typeof window.updateGearTheme === "function") {
+            window.updateGearTheme(shouldBeDark);
+          }
         }
       }
     }
