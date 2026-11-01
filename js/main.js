@@ -595,3 +595,66 @@ if (themeToggle) {
     chars[0].before(caret);
     setTimeout(typeNext, 600);
 })();
+
+// --- READING LIST MODAL CONTROLLER ---
+(function () {
+    const triggers = document.querySelectorAll('.reading-list-btn');
+    const modalBackdrop = document.getElementById('reading-modal-backdrop');
+    if (!triggers.length || !modalBackdrop) return;
+
+    const closeBtn = document.getElementById('reading-modal-close-btn');
+    let activeTrigger = null;
+
+    function openModal(trigger = null) {
+        activeTrigger = trigger instanceof HTMLElement
+            ? trigger
+            : document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null;
+        modalBackdrop.classList.remove('hidden');
+        document.body.classList.add('reading-modal-open');
+        triggers.forEach(item => {
+            item.setAttribute('aria-expanded', String(item === activeTrigger));
+        });
+        if (closeBtn) closeBtn.focus();
+    }
+
+    function closeModal() {
+        modalBackdrop.classList.add('hidden');
+        document.body.classList.remove('reading-modal-open');
+        triggers.forEach(trigger => trigger.setAttribute('aria-expanded', 'false'));
+        const focusTarget = activeTrigger?.closest('.mobile-nav-overlay')
+            ? document.getElementById('mobile-menu-toggle')
+            : activeTrigger;
+        activeTrigger = null;
+        if (focusTarget instanceof HTMLElement) focusTarget.focus();
+    }
+
+    window.openReadingModal = openModal;
+    window.closeReadingModal = closeModal;
+
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openModal(trigger);
+        });
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeModal);
+    }
+
+    // Dismiss when clicking the backdrop outside the modal window
+    modalBackdrop.addEventListener('click', (e) => {
+        if (e.target === modalBackdrop) {
+            closeModal();
+        }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !modalBackdrop.classList.contains('hidden')) {
+            closeModal();
+        }
+    });
+})();

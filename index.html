@@ -113,11 +113,11 @@
       }
     </script>
 
-    <!-- Google Fonts: Doto, Plus Jakarta Sans, JetBrains Mono & Space Mono -->
+    <!-- Google Fonts: Doto, Headland One, Plus Jakarta Sans, JetBrains Mono & Space Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Doto:wght@700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Special+Elite&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Doto:wght@700&family=Headland+One&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Special+Elite&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
 
@@ -174,7 +174,7 @@
         <div class="header-left">
           <a class="site-logo" href="#about">Senthil Palanivelu</a>
         </div>
-        <nav class="header-middle">
+        <nav class="header-middle" aria-label="Primary">
           <a class="nav-link active" href="#about">About</a>
           <a class="nav-link" href="#quick-links">Links</a>
           <a class="nav-link" href="#contact">Contact</a>
@@ -338,11 +338,38 @@
             </div>
           </div>
           <div class="header-divider" aria-hidden="true"></div>
+          <!-- Book / What I Read icon -->
+          <button
+            type="button"
+            class="icon-btn reading-list-btn"
+            id="reading-list-btn"
+            data-tooltip="What I read"
+            aria-label="What I read"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              style="
+                fill: none;
+                stroke: currentColor;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+              "
+              aria-hidden="true"
+            >
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+            </svg>
+          </button>
+          <div class="header-divider" aria-hidden="true"></div>
           <button
             class="icon-btn"
             id="terminal-trigger"
-            title="Open Interactive Console"
-            aria-label="Open Terminal"
+            data-tooltip="Terminal"
+            aria-label="Terminal"
           >
             <svg
               viewBox="0 0 24 24"
@@ -364,8 +391,8 @@
           <button
             class="icon-btn"
             id="theme-toggle"
+            data-tooltip="Toggle Theme"
             aria-label="Toggle Dark Mode"
-            title="Toggle Theme"
           >
             <svg
               viewBox="0 0 24 24"
@@ -427,9 +454,18 @@
           </span>
         </time>
       </div>
-      <nav class="mobile-nav-links">
+      <nav class="mobile-nav-links" aria-label="Mobile">
         <a class="mobile-nav-link active" href="#about">About</a>
         <a class="mobile-nav-link" href="#quick-links">Links</a>
+        <button
+          type="button"
+          class="mobile-nav-link reading-list-btn"
+          aria-label="What I read"
+          aria-haspopup="dialog"
+          aria-expanded="false"
+        >
+          <span class="reading-btn-text">What I read</span>
+        </button>
         <a class="mobile-nav-link" href="#contact">Contact</a>
       </nav>
     </div>
@@ -986,6 +1022,201 @@
         </a>
       </div>
     </footer>
+
+    <!-- Favorite Newspapers & Magazines drawer -->
+    <div
+      id="reading-modal-backdrop"
+      class="reading-modal-backdrop hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="reading-modal-title"
+    >
+      <div class="reading-modal-window">
+        <!-- Reading drawer header -->
+        <div class="reading-modal-header">
+          <h2 id="reading-modal-title" class="reading-modal-title">What I read</h2>
+          <button
+            type="button"
+            class="reading-modal-close-btn"
+            id="reading-modal-close-btn"
+            aria-label="Close dialog"
+            title="Close (Esc)"
+          >
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Modal Body Content (Clean List View) -->
+        <div class="reading-modal-body">
+          <!-- Newspapers Section -->
+          <section class="reading-section" data-category="newspapers">
+            <div class="reading-section-header">
+              <span class="reading-tag-badge"><span class="reading-section-index">01</span>Daily Press</span>
+              <span class="reading-tag-count">2 sources</span>
+            </div>
+            <div class="reading-list reading-list-newspapers">
+              <a
+                href="https://www.nytimes.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">NYT</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">New York Times</span>
+                  <span class="reading-item-desc">Daily journalism, world &amp; culture</span>
+                </div>
+              </a>
+              <a
+                href="https://www.wsj.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">WSJ</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">Wall Street Journal</span>
+                  <span class="reading-item-desc">Markets, finance &amp; global business</span>
+                </div>
+              </a>
+            </div>
+          </section>
+
+          <!-- Magazines Section -->
+          <section class="reading-section" data-category="magazines">
+            <div class="reading-section-header">
+              <span class="reading-tag-badge"><span class="reading-section-index">02</span>Periodicals &amp; Essays</span>
+              <span class="reading-tag-count">10 sources</span>
+            </div>
+            <div class="reading-list reading-list-magazines">
+              <a
+                href="https://hbr.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">HBR</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">Harvard Business Review</span>
+                  <span class="reading-item-desc">Strategy, leadership &amp; management</span>
+                </div>
+              </a>
+              <a
+                href="https://sloanreview.mit.edu"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">MIT</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">MIT Sloan Management Review</span>
+                  <span class="reading-item-desc">Technology leadership &amp; innovation</span>
+                </div>
+              </a>
+              <a
+                href="https://www.bloomberg.com/businessweek"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">BW</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">Bloomberg Businessweek</span>
+                  <span class="reading-item-desc">Global industry &amp; market trends</span>
+                </div>
+              </a>
+              <a
+                href="https://www.nytimes.com/section/magazine"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">NYTM</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">NYT Magazine</span>
+                  <span class="reading-item-desc">Longform investigative journalism &amp; essays</span>
+                </div>
+              </a>
+              <a
+                href="https://time.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">TIME</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">Times Magazine</span>
+                  <span class="reading-item-desc">World affairs, politics &amp; leaders</span>
+                </div>
+              </a>
+              <a
+                href="https://www.wired.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">W</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">Wired USA</span>
+                  <span class="reading-item-desc">Emerging tech, science &amp; artificial intelligence</span>
+                </div>
+              </a>
+              <a
+                href="https://www.economist.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">ECON</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">The Economist</span>
+                  <span class="reading-item-desc">International economics &amp; world politics</span>
+                </div>
+              </a>
+              <a
+                href="https://www.forbes.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">FB</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">Forbes USA</span>
+                  <span class="reading-item-desc">Business leadership, finance &amp; entrepreneurship</span>
+                </div>
+              </a>
+              <a
+                href="https://www.ft.com/magazine"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">FT</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">FT Weekend Magazine</span>
+                  <span class="reading-item-desc">Global viewpoints, culture &amp; commentary</span>
+                </div>
+              </a>
+              <a
+                href="https://www.theatlantic.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="reading-list-item"
+              >
+                <span class="reading-item-badge">ATL</span>
+                <div class="reading-item-text">
+                  <span class="reading-item-name">The Atlantic</span>
+                  <span class="reading-item-desc">Deep culture, politics &amp; contemporary thought</span>
+                </div>
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
 
     <!-- Retro Terminal Widget HTML -->
     <div id="terminal-window" class="hidden">

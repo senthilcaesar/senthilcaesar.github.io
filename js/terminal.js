@@ -339,7 +339,7 @@
       case "hey":
         return `Hello! How can I help you today? To see the list of available commands type <span class="highlight">help</span>`;
       case "help":
-        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">identity</span>       - <span class="gray">Who I am</span><br>• <span class="highlight">date</span>          - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
+        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">identity</span>       - <span class="gray">Who I am</span><br>• <span class="highlight">date</span>          - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">reading</span>        - <span class="gray">Favorite newspapers & magazines</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
       case "education":
         return `<b>Education History:</b><br><br>
 • <span class="highlight">[Jan 2015 - Jan 2019]</span> <b>Master of Science in Computer Science</b>, <span class="error">University of Massachusetts Boston</span> (USA)<br>
@@ -594,6 +594,30 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
       }
       case "blog":
         return `Check out my latest thoughts, guides, and learnings:<br><a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">senthilcaesar.github.io/blogs/</a>`;
+      case "reading":
+      case "reads":
+      case "press":
+      case "magazines":
+      case "newspapers":
+        if (typeof window.openReadingModal === "function") {
+          window.openReadingModal();
+          return `<span class="success">Opening Favorite Reading List dialog... 📰</span>`;
+        }
+        return `<b>Favorite Newspapers & Magazines:</b><br><br>
+<b>📰 Newspapers:</b><br>
+• <a class="link" href="https://www.nytimes.com" target="_blank">New York Times</a><br>
+• <a class="link" href="https://www.wsj.com" target="_blank">Wall Street Journal</a><br><br>
+<b>📑 Magazines:</b><br>
+• <a class="link" href="https://hbr.org" target="_blank">Harvard Business Review</a><br>
+• <a class="link" href="https://sloanreview.mit.edu" target="_blank">MIT Sloan Management Review</a><br>
+• <a class="link" href="https://www.bloomberg.com/businessweek" target="_blank">Bloomberg Businessweek</a><br>
+• <a class="link" href="https://www.nytimes.com/section/magazine" target="_blank">NYT Magazine</a><br>
+• <a class="link" href="https://time.com" target="_blank">Times Magazine</a><br>
+• <a class="link" href="https://www.wired.com" target="_blank">Wired USA</a><br>
+• <a class="link" href="https://www.economist.com" target="_blank">The Economist</a><br>
+• <a class="link" href="https://www.forbes.com" target="_blank">Forbes USA</a><br>
+• <a class="link" href="https://www.ft.com/magazine" target="_blank">FT Weekend Magazine</a><br>
+• <a class="link" href="https://www.theatlantic.com" target="_blank">The Atlantic</a>`;
       case "links":
         return `Quick Links:<br>• <a class="link" href="https://senthilcaesar.github.io/portfolio/" target="_blank">Portfolio</a><br>• <a class="link" href="https://senthilcaesar.github.io/projects/" target="_blank">Projects</a><br>• <a class="link" href="https://senthilcaesar.github.io/my-reading/" target="_blank">Readings</a><br>• <a class="link" href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">KnowledgeLab</a><br>• <a class="link" href="https://senthilcaesar.github.io/resources/" target="_blank">URL Library</a><br>• <a class="link" href="https://senthilcaesar.github.io/commands/" target="_blank">Commands</a><br>• <a class="link" href="https://senthilcaesar.github.io/promptshelf/" target="_blank">Prompt Shelf</a><br>• <a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">Blogs</a><br>• <a class="link" href="https://senthilcaesar.github.io/study/" target="_blank">Study</a><br>• <a class="link" href="https://senthilcaesar.github.io/tech-stack/" target="_blank">Tech Stack</a><br>• <a class="link" href="https://senthilcaesar.github.io/wander-list/" target="_blank">Wanderlist</a>`;
       case "contact":
