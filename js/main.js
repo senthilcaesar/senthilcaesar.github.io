@@ -383,6 +383,7 @@ if (themeToggle) {
         document.body.classList.remove('mobile-menu-open');
         hamburgerIcon.classList.remove('hidden');
         closeIcon.classList.add('hidden');
+        mobileToggle.setAttribute('aria-expanded', 'false');
     }
 
     // Open Mobile Menu Overlay
@@ -391,7 +392,10 @@ if (themeToggle) {
         document.body.classList.add('mobile-menu-open');
         hamburgerIcon.classList.add('hidden');
         closeIcon.classList.remove('hidden');
+        mobileToggle.setAttribute('aria-expanded', 'true');
     }
+
+    window.closeMobileMenu = closeMobileMenu;
 
     // Toggle Mobile Menu Overlay
     mobileToggle.addEventListener('click', (e) => {
@@ -402,6 +406,31 @@ if (themeToggle) {
             openMobileMenu();
         }
     });
+
+    // Close Mobile Menu on backdrop tap
+    mobileOverlay.addEventListener('click', (e) => {
+        if (e.target === mobileOverlay) {
+            closeMobileMenu();
+        }
+    });
+
+    // Close Mobile Menu on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && mobileOverlay.classList.contains('open')) {
+            closeMobileMenu();
+        }
+    });
+
+    // Mobile Terminal Shortcut
+    const mobileTerminalTrigger = document.getElementById('mobile-terminal-trigger');
+    if (mobileTerminalTrigger) {
+        mobileTerminalTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeMobileMenu();
+            const termTrigger = document.getElementById('terminal-trigger');
+            if (termTrigger) termTrigger.click();
+        });
+    }
 
     // 1. Click Listener for instant highlight and scroll-spy bypass
     const allLinks = [...navLinks, ...mobileLinks];
@@ -431,7 +460,7 @@ if (themeToggle) {
 
     // Close mobile menu if window is resized above mobile breakpoint
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 768 && mobileOverlay.classList.contains('open')) {
+        if (window.innerWidth > 900 && mobileOverlay.classList.contains('open')) {
             closeMobileMenu();
         }
     });
@@ -606,6 +635,9 @@ if (themeToggle) {
     let activeTrigger = null;
 
     function openModal(trigger = null) {
+        if (typeof window.closeMobileMenu === 'function') {
+            window.closeMobileMenu();
+        }
         activeTrigger = trigger instanceof HTMLElement
             ? trigger
             : document.activeElement instanceof HTMLElement
