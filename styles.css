@@ -253,6 +253,7 @@ header {
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .header-divider {
@@ -2822,8 +2823,8 @@ body.dark-mode #terminal-input {
 }
 
 .date-text {
-  display: inline-flex;
-  align-items: center;
+  display: inline-block;
+  white-space: nowrap;
   font-size: 0.82rem;
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -3073,6 +3074,7 @@ body.dark-mode #terminal-input {
 .weather-dropdown-container {
   position: relative;
   display: inline-block;
+  flex-shrink: 0;
 }
 
 .weather-dropdown-btn {
@@ -3089,6 +3091,8 @@ body.dark-mode #terminal-input {
   font-family: inherit;
   font-size: 0.82rem;
   font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: all var(--transition-speed) ease;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   background-color: var(--card-bg);
@@ -3098,6 +3102,55 @@ body.dark-mode #terminal-input {
   border-color: var(--link-color);
   color: var(--link-color);
   background-color: var(--bg-secondary);
+}
+
+/* Date and weather buttons share one look: same font, height, padding, icon box and hover */
+.header-date-badge,
+.weather-dropdown-btn {
+  box-sizing: border-box;
+  height: 34px;
+  padding: 0 12px;
+  gap: 7px;
+  font-family:
+    "Plus Jakarta Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  transition:
+    background-color var(--transition-speed),
+    border-color var(--transition-speed),
+    color var(--transition-speed),
+    box-shadow var(--transition-speed),
+    transform 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.weather-dropdown-btn:hover {
+  transform: translateY(-1px);
+}
+
+.header-date-badge .date-icon,
+.weather-dropdown-btn .weather-icon-current {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.weather-dropdown-btn .weather-icon-current {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.header-date-badge .dropdown-chevron,
+.weather-dropdown-btn .dropdown-chevron {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
 }
 
 .weather-icon-current {
@@ -3683,6 +3736,55 @@ body.mobile-menu-open {
 
   .header-container {
     padding: 0 24px;
+  }
+}
+
+/* Keep the weather label on one line: tighten the rest of the header instead */
+@media (min-width: 901px) and (max-width: 1150px) {
+  .header-middle {
+    gap: 18px;
+    margin: 0 16px;
+  }
+
+  .header-right {
+    gap: 8px;
+  }
+
+  .header-date-badge .date-year,
+  .header-date-badge .date-year-sep,
+  .header-date-badge .date-day,
+  .header-date-badge .date-sep {
+    display: none;
+  }
+
+  .header-container {
+    padding: 0 20px;
+  }
+
+  /* With the weekday hidden, show the date in the same tone as the weather label */
+  .header-date-badge .date-month-short,
+  .header-date-badge .date-day-num {
+    color: var(--text-color);
+    font-weight: 600;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1040px) {
+  .header-divider {
+    display: none;
+  }
+
+  .header-middle {
+    gap: 14px;
+    margin: 0 12px;
+  }
+
+  .header-right {
+    gap: 6px;
+  }
+
+  .site-logo {
+    font-size: 1.1rem;
   }
 }
 
