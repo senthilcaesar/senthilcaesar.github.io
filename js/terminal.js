@@ -243,12 +243,14 @@
       if (isTyping) return;
 
       const userLine = document.createElement("div");
+      userLine.classList.add("cmd-line");
       userLine.innerHTML = `<span class="prompt">senthil:~$</span> <span class="command-text">${cmdVal}</span>`;
       outputContainer.appendChild(userLine);
 
       const result = executeCommand(cmdVal);
       if (result) {
         const resLine = document.createElement("div");
+        resLine.classList.add("cmd-result");
         const fullWidthCmds = ["experience", "education", "certifications"];
         if (fullWidthCmds.includes(cmdVal.toLowerCase().split(" ")[0])) {
           resLine.classList.add("full-width");
@@ -323,6 +325,7 @@
 
         // Display user's command
         const userLine = document.createElement("div");
+        userLine.classList.add("cmd-line");
         userLine.innerHTML = `<span class="prompt">senthil:~$</span> <span class="command-text">${cmdVal}</span>`;
         outputContainer.appendChild(userLine);
 
@@ -330,6 +333,7 @@
         const result = executeCommand(cmdVal);
         if (result) {
           const resLine = document.createElement("div");
+          resLine.classList.add("cmd-result");
           const fullWidthCmds = ["experience", "education", "certifications"];
           if (fullWidthCmds.includes(cmdVal.toLowerCase().split(" ")[0])) {
             resLine.classList.add("full-width");
@@ -344,6 +348,7 @@
         }
       } else {
         const userLine = document.createElement("div");
+        userLine.classList.add("cmd-line");
         userLine.innerHTML = `<span class="prompt">senthil:~$</span>`;
         outputContainer.appendChild(userLine);
       }
@@ -391,6 +396,7 @@
           input.value = prefix;
         } else {
           const matchLine = document.createElement("div");
+          matchLine.classList.add("cmd-line");
           matchLine.innerHTML = `<span class="prompt">senthil:~$</span> <span class="command-text">${partial}</span><br>${matches.join("&nbsp;&nbsp;")}`;
           outputContainer.appendChild(matchLine);
           outputContainer.scrollTop = outputContainer.scrollHeight;

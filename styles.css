@@ -2417,6 +2417,22 @@ body.dark-mode .terminal-buttons .btn.maximize {
   word-break: break-all;
 }
 
+/* Breathing room between one command's output and the next prompt */
+.terminal-output > .cmd-line:not(:first-child) {
+  margin-top: 22px;
+}
+
+.terminal-output > .cmd-result {
+  margin-top: 8px;
+}
+
+/* Empty space below the last output, above the input line */
+.terminal-output::after {
+  content: "";
+  display: block;
+  height: 24px;
+}
+
 .terminal-output .highlight {
   color: #d97706;
   font-weight: bold;
