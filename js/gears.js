@@ -236,6 +236,67 @@
                 ]
             };
 
+            // Value labels: each gear stands for one value.
+            // Largest gear = Happiness, middle = Willpower, smallest = Confidence.
+            // Labels sit just outside each gear and follow it as the group tilts.
+            // CSS shows them one at a time (see .gear-label in styles.css).
+            const labelLayer = document.createElement('div');
+            labelLayer.className = 'gear-labels';
+            labelLayer.setAttribute('aria-hidden', 'true');
+            container.appendChild(labelLayer);
+
+            const gearLabels = [
+                { id: 'happiness', text: 'Happiness', pos: posB, offset: new THREE.Vector3(0.6, 2.25 + 0.85, 0) },
+                { id: 'willpower', text: 'Willpower', pos: posA, offset: new THREE.Vector3(0, -(1.75 + 1.3), 0) },
+                // Confidence sits to the LEFT of the small gear (right-aligned), well away from the large gear.
+                { id: 'confidence', text: 'Confidence', pos: posC, offset: new THREE.Vector3(-(1.2 + 0.8), 0.35, 0), align: 'right',
+                  // Used when the screen has no room to the left of the gears (e.g. narrow tablets).
+                  fallbackOffset: new THREE.Vector3(0, 1.2 + 0.85, 0) }
+            ].map((l) => {
+                const span = document.createElement('span');
+                span.className = `gear-label gear-label--${l.id}`;
+                span.textContent = l.text;
+                labelLayer.appendChild(span);
+                return {
+                    el: span,
+                    local: l.pos.clone().add(l.offset),
+                    fallback: l.fallbackOffset ? l.pos.clone().add(l.fallbackOffset) : null,
+                    align: l.align || 'center'
+                };
+            });
+
+            const projected = new THREE.Vector3();
+            function updateLabels() {
+                const w = container.clientWidth || 200;
+                const h = container.clientHeight || 200;
+                const containerLeft = container.getBoundingClientRect().left;
+                gearGroup.updateMatrixWorld();
+                gearLabels.forEach((l) => {
+                    projected.copy(l.local).applyMatrix4(gearGroup.matrixWorld).project(camera);
+                    let align = l.align;
+                    if (align === 'right') {
+                        // Not enough room on screen to the left? Sit above the gear instead.
+                        const rightEdge = (projected.x * 0.5 + 0.5) * w;
+                        if (containerLeft + rightEdge - l.el.offsetWidth < 8 && l.fallback) {
+                            projected.copy(l.fallback).applyMatrix4(gearGroup.matrixWorld).project(camera);
+                            align = 'center';
+                        }
+                    }
+                    // The gear area no longer clips, so labels may rise above or drop below it.
+                    const y = (-projected.y * 0.5 + 0.5) * h;
+                    let x = (projected.x * 0.5 + 0.5) * w;
+                    if (align === 'right') {
+                        // Right edge pinned beside the gear; the word extends leftwards past the canvas.
+                        l.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-100%, -50%)`;
+                        return;
+                    }
+                    // Keep centred labels inside the canvas.
+                    const half = l.el.offsetWidth / 2 + 2;
+                    x = Math.min(Math.max(x, half), w - half);
+                    l.el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -50%)`;
+                });
+            }
+
             function getDrivenRotation(driverRotation, N_driver, N_driven, centerDriver, centerDriven, isValleyAligned = true) {
                 const dx = centerDriven.x - centerDriver.x;
                 const dy = centerDriven.y - centerDriver.y;
@@ -299,6 +360,7 @@
                 pointLight.intensity = theme.pointIntensity + lightIntensityBoost * 2.5;
 
                 renderer.render(scene, camera);
+                updateLabels();
             }
 
             animate();

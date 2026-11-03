@@ -489,6 +489,7 @@ body.dark-mode .mountain-background {
   #gear-canvas-container {
     width: 170px;
     height: 170px;
+    margin-top: -12px;
   }
 }
 
@@ -554,7 +555,7 @@ body.dark-mode .mountain-background {
   #gear-canvas-container {
     width: 140px;
     height: 140px;
-    margin-top: 2px;
+    margin-top: -10px;
     touch-action: pan-y;
   }
 }
@@ -1177,11 +1178,69 @@ body.dark-mode .reading-list-btn {
 #gear-canvas-container {
   width: 200px;
   height: 200px;
-  margin-top: 8px;
-  overflow: hidden;
+  margin-top: 36px;
+  /* visible so the "Confidence" label can sit to the left of the gear area */
+  overflow: visible;
   position: relative;
   cursor: pointer;
   touch-action: pan-y;
+}
+
+/* On phones the sidebar stacks above the bio, so keep the gears close. */
+@media (max-width: 720px) {
+  #gear-canvas-container {
+    margin-top: 4px;
+  }
+}
+
+/* Gear value labels (Happiness, Willpower, Confidence) */
+.gear-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.gear-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* Matches .profile-title ("CS Graduate @") */
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  will-change: transform;
+}
+
+/* One word at a time: Happiness -> Willpower -> Confidence, 3s each on a 9s loop. */
+.gear-label {
+  opacity: 0;
+  animation: gear-label-turn 9s ease-in-out infinite;
+}
+
+.gear-label--happiness {
+  animation-delay: 0s;
+}
+
+.gear-label--willpower {
+  animation-delay: 3s;
+}
+
+.gear-label--confidence {
+  animation-delay: 6s;
+}
+
+@keyframes gear-label-turn {
+  0% {
+    opacity: 0;
+  }
+  7%,
+  27% {
+    opacity: 1;
+  }
+  33.33%,
+  100% {
+    opacity: 0;
+  }
 }
 
 /* Content Column */
