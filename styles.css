@@ -1229,6 +1229,13 @@ body.dark-mode .reading-list-btn {
   animation-delay: 6s;
 }
 
+/* Hovering the gears shows all three words at once. */
+#gear-canvas-container:hover .gear-label {
+  animation: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
 @keyframes gear-label-turn {
   0% {
     opacity: 0;
