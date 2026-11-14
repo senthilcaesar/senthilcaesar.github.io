@@ -689,7 +689,12 @@
           <!-- 3D Interactive Gear Canvas Widget -->
           <div
             id="gear-canvas-container"
-            title="Happiness, Willpower and Confidence: click to spin the gears! Hover to tilt."
+            role="button"
+            tabindex="0"
+            aria-haspopup="dialog"
+            aria-controls="gear-lightbox"
+            aria-label="Happiness, Willpower and Confidence: open the illustration"
+            title="Happiness, Willpower and Confidence: click to see how they connect. Hover to tilt."
           ></div>
         </aside>
 
@@ -1272,6 +1277,38 @@
           </section>
         </div>
       </div>
+    </div>
+
+    <!-- Gear lightbox: Happiness, Willpower and Confidence illustration -->
+    <div
+      id="gear-lightbox"
+      class="gear-lightbox hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Happiness fuels willpower, willpower builds confidence, confidence boosts happiness"
+    >
+      <figure class="gear-lightbox-figure">
+        <button
+          type="button"
+          class="gear-lightbox-close"
+          id="gear-lightbox-close"
+          aria-label="Close illustration"
+          title="Close (Esc)"
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+        <img
+          src="images/happiness-willpower-confidence.jpg"
+          alt="A cycle of three cartoon characters: a sunny cloud labelled Happiness at the top fuels an orange fighter labelled Willpower on the right, Willpower builds a caped blue hero labelled Confidence on the left, and Confidence boosts Happiness."
+          width="1600"
+          height="893"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
     </div>
 
     <!-- Retro Terminal Widget HTML -->

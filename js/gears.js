@@ -324,14 +324,7 @@
                 targetRotY = -0.25;
             });
 
-            // Click to Spin
-            let spinVelocity = 0;
-            let lightIntensityBoost = 0;
-
-            container.addEventListener('click', () => {
-                spinVelocity = 4.5;
-                lightIntensityBoost = 1.2;
-            });
+            // Clicking the gears opens the illustration lightbox (see js/main.js).
 
             // Animation Loop
             const clock = new THREE.Clock();
@@ -342,9 +335,8 @@
                 requestAnimationFrame(animate);
 
                 const delta = Math.min(clock.getDelta(), 0.1);
-                spinVelocity += (0 - spinVelocity) * 0.05;
                 const weatherSpeed = window.weatherGearSpeed || 0;
-                const currentSpeed = baseSpeedScale + spinVelocity + weatherSpeed;
+                const currentSpeed = baseSpeedScale + weatherSpeed;
                 currentAngle += delta * currentSpeed;
 
                 gearA.rotation.z = currentAngle;
@@ -353,11 +345,6 @@
 
                 gearGroup.rotation.x += (targetRotX - gearGroup.rotation.x) * 0.08;
                 gearGroup.rotation.y += (targetRotY - gearGroup.rotation.y) * 0.08;
-
-                lightIntensityBoost += (0 - lightIntensityBoost) * 0.08;
-                const isDark = document.body.classList.contains('dark-mode');
-                const theme = isDark ? colors.dark : colors.light;
-                pointLight.intensity = theme.pointIntensity + lightIntensityBoost * 2.5;
 
                 renderer.render(scene, camera);
                 updateLabels();

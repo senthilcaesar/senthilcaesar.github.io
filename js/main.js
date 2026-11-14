@@ -735,3 +735,47 @@ if (mobileThemeBtn) {
         }
     });
 })();
+
+// --- GEAR LIGHTBOX CONTROLLER ---
+// Clicking the gears shows the Happiness / Willpower / Confidence illustration.
+(function () {
+    const trigger = document.getElementById('gear-canvas-container');
+    const lightbox = document.getElementById('gear-lightbox');
+    if (!trigger || !lightbox) return;
+
+    const closeBtn = document.getElementById('gear-lightbox-close');
+
+    function open() {
+        lightbox.classList.remove('hidden');
+        document.body.classList.add('gear-lightbox-open');
+        trigger.setAttribute('aria-expanded', 'true');
+        if (closeBtn) closeBtn.focus();
+    }
+
+    function close() {
+        lightbox.classList.add('hidden');
+        document.body.classList.remove('gear-lightbox-open');
+        trigger.setAttribute('aria-expanded', 'false');
+        trigger.focus();
+    }
+
+    trigger.setAttribute('aria-expanded', 'false');
+    trigger.addEventListener('click', open);
+    trigger.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            open();
+        }
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', close);
+
+    // Clicking anywhere outside the picture closes it.
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) close();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) close();
+    });
+})();

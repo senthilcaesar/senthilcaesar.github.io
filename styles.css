@@ -4891,6 +4891,100 @@ body.dark-mode .reading-list-item:focus-visible .reading-item-desc {
   }
 }
 
+/* Gear lightbox: the Happiness / Willpower / Confidence illustration */
+body.gear-lightbox-open {
+  overflow: hidden;
+}
+
+.gear-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear;
+}
+
+.gear-lightbox.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 0.28s;
+}
+
+body.dark-mode .gear-lightbox {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.gear-lightbox-figure {
+  position: relative;
+  margin: 0;
+  max-width: min(1200px, 100%);
+  transform: scale(1);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gear-lightbox.hidden .gear-lightbox-figure {
+  transform: scale(0.94);
+}
+
+.gear-lightbox-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  object-fit: contain;
+  border-radius: 18px;
+  box-shadow: 0 30px 80px -20px rgba(15, 23, 42, 0.55);
+}
+
+.gear-lightbox-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.85);
+  color: #3b2f2a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.gear-lightbox-close:hover {
+  background: #ffffff;
+  transform: scale(1.06);
+}
+
+#gear-canvas-container:focus-visible {
+  outline: 2px solid var(--heading-color);
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gear-lightbox,
+  .gear-lightbox-figure {
+    transition: none;
+  }
+}
+
 /* Print Optimization */
 @media print {
   header,
@@ -4900,6 +4994,7 @@ body.dark-mode .reading-list-item:focus-visible .reading-item-desc {
   .weather-cloud-container,
   #weather-canvas,
   #gear-canvas-container,
+  .gear-lightbox,
   #terminal-window,
   #glitch-screen,
   .reading-modal-backdrop,
