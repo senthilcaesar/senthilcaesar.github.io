@@ -702,6 +702,8 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
 • <a class="link" href="https://hbr.org" target="_blank">Harvard Business Review</a><br>
 • <a class="link" href="https://sloanreview.mit.edu" target="_blank">MIT Sloan Management Review</a><br>
 • <a class="link" href="https://www.bloomberg.com/businessweek" target="_blank">Bloomberg Businessweek</a><br>
+• <a class="link" href="https://www.scientificamerican.com/" target="_blank">Scientific American</a><br>
+• <a class="link" href="https://www.quantamagazine.org/" target="_blank">Quanta Magazine</a><br>
 • <a class="link" href="https://www.nytimes.com/section/magazine" target="_blank">NYT Magazine</a><br>
 • <a class="link" href="https://time.com" target="_blank">Times Magazine</a><br>
 • <a class="link" href="https://www.wired.com" target="_blank">Wired USA</a><br>
