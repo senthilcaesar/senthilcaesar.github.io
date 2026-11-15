@@ -752,6 +752,7 @@ if (mobileThemeBtn) {
         document.body.classList.add('gear-lightbox-open');
         trigger.setAttribute('aria-expanded', 'true');
         if (loop) loop.play();
+        showPause();
         if (closeBtn) closeBtn.focus();
     }
 
@@ -773,7 +774,29 @@ if (mobileThemeBtn) {
     });
 
     if (closeBtn) closeBtn.addEventListener('click', close);
-    if (replayBtn && loop) replayBtn.addEventListener('click', () => loop.play());
+    const pauseBtn = document.getElementById('gear-loop-pause');
+    function showPause() {
+        if (!pauseBtn || !loop) return;
+        const p = loop.isPaused();
+        pauseBtn.classList.toggle('is-paused', p);
+        pauseBtn.setAttribute('aria-pressed', String(p));
+        pauseBtn.setAttribute('aria-label', p ? 'Resume the animation' : 'Pause the animation');
+        pauseBtn.title = p ? 'Play' : 'Pause';
+    }
+    if (pauseBtn && loop) {
+        pauseBtn.addEventListener('click', () => {
+            if (loop.isPaused()) loop.resume();
+            else loop.pause();
+            showPause();
+        });
+    }
+
+    if (replayBtn && loop) {
+        replayBtn.addEventListener('click', () => {
+            loop.play();
+            showPause();
+        });
+    }
 
     const muteBtn = document.getElementById('gear-loop-mute');
     function showMute() {
@@ -847,8 +870,15 @@ function createGearLoop(svg, caption) {
         loaded = true;
     }
 
+    // Timers that can be frozen by pause() and picked up again by resume().
     function at(ms, fn) {
-        timers.push(setTimeout(fn, ms));
+        const t = { due: performance.now() + ms, id: null };
+        t.run = () => {
+            timers = timers.filter((x) => x !== t);
+            fn();
+        };
+        t.id = setTimeout(t.run, ms);
+        timers.push(t);
     }
 
     function setCaption(text) {
@@ -905,10 +935,14 @@ function createGearLoop(svg, caption) {
 
     function reset() {
         stopAudio();
-        timers.forEach(clearTimeout);
+        timers.forEach((t) => clearTimeout(t.id));
         timers = [];
         if (rafId) cancelAnimationFrame(rafId);
         rafId = null;
+        sparkFrame = null;
+        sparkStart = null;
+        paused = false;
+        frozen = [];
         svg.classList.remove('is-static');
         svg.querySelectorAll('.is-on, .is-bounce').forEach((el) => el.classList.remove('is-on', 'is-bounce'));
         spark.style.opacity = '0';
@@ -946,6 +980,11 @@ function createGearLoop(svg, caption) {
     let useAudioClock = false;
     let events = [];
     let schedRaf = null;
+    let paused = false;
+    let pausedAt = 0;
+    let frozen = [];
+    let sparkFrame = null;
+    let sparkStart = null;
 
     function isMuted() {
         try {
@@ -1052,12 +1091,11 @@ function createGearLoop(svg, caption) {
         const SEG = TRAVEL + PAUSE;
         const lengths = arrows.map((a) => a.path.getTotalLength());
         const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
-        let start = null;
         let lastSeg = -1;
 
         function frame(now) {
-            if (start === null) start = now;
-            const elapsed = now - start;
+            if (sparkStart === null) sparkStart = now;
+            const elapsed = now - sparkStart;
             const segIndex = Math.floor(elapsed / SEG);
             const lap = Math.floor(segIndex / arrows.length);
             const i = segIndex % arrows.length;
@@ -1084,8 +1122,62 @@ function createGearLoop(svg, caption) {
             rafId = requestAnimationFrame(frame);
         }
 
+        sparkFrame = frame;
         rafId = requestAnimationFrame(frame);
     }
 
-    return { play, stop: reset, isMuted, setMuted };
+    // CSS animations and transitions running inside the loop and its caption.
+    function runningAnimations() {
+        return [svg, caption]
+            .filter((el) => el && el.getAnimations)
+            .flatMap((el) => el.getAnimations({ subtree: true }))
+            .filter((a) => a.playState === 'running');
+    }
+
+    // Freeze everything where it stands: voice, scheduled steps, typing,
+    // CSS animations and the spark.
+    function pause() {
+        if (paused) return;
+        paused = true;
+        pausedAt = performance.now();
+        if (schedRaf) cancelAnimationFrame(schedRaf);
+        schedRaf = null;
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = null;
+        if (audio) audio.pause();
+        timers.forEach((t) => {
+            clearTimeout(t.id);
+            t.left = Math.max(0, t.due - pausedAt);
+        });
+        frozen = runningAnimations();
+        frozen.forEach((a) => a.pause());
+    }
+
+    function resume() {
+        if (!paused) return;
+        paused = false;
+        const now = performance.now();
+        const gap = now - pausedAt;
+        if (useAudioClock && audio && !audio.ended) {
+            audio.play().catch(() => {
+                useAudioClock = false;
+                clockStart = performance.now() - audio.currentTime * 1000;
+            });
+        } else {
+            clockStart += gap;
+        }
+        timers.forEach((t) => {
+            t.due = now + t.left;
+            t.id = setTimeout(t.run, t.left);
+        });
+        frozen.forEach((a) => a.play());
+        frozen = [];
+        if (sparkFrame) {
+            if (sparkStart !== null) sparkStart += gap;
+            rafId = requestAnimationFrame(sparkFrame);
+        }
+        if (events.length) runEvents();
+    }
+
+    return { play, stop: reset, pause, resume, isPaused: () => paused, isMuted, setMuted };
 }

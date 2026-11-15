@@ -4976,12 +4976,25 @@ body.dark-mode .gear-lightbox {
   height: auto;
 }
 
-.gear-loop-replay {
+.gear-loop-pause {
   right: 54px;
 }
 
-.gear-loop-mute {
+.gear-loop-pause .icon-play,
+.gear-loop-pause.is-paused .icon-pause {
+  display: none;
+}
+
+.gear-loop-pause.is-paused .icon-play {
+  display: block;
+}
+
+.gear-loop-replay {
   right: 96px;
+}
+
+.gear-loop-mute {
+  right: 138px;
 }
 
 .gear-loop-mute .icon-muted,
