@@ -737,22 +737,26 @@ if (mobileThemeBtn) {
 })();
 
 // --- GEAR LIGHTBOX CONTROLLER ---
-// Clicking the gears shows the Happiness / Willpower / Confidence illustration.
+// Clicking the gears plays the Happiness / Willpower / Confidence loop animation.
 (function () {
     const trigger = document.getElementById('gear-canvas-container');
     const lightbox = document.getElementById('gear-lightbox');
     if (!trigger || !lightbox) return;
 
     const closeBtn = document.getElementById('gear-lightbox-close');
+    const replayBtn = document.getElementById('gear-loop-replay');
+    const loop = createGearLoop(document.getElementById('gear-loop'), document.getElementById('gear-loop-caption'));
 
     function open() {
         lightbox.classList.remove('hidden');
         document.body.classList.add('gear-lightbox-open');
         trigger.setAttribute('aria-expanded', 'true');
+        if (loop) loop.play();
         if (closeBtn) closeBtn.focus();
     }
 
     function close() {
+        if (loop) loop.stop();
         lightbox.classList.add('hidden');
         document.body.classList.remove('gear-lightbox-open');
         trigger.setAttribute('aria-expanded', 'false');
@@ -769,6 +773,23 @@ if (mobileThemeBtn) {
     });
 
     if (closeBtn) closeBtn.addEventListener('click', close);
+    if (replayBtn && loop) replayBtn.addEventListener('click', () => loop.play());
+
+    const muteBtn = document.getElementById('gear-loop-mute');
+    function showMute() {
+        const muted = loop.isMuted();
+        muteBtn.classList.toggle('is-muted', muted);
+        muteBtn.setAttribute('aria-pressed', String(muted));
+        muteBtn.setAttribute('aria-label', muted ? 'Turn voice-over on' : 'Mute voice-over');
+        muteBtn.title = muted ? 'Voice-over off' : 'Voice-over on';
+    }
+    if (muteBtn && loop) {
+        showMute();
+        muteBtn.addEventListener('click', () => {
+            loop.setMuted(!loop.isMuted());
+            showMute();
+        });
+    }
 
     // Clicking anywhere outside the picture closes it.
     lightbox.addEventListener('click', (e) => {
@@ -779,3 +800,292 @@ if (mobileThemeBtn) {
         if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) close();
     });
 })();
+
+// --- GEAR LOOP ANIMATION ---
+// Builds the loop one step at a time, starting with Happiness:
+//   Happiness -> (fuels) -> Willpower -> (builds) -> Confidence -> (boosts) -> Happiness
+// Once the loop is closed, a spark keeps travelling round it, each character
+// bouncing as the spark reaches it, and the spark grows a little each lap to
+// show the loop reinforcing itself.
+function createGearLoop(svg, caption) {
+    if (!svg) return null;
+
+    const IMG_SRC = 'images/happiness-willpower-confidence.jpg';
+    const q = (sel) => svg.querySelector(sel);
+    const chars = {
+        happiness: q('.hwc-char[data-step="happiness"]'),
+        willpower: q('.hwc-char[data-step="willpower"]'),
+        confidence: q('.hwc-char[data-step="confidence"]'),
+    };
+    const arrows = ['fuels', 'builds', 'boosts'].map((name, i) => ({
+        draw: q(`#hwc-m-${name} .hwc-draw`),
+        label: q(`.hwc-label[data-step="${name}"]`),
+        path: q(`#hwc-path-${name}`),
+        target: ['willpower', 'confidence', 'happiness'][i],
+    }));
+    const typers = {};
+    svg.querySelectorAll('.hwc-type').forEach((g) => {
+        typers[g.dataset.step] = {
+            g,
+            clip: q(`#hwc-c-type-${g.dataset.step} rect`),
+            caret: g.querySelector('.hwc-caret'),
+            start: Number(g.dataset.start),
+            ends: g.dataset.ends.split(',').map(Number),
+        };
+    });
+    const sunburst = q('.hwc-sunburst');
+    const spark = q('#hwc-spark');
+    const sparkCore = q('.hwc-spark-core');
+
+    let timers = [];
+    let rafId = null;
+    let loaded = false;
+
+    function ensureImage() {
+        if (loaded) return;
+        svg.querySelectorAll('.hwc-img').forEach((img) => img.setAttribute('href', IMG_SRC));
+        loaded = true;
+    }
+
+    function at(ms, fn) {
+        timers.push(setTimeout(fn, ms));
+    }
+
+    function setCaption(text) {
+        if (!caption) return;
+        caption.classList.add('is-swapping');
+        at(400, () => {
+            caption.textContent = text;
+            caption.classList.remove('is-swapping');
+        });
+    }
+
+    // Restart a CSS animation class on an element.
+    function retrigger(el, cls) {
+        el.classList.remove(cls);
+        void el.getBoundingClientRect();
+        el.classList.add(cls);
+    }
+
+    function bounce(name) {
+        retrigger(chars[name], 'is-bounce');
+        if (name === 'happiness') retrigger(sunburst, 'is-on');
+    }
+
+    // Uncover the first `count` letters of a painted name and park the cursor after them.
+    function layoutTyper(t, count) {
+        const edge = count ? t.ends[count - 1] : t.start;
+        t.clip.setAttribute('width', edge - t.start);
+        t.caret.setAttribute('x', edge + 5);
+    }
+
+    // Type a name out like someone at a keyboard: uneven gaps between keys,
+    // a blinking cursor while idle, gone a moment after the word is done.
+    function typeName(name) {
+        const t = typers[name];
+        if (!t) return;
+        Object.values(typers).forEach((o) => o.g.classList.remove('is-typing', 'is-idle'));
+        layoutTyper(t, 0);
+        t.g.classList.add('is-idle');
+        let delay = 450;
+        t.ends.forEach((_, i) => {
+            delay += 140 + Math.random() * 120 + (i === 0 ? 100 : 0);
+            at(delay, () => {
+                t.g.classList.remove('is-idle');
+                t.g.classList.add('is-typing');
+                layoutTyper(t, i + 1);
+            });
+        });
+        at(delay + 120, () => {
+            t.g.classList.remove('is-typing');
+            t.g.classList.add('is-idle');
+        });
+        at(delay + 2500, () => t.g.classList.remove('is-idle'));
+    }
+
+    function reset() {
+        stopAudio();
+        timers.forEach(clearTimeout);
+        timers = [];
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = null;
+        svg.classList.remove('is-static');
+        svg.querySelectorAll('.is-on, .is-bounce').forEach((el) => el.classList.remove('is-on', 'is-bounce'));
+        spark.style.opacity = '0';
+        Object.values(typers).forEach((t) => {
+            t.g.classList.remove('is-typing', 'is-idle');
+            layoutTyper(t, 0);
+        });
+    }
+
+    // Voice-over: one track, voiced with Kokoro (voice af_heart, speed 0.9). The
+    // opening sentence is its own take; the rest is one continuous take, with pauses
+    // added between sentences. Times are seconds into the track, from Whisper word
+    // timestamps on the final file.
+    const NARRATION = {
+        src: 'audio/happiness-loop.m4a',
+        lines: [
+            { at: 0.56, text: 'When you are a happy person, you see your life in a positive light.' },
+            { at: 5.92, text: 'That positivity gives you the courage to take on new challenges, and it fuels your willpower.' },
+            { at: 12.26, text: 'Willpower drives you to do great work, and every piece of great work builds your confidence.' },
+            { at: 18.3, text: 'Your newfound confidence, in turn, boosts your happiness.' },
+            { at: 23.1, text: 'And so the cycle repeats: a self-reinforcing loop that carries you into a state of flow, until the cycle becomes part of who you are.' },
+        ],
+        // When each arrow's word is spoken, and when the character it points at is named.
+        words: [
+            { word: 9.42, arrive: 9.96 }, // fuels -> willpower
+            { word: 15.68, arrive: 16.16 }, // builds -> confidence
+            { word: 20.76, arrive: 21.16 }, // boosts -> happiness
+        ],
+    };
+    const DRAW = 2.0; // seconds an arrow takes to draw (matches .hwc-draw in styles.css)
+    const MUTE_KEY = 'gearLoopMuted';
+
+    let audio = null;
+    let clockStart = 0;
+    let useAudioClock = false;
+    let events = [];
+    let schedRaf = null;
+
+    function isMuted() {
+        try {
+            return localStorage.getItem(MUTE_KEY) === '1';
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function setMuted(m) {
+        try {
+            localStorage.setItem(MUTE_KEY, m ? '1' : '0');
+        } catch (e) {
+            /* storage unavailable: keep it for this visit only */
+        }
+        if (audio) audio.muted = m;
+    }
+
+    // Seconds since the sequence began: the audio's own position while it plays,
+    // so the pictures follow the voice even if the file starts late.
+    function clock() {
+        if (useAudioClock && audio) return audio.currentTime;
+        return (performance.now() - clockStart) / 1000;
+    }
+
+    function runEvents() {
+        const t = clock();
+        while (events.length && events[0].t <= t) events.shift().fn();
+        schedRaf = events.length ? requestAnimationFrame(runEvents) : null;
+    }
+
+    function stopAudio() {
+        if (schedRaf) cancelAnimationFrame(schedRaf);
+        schedRaf = null;
+        events = [];
+        if (audio) audio.pause();
+    }
+
+    function startTimeline(list) {
+        events = list.sort((x, y) => x.t - y.t);
+        if (!audio) {
+            audio = new Audio(NARRATION.src);
+            audio.preload = 'auto';
+        }
+        audio.muted = isMuted();
+        audio.currentTime = 0;
+        useAudioClock = true;
+        audio.play().catch(() => {
+            // No audio (blocked, missing, unsupported): run on the wall clock instead.
+            useAudioClock = false;
+            clockStart = performance.now() - audio.currentTime * 1000;
+        });
+        runEvents();
+    }
+
+    function play() {
+        ensureImage();
+        reset();
+        const list = [];
+        const ev = (t, fn) => list.push({ t, fn });
+
+        // Captions follow the voice, a moment early so the fade lands on the first word.
+        NARRATION.lines.forEach((line) => ev(Math.max(0, line.at - 0.4), () => setCaption(line.text)));
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            svg.classList.add('is-static');
+            Object.values(typers).forEach((t) => layoutTyper(t, t.ends.length));
+            startTimeline(list);
+            return;
+        }
+
+        if (caption) caption.textContent = '';
+
+        ev(NARRATION.lines[0].at, () => {
+            chars.happiness.classList.add('is-on');
+            typeName('happiness');
+        });
+
+        // Each arrow finishes drawing as its word ("fuels", "builds", "boosts") is
+        // spoken, and the next character appears as the voice names it.
+        arrows.forEach((arrow, i) => {
+            const w = NARRATION.words[i];
+            ev(w.word - DRAW + 0.15, () => arrow.draw.classList.add('is-on'));
+            ev(w.word, () => arrow.label.classList.add('is-on'));
+            ev(w.arrive, () => {
+                if (arrow.target === 'happiness') bounce('happiness');
+                else {
+                    chars[arrow.target].classList.add('is-on');
+                    typeName(arrow.target);
+                }
+            });
+        });
+
+        // "And so the cycle repeats": the spark starts going round.
+        ev(NARRATION.lines[4].at, runSpark);
+
+        startTimeline(list);
+    }
+
+    // Spark: travels each arrow in turn, pausing briefly at each character.
+    function runSpark() {
+        const TRAVEL = 2200;
+        const PAUSE = 700;
+        const SEG = TRAVEL + PAUSE;
+        const lengths = arrows.map((a) => a.path.getTotalLength());
+        const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+        let start = null;
+        let lastSeg = -1;
+
+        function frame(now) {
+            if (start === null) start = now;
+            const elapsed = now - start;
+            const segIndex = Math.floor(elapsed / SEG);
+            const lap = Math.floor(segIndex / arrows.length);
+            const i = segIndex % arrows.length;
+            const local = elapsed - segIndex * SEG;
+
+            // Arrived at the end of the previous arrow: bounce its character.
+            if (segIndex !== lastSeg) {
+                if (lastSeg >= 0) bounce(arrows[lastSeg % arrows.length].target);
+                lastSeg = segIndex;
+            }
+
+            const grow = Math.min(lap, 4);
+            sparkCore.setAttribute('r', String(9 + grow * 1.5));
+
+            if (local < TRAVEL) {
+                const p = arrows[i].path.getPointAtLength(ease(local / TRAVEL) * lengths[i]);
+                spark.setAttribute('transform', `translate(${p.x} ${p.y}) scale(${1 + grow * 0.12})`);
+                const fade = Math.min(local / 250, (TRAVEL - local) / 250, 1);
+                spark.style.opacity = String(Math.max(0, fade));
+            } else {
+                spark.style.opacity = '0';
+            }
+
+            rafId = requestAnimationFrame(frame);
+        }
+
+        rafId = requestAnimationFrame(frame);
+    }
+
+    return { play, stop: reset, isMuted, setMuted };
+}

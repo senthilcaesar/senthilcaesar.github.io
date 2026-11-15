@@ -117,7 +117,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Doto:wght@700&family=Headland+One&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Special+Elite&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Doto:wght@700&family=Headland+One&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Lora:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Special+Elite&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
       rel="stylesheet"
     />
 
@@ -1324,14 +1324,169 @@
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
-        <img
-          src="images/happiness-willpower-confidence.jpg"
-          alt="A cycle of three cartoon characters: a sunny cloud labelled Happiness at the top fuels an orange fighter labelled Willpower on the right, Willpower builds a caped blue hero labelled Confidence on the left, and Confidence boosts Happiness."
-          width="1600"
-          height="893"
-          loading="lazy"
-          decoding="async"
-        />
+        <button
+          type="button"
+          class="gear-lightbox-close gear-loop-mute"
+          id="gear-loop-mute"
+          aria-pressed="false"
+          aria-label="Mute voice-over"
+          title="Voice-over on"
+        >
+          <svg class="icon-sound" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+            <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+          </svg>
+          <svg class="icon-muted" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="22" y1="9" x2="16" y2="15"></line>
+            <line x1="16" y1="9" x2="22" y2="15"></line>
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="gear-lightbox-close gear-loop-replay"
+          id="gear-loop-replay"
+          aria-label="Replay the animation"
+          title="Replay"
+        >
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 12a9 9 0 1 0 3-6.7"></path>
+            <polyline points="3 3 3 9 9 9"></polyline>
+          </svg>
+        </button>
+        <!--
+          Animated loop built from pieces of one illustration.
+          Each piece is the same image, revealed through its own mask:
+          characters pop in, arrows draw along their path, labels fade in.
+          js/main.js sequences it, starting with Happiness, then sends a
+          spark around the loop. The image href is set on first open.
+        -->
+        <svg
+          class="gear-loop"
+          id="gear-loop"
+          viewBox="0 0 1600 893"
+          role="img"
+          aria-label="Animation of a self-reinforcing loop: Happiness fuels Willpower, Willpower builds Confidence, and Confidence boosts Happiness, which starts the loop again."
+        >
+          <defs>
+            <filter id="hwc-soft" x="-10%" y="-10%" width="120%" height="120%">
+              <feGaussianBlur stdDeviation="3" />
+            </filter>
+            <filter id="hwc-glow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="9" />
+            </filter>
+            <radialGradient id="hwc-sun">
+              <stop offset="0%" stop-color="#ffd76a" stop-opacity="0.75" />
+              <stop offset="100%" stop-color="#ffd76a" stop-opacity="0" />
+            </radialGradient>
+
+            <!-- Character masks: drawn around each character, clear of the arrow tips
+                 and of the painted names (the names are typed in live instead) -->
+            <mask id="hwc-m-happiness" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="893">
+              <polygon filter="url(#hwc-soft)" fill="#fff" points="650,142 956,142 956,265 918,348 688,348 667,292 652,266" />
+            </mask>
+            <mask id="hwc-m-willpower" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="893">
+              <polygon filter="url(#hwc-soft)" fill="#fff" points="948,528 1234,528 1234,762 975,762 975,745 1006,720 1006,640 948,615" />
+            </mask>
+            <mask id="hwc-m-confidence" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="893">
+              <polygon filter="url(#hwc-soft)" fill="#fff" points="392,528 668,528 668,688 641,694 633,742 652,762 392,762" />
+            </mask>
+
+            <!-- Arrow masks: a thick stroke along each arrow, drawn from tail to head -->
+            <mask id="hwc-m-fuels" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="893">
+              <path class="hwc-draw" pathLength="1" d="M955,276 Q1102,338 1102,518" />
+              <circle class="hwc-head" cx="1101" cy="497" r="30" />
+            </mask>
+            <mask id="hwc-m-builds" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="893">
+              <path class="hwc-draw" pathLength="1" d="M978,697 Q820,792 636,701" />
+              <circle class="hwc-head" cx="655" cy="708" r="30" />
+            </mask>
+            <mask id="hwc-m-boosts" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="893">
+              <path class="hwc-draw" pathLength="1" d="M510,520 Q518,318 660,268" />
+              <circle class="hwc-head" cx="640" cy="280" r="30" />
+            </mask>
+
+            <!-- Name reveal areas: JS widens each rect one letter at a time -->
+            <clipPath id="hwc-c-type-happiness"><rect x="668" y="64" width="0" height="76" /></clipPath>
+            <clipPath id="hwc-c-type-willpower"><rect x="980" y="768" width="0" height="52" /></clipPath>
+            <clipPath id="hwc-c-type-confidence"><rect x="405" y="768" width="0" height="52" /></clipPath>
+
+            <!-- Paths the spark follows in the loop phase (same as the arrows) -->
+            <path id="hwc-path-fuels" d="M960,280 Q1100,340 1102,512" />
+            <path id="hwc-path-builds" d="M972,700 Q820,790 645,705" />
+            <path id="hwc-path-boosts" d="M510,515 Q516,322 652,272" />
+          </defs>
+
+          <rect width="1600" height="893" fill="#fdf4e3" />
+
+          <!-- Arrows -->
+          <g class="hwc-arrow" data-step="fuels" mask="url(#hwc-m-fuels)">
+            <image class="hwc-img" width="1600" height="893" />
+          </g>
+          <g class="hwc-arrow" data-step="builds" mask="url(#hwc-m-builds)">
+            <image class="hwc-img" width="1600" height="893" />
+          </g>
+          <g class="hwc-arrow" data-step="boosts" mask="url(#hwc-m-boosts)">
+            <image class="hwc-img" width="1600" height="893" />
+          </g>
+
+          <!-- Arrow labels: live text in a script face, set apart from the character names -->
+          <text class="hwc-label" data-step="fuels" x="1112" y="372" transform="rotate(62 1112 372)">Fuels</text>
+          <text class="hwc-label" data-step="builds" x="806" y="808">Builds</text>
+          <text class="hwc-label" data-step="boosts" x="492" y="372" transform="rotate(-62 492 372)">Boosts</text>
+
+          <!-- Glow behind Happiness when the loop comes back round -->
+          <circle class="hwc-sunburst" cx="800" cy="235" r="190" fill="url(#hwc-sun)" />
+
+          <!-- Characters -->
+          <g class="hwc-char" data-step="happiness" style="transform-origin: 800px 330px">
+            <g mask="url(#hwc-m-happiness)">
+              <image class="hwc-img" width="1600" height="893" />
+            </g>
+          </g>
+          <g class="hwc-char" data-step="willpower" style="transform-origin: 1100px 745px">
+            <g mask="url(#hwc-m-willpower)">
+              <image class="hwc-img" width="1600" height="893" />
+            </g>
+          </g>
+          <g class="hwc-char" data-step="confidence" style="transform-origin: 535px 745px">
+            <g mask="url(#hwc-m-confidence)">
+              <image class="hwc-img" width="1600" height="893" />
+            </g>
+          </g>
+
+          <!-- Character names: the painted lettering, uncovered one letter at a time
+               like someone typing. data-ends holds the right edge of each letter
+               in the illustration, measured from the image. -->
+          <g class="hwc-type" data-step="happiness" data-start="668" data-ends="710,741,768,799,814,849,879,908,940">
+            <g clip-path="url(#hwc-c-type-happiness)">
+              <image class="hwc-img" width="1600" height="893" />
+            </g>
+            <rect class="hwc-caret" width="5" height="52" y="80" />
+          </g>
+          <g class="hwc-type" data-step="willpower" data-start="980" data-ends="1024,1036,1060,1082,1106,1133,1172,1196,1228">
+            <g clip-path="url(#hwc-c-type-willpower)">
+              <image class="hwc-img" width="1600" height="893" />
+            </g>
+            <rect class="hwc-caret" width="5" height="52" y="770" />
+          </g>
+          <g class="hwc-type" data-step="confidence" data-start="405" data-ends="436,464,493,518,529,557,581,609,636,664">
+            <g clip-path="url(#hwc-c-type-confidence)">
+              <image class="hwc-img" width="1600" height="893" />
+            </g>
+            <rect class="hwc-caret" width="5" height="52" y="770" />
+          </g>
+
+          <!-- Spark that travels the loop once it is complete -->
+          <g class="hwc-spark" id="hwc-spark">
+            <circle r="22" fill="#ffc94d" filter="url(#hwc-glow)" />
+            <circle class="hwc-spark-core" r="9" fill="#fff6d8" stroke="#f2a93b" stroke-width="3" />
+          </g>
+        </svg>
+        <figcaption class="gear-loop-caption" id="gear-loop-caption" aria-live="polite">
+          Happiness
+        </figcaption>
       </figure>
     </div>
 
