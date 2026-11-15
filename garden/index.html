@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Senthil's Career Garden</title>
+    <meta
+      name="description"
+      content="Senthil Palanivelu's career from 2007 to today, drawn as a garden: each plant is a chapter, each flower a degree or role."
+    />
+    <link rel="icon" href="../images/sp.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@500;600&family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Follow the theme chosen on the main site.
+      (function () {
+        try {
+          if (localStorage.getItem("theme") === "dark") {
+            document.documentElement.setAttribute("data-theme", "dark");
+          } else if (localStorage.getItem("theme") === "light") {
+            document.documentElement.setAttribute("data-theme", "light");
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      :root {
+        --sky: #f7f1ec;
+        --cloud: #e3e1f3;
+        --title: #232c5c;
+        --stem: #1f6b5a;
+        --ground: #7db1a7;
+        --ground-text: #26323a;
+        --label: #111418;
+        --label-sub: #2f3439;
+        --flower-eye: #ffffff;
+        --bud: #6aa38f;
+        --tip-bg: #ffffff;
+        --tip-text: #1d2328;
+        --tip-border: rgba(0, 0, 0, 0.08);
+        --link: #232c5c;
+      }
+      :root[data-theme="dark"] {
+        --sky: #14171c;
+        --cloud: #262a44;
+        --title: #d9dcf7;
+        --stem: #4fae96;
+        --ground: #2f5c55;
+        --ground-text: #e6efec;
+        --label: #f1f3f5;
+        --label-sub: #b9c0c7;
+        --flower-eye: #14171c;
+        --bud: #5d9c86;
+        --tip-bg: #1f242b;
+        --tip-text: #e8ecef;
+        --tip-border: rgba(255, 255, 255, 0.1);
+        --link: #d9dcf7;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme="light"]) {
+          --sky: #14171c;
+          --cloud: #262a44;
+          --title: #d9dcf7;
+          --stem: #4fae96;
+          --ground: #2f5c55;
+          --ground-text: #e6efec;
+          --label: #f1f3f5;
+          --label-sub: #b9c0c7;
+          --flower-eye: #14171c;
+          --bud: #5d9c86;
+          --tip-bg: #1f242b;
+          --tip-text: #e8ecef;
+          --tip-border: rgba(255, 255, 255, 0.1);
+          --link: #d9dcf7;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        overflow-x: hidden;
+        background: var(--sky);
+        color: var(--label);
+        font-family: "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ---------- Cloud header ---------- */
+      .sky-header {
+        position: relative;
+        background: var(--cloud);
+        padding: 28px 16px 18px;
+        text-align: center;
+      }
+      .sky-header h1 {
+        margin: 0;
+        font-family: "Roboto Condensed", "Arial Narrow", sans-serif;
+        font-weight: 500;
+        font-size: clamp(2rem, 5vw, 3.2rem);
+        color: var(--title);
+        letter-spacing: 0.01em;
+      }
+      .scallop {
+        display: block;
+        width: 100%;
+        height: 22px;
+        position: absolute;
+        left: 0;
+        bottom: -21px;
+      }
+      .scallop path {
+        fill: var(--cloud);
+      }
+      .back-link {
+        position: absolute;
+        top: 14px;
+        left: 16px;
+        color: var(--link);
+        text-decoration: none;
+        font-size: 0.85rem;
+        opacity: 0.75;
+      }
+      .back-link:hover,
+      .back-link:focus-visible {
+        opacity: 1;
+        text-decoration: underline;
+      }
+
+      /* ---------- Garden ---------- */
+      main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding-top: 30px;
+        min-width: 0;
+        max-width: 100vw;
+      }
+      .garden-scroll {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+      #garden {
+        display: block;
+        width: 100%;
+        min-width: 1400px;
+        height: auto;
+      }
+      .scroll-hint {
+        display: none;
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--label-sub);
+        margin: 0 16px 8px;
+      }
+      @media (max-width: 1100px) {
+        .scroll-hint {
+          display: block;
+        }
+      }
+
+      .stem {
+        fill: none;
+        stroke: var(--stem);
+        stroke-width: 3;
+        stroke-linecap: round;
+      }
+      .stem.trunk {
+        stroke-width: 5;
+        stroke-linecap: butt;
+      }
+      .ground {
+        fill: var(--ground);
+      }
+      .bed-name {
+        font-family: "Roboto", sans-serif;
+        font-weight: 500;
+        font-size: 22px;
+        fill: var(--ground-text);
+      }
+      .node-title {
+        font-weight: 500;
+        font-size: 17px;
+        fill: var(--label);
+      }
+      .node-sub {
+        font-weight: 300;
+        font-size: 14.5px;
+        fill: var(--label-sub);
+      }
+      .bud-label {
+        font-style: italic;
+        font-weight: 300;
+        font-size: 15px;
+        fill: var(--label-sub);
+      }
+      .flower-eye {
+        fill: var(--flower-eye);
+      }
+      .bud {
+        fill: var(--bud);
+      }
+
+      .node {
+        cursor: pointer;
+        outline: none;
+      }
+      .node .bloom {
+        transform-box: fill-box;
+        transform-origin: center;
+        transition: transform 0.25s ease;
+      }
+      .node:hover .bloom,
+      .node:focus-visible .bloom,
+      .node.active .bloom {
+        transform: scale(1.18) rotate(22deg);
+      }
+      .node:focus-visible .focus-ring {
+        stroke: var(--title);
+        stroke-width: 2;
+        stroke-dasharray: 4 3;
+        fill: none;
+      }
+
+      /* Growth animation: stems draw, flowers bloom in date order. */
+      .grow .stem {
+        stroke-dasharray: var(--len);
+        stroke-dashoffset: var(--len);
+        animation: draw 0.6s ease-out forwards;
+        animation-delay: var(--delay);
+      }
+      .grow .bloom-wrap {
+        transform-box: fill-box;
+        transform-origin: center;
+        transform: scale(0);
+        animation: bloom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        animation-delay: var(--delay);
+      }
+      .grow .label {
+        opacity: 0;
+        animation: fade 0.5s ease forwards;
+        animation-delay: var(--delay);
+      }
+      @keyframes draw {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+      @keyframes bloom {
+        to {
+          transform: scale(1);
+        }
+      }
+      @keyframes fade {
+        to {
+          opacity: 1;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .grow .stem,
+        .grow .bloom-wrap,
+        .grow .label {
+          animation: none;
+          stroke-dashoffset: 0;
+          transform: none;
+          opacity: 1;
+        }
+        .node .bloom {
+          transition: none;
+        }
+      }
+
+      /* ---------- Tooltip ---------- */
+      .tip {
+        position: fixed;
+        z-index: 10;
+        pointer-events: none;
+        max-width: 260px;
+        background: var(--tip-bg);
+        color: var(--tip-text);
+        border: 1px solid var(--tip-border);
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        opacity: 0;
+        transform: translateY(4px);
+        transition:
+          opacity 0.15s ease,
+          transform 0.15s ease;
+      }
+      .tip.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .tip strong {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 2px;
+      }
+      .tip .muted {
+        opacity: 0.75;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="sky-header">
+      <a class="back-link" href="../">&larr; Home</a>
+      <h1>Senthil's Career Garden</h1>
+      <svg class="scallop" viewBox="0 0 1200 22" preserveAspectRatio="none" aria-hidden="true">
+        <path id="scallop-path" d="" />
+      </svg>
+    </header>
+
+    <main>
+      <p class="scroll-hint">Swipe sideways to walk through the garden &rarr;</p>
+      <div class="garden-scroll">
+        <svg
+          id="garden"
+          viewBox="0 120 1820 660"
+          role="img"
+          aria-labelledby="garden-title garden-desc"
+        >
+          <title id="garden-title">Senthil's Career Garden</title>
+          <desc id="garden-desc">
+            Four plants growing from a shared bed of ground. Education, 2007 to 2019:
+            B.E. in Electronics and Communication at Anna University, then M.S. in
+            Computer Science at UMass Boston. Information Technology, 2012 to 2017: IT
+            Specialist at MphasiS, then IT Research Assistant at UMass Boston. Neuroscience
+            Research, 2019 to 2024: Clinical
+            Research Coordinator II at Mass General Hospital, Research Data Analyst I at
+            Boston University, branching to Research Associate in Research Math at
+            Nationwide Children's Hospital and Bioinformatician I at Brigham and
+            Women's Hospital. AI and Innovation, 2025 to present: Member of Technical
+            Staff at Amudham Naturals, then Senior Innovation Engineer at Tarento Group.
+          </desc>
+          <g id="stems"></g>
+          <path id="ground" class="ground" d="" />
+          <g id="beds"></g>
+          <g id="nodes"></g>
+        </svg>
+      </div>
+    </main>
+
+    <div class="tip" id="tip" role="status" aria-live="polite"></div>
+
+    <script>
+      (function () {
+        const GROUND_Y = 600;
+        const NS = "http://www.w3.org/2000/svg";
+
+        // y = height above the ground. x = offset from the plant's base.
+        // side: which side of the flower the label sits on.
+        const PLANTS = [
+          {
+            name: "Education",
+            color: "#9a8cc8",
+            baseX: 150,
+            labelX: 150,
+            nodes: [
+              {
+                id: "be",
+                x: 0,
+                y: 120,
+                title: "B.E. Electronics & Communication",
+                org: "Anna University",
+                dates: "Sep 2007 – Sep 2011",
+                short: "2007–2011",
+                loc: "India",
+                start: 2007.7,
+              },
+              {
+                id: "ms",
+                parent: "be",
+                x: 0,
+                y: 240,
+                title: "M.S. Computer Science",
+                org: "University of Massachusetts Boston",
+                orgShort: "UMass Boston",
+                dates: "Jan 2015 – Jan 2019",
+                short: "2015–2019",
+                loc: "Boston, USA",
+                start: 2015.0,
+              },
+            ],
+          },
+          {
+            name: "Information Technology",
+            color: "#6aa2cc",
+            baseX: 620,
+            labelX: 620,
+            nodes: [
+              {
+                id: "mphasis",
+                x: 0,
+                y: 120,
+                title: "IT Specialist",
+                org: "MphasiS",
+                dates: "Oct 2012 – Feb 2014",
+                short: "2012–2014",
+                loc: "Pune, India",
+                start: 2012.8,
+              },
+              {
+                id: "itasst",
+                parent: "mphasis",
+                x: 0,
+                y: 240,
+                title: "IT Research Assistant",
+                org: "University of Massachusetts Boston",
+                orgShort: "UMass Boston",
+                dates: "2015 – 2017",
+                short: "2015–2017",
+                loc: "Boston, USA",
+                start: 2015.5,
+              },
+            ],
+          },
+          {
+            name: "Neuroscience Research",
+            color: "#d96c5d",
+            baseX: 1060,
+            labelX: 1060,
+            nodes: [
+              {
+                id: "mgh",
+                x: 0,
+                y: 120,
+                title: "Clinical Research Coordinator II",
+                org: "Mass General Hospital",
+                dates: "Jan 2019 – Mar 2020",
+                short: "2019–2020",
+                loc: "Boston, USA",
+                start: 2019.0,
+              },
+              {
+                id: "bu",
+                parent: "mgh",
+                x: 0,
+                y: 220,
+                title: "Research Data Analyst I",
+                org: "Boston University",
+                dates: "Apr 2020 – Aug 2021",
+                short: "2020–2021",
+                loc: "Boston, USA",
+                start: 2020.3,
+              },
+              {
+                id: "nch",
+                parent: "bu",
+                x: -95,
+                y: 320,
+                side: "left",
+                title: "Research Associate",
+                org: "Nationwide Children's Hospital",
+                role: "Research Math",
+                dates: "Sep 2021 – Jul 2022",
+                short: "2021–2022",
+                loc: "Columbus, USA",
+                start: 2021.7,
+              },
+              {
+                id: "bwh",
+                parent: "bu",
+                x: 0,
+                y: 410,
+                title: "Bioinformatician I",
+                org: "Brigham & Women's Hospital",
+                dates: "Sep 2022 – Dec 2024",
+                short: "2022–2024",
+                loc: "Boston, USA",
+                start: 2022.7,
+              },
+            ],
+          },
+          {
+            name: "AI & Innovation",
+            color: "#dcc173",
+            baseX: 1480,
+            labelX: 1480,
+            nodes: [
+              {
+                id: "amudham",
+                x: 0,
+                y: 120,
+                title: "Member of Technical Staff",
+                org: "Amudham Naturals",
+                dates: "Jul 2025 – Apr 2026",
+                short: "2025–2026",
+                loc: "Chennai, India",
+                start: 2025.5,
+              },
+              {
+                id: "tarento",
+                parent: "amudham",
+                x: 0,
+                y: 240,
+                title: "Senior Innovation Engineer",
+                org: "Tarento Group",
+                dates: "Apr 2026 – Present",
+                short: "2026–Present",
+                loc: "Bengaluru, India",
+                start: 2026.3,
+              },
+              {
+                id: "next",
+                parent: "tarento",
+                x: 0,
+                y: 330,
+                bud: true,
+                title: "Still growing…",
+                start: 2026.9,
+              },
+            ],
+          },
+        ];
+
+        const svg = document.getElementById("garden");
+        const stemsG = document.getElementById("stems");
+        const nodesG = document.getElementById("nodes");
+        const bedsG = document.getElementById("beds");
+        const tip = document.getElementById("tip");
+
+        const el = (tag, attrs, parent) => {
+          const n = document.createElementNS(NS, tag);
+          for (const k in attrs) n.setAttribute(k, attrs[k]);
+          if (parent) parent.appendChild(n);
+          return n;
+        };
+
+        // ----- Scalloped cloud edge under the header -----
+        (function () {
+          let d = "M0,0 ";
+          const w = 1200;
+          const bump = 60;
+          for (let x = 0; x < w; x += bump) {
+            d += `Q${x + bump / 2},${22} ${x + bump},0 `;
+          }
+          d += `L${w},0 Z`;
+          document.getElementById("scallop-path").setAttribute("d", d);
+        })();
+
+        // ----- Rolling ground -----
+        (function () {
+          const left = -20;
+          const right = 1840;
+          const bottom = 800;
+          // Hand-tuned hills so the bed reads as a gentle, uneven lawn.
+          const crests = [
+            [0, 612],
+            [190, 588],
+            [420, 604],
+            [640, 590],
+            [860, 606],
+            [1080, 586],
+            [1300, 604],
+            [1520, 588],
+            [1720, 602],
+            [1840, 596],
+          ];
+          let d = `M${left},${bottom} L${left},${crests[0][1]} `;
+          for (let i = 0; i < crests.length - 1; i++) {
+            const [x0, y0] = crests[i];
+            const [x1, y1] = crests[i + 1];
+            const mx = (x0 + x1) / 2;
+            d += `C${mx},${y0} ${mx},${y1} ${x1},${y1} `;
+          }
+          d += `L${right},${bottom} Z`;
+          document.getElementById("ground").setAttribute("d", d);
+        })();
+
+        // ----- Flower shape (eight round petals around a ring) -----
+        function drawFlower(parent, cx, cy, color) {
+          const wrap = el("g", { class: "bloom-wrap" }, parent);
+          const bloom = el("g", { class: "bloom" }, wrap);
+          const petals = 8;
+          for (let i = 0; i < petals; i++) {
+            const a = (i / petals) * Math.PI * 2;
+            el(
+              "circle",
+              {
+                cx: cx + Math.cos(a) * 11,
+                cy: cy + Math.sin(a) * 11,
+                r: 7.5,
+                fill: color,
+              },
+              bloom,
+            );
+          }
+          el("circle", { cx, cy, r: 13, fill: color }, bloom);
+          el("circle", { cx, cy, r: 5.5, class: "flower-eye" }, bloom);
+          el("circle", { cx, cy, r: 25, class: "focus-ring", fill: "none" }, wrap);
+          return wrap;
+        }
+
+        function drawBud(parent, cx, cy) {
+          const wrap = el("g", { class: "bloom-wrap" }, parent);
+          const bloom = el("g", { class: "bloom" }, wrap);
+          el(
+            "path",
+            {
+              class: "bud",
+              d: `M${cx},${cy - 14} C${cx + 10},${cy - 6} ${cx + 9},${cy + 8} ${cx},${cy + 10} C${cx - 9},${cy + 8} ${cx - 10},${cy - 6} ${cx},${cy - 14} Z`,
+            },
+            bloom,
+          );
+          return wrap;
+        }
+
+        // Stem from a child flower down to its parent: drop straight,
+        // then swing sideways into the parent like a branching stalk.
+        function stemPath(cx, cy, px, py) {
+          if (cx === px) return `M${px},${py} L${cx},${cy}`;
+          const turn = py - 46;
+          return `M${px},${py} C${px},${py - 34} ${cx},${py - 14} ${cx},${turn} L${cx},${cy}`;
+        }
+
+        // ----- Build everything, then order the animation by date -----
+        const events = []; // { start, stem, node }
+
+        PLANTS.forEach((plant) => {
+          const byId = {};
+          plant.nodes.forEach((n) => {
+            n.cx = plant.baseX + n.x;
+            n.cy = GROUND_Y - n.y;
+            byId[n.id] = n;
+          });
+
+          plant.nodes.forEach((n) => {
+            let d;
+            let trunk = false;
+            if (n.parent) {
+              const p = byId[n.parent];
+              d = stemPath(n.cx, n.cy, p.cx, p.cy);
+            } else {
+              d = `M${n.cx},${GROUND_Y + 14} L${n.cx},${n.cy}`;
+              trunk = true;
+            }
+            const stem = el("path", { d, class: trunk ? "stem trunk" : "stem" }, stemsG);
+
+            const g = el("g", { class: "node" }, nodesG);
+            if (n.bud) {
+              drawBud(g, n.cx, n.cy);
+              const t = el(
+                "text",
+                { x: n.cx + 22, y: n.cy + 5, class: "label bud-label" },
+                g,
+              );
+              t.textContent = n.title;
+              g.setAttribute("aria-hidden", "true");
+              g.style.cursor = "default";
+            } else {
+              drawFlower(g, n.cx, n.cy, plant.color);
+              const left = n.side === "left";
+              const tx = left ? n.cx - 30 : n.cx + 30;
+              const anchor = left ? "end" : "start";
+              const label = el("g", { class: "label" }, g);
+              const title = el(
+                "text",
+                { x: tx, y: n.cy - 3, "text-anchor": anchor, class: "node-title" },
+                label,
+              );
+              title.textContent = n.title;
+              const sub = el(
+                "text",
+                { x: tx, y: n.cy + 17, "text-anchor": anchor, class: "node-sub" },
+                label,
+              );
+              sub.textContent = `${n.orgShort || n.org} · ${n.short}`;
+
+              g.setAttribute("tabindex", "0");
+              g.setAttribute("role", "button");
+              g.setAttribute(
+                "aria-label",
+                `${n.title}${n.role ? ", " + n.role : ""}, ${n.org}, ${n.loc}, ${n.dates}`,
+              );
+              g.dataset.title = n.title + (n.role ? " – " + n.role : "");
+              g.dataset.org = n.org;
+              g.dataset.loc = n.loc;
+              g.dataset.dates = n.dates;
+              g.dataset.plant = plant.name;
+            }
+            events.push({ start: n.start, stem, node: g });
+          });
+
+          const name = el(
+            "text",
+            {
+              x: plant.labelX,
+              y: GROUND_Y + 92,
+              "text-anchor": "middle",
+              class: "bed-name",
+            },
+            bedsG,
+          );
+          name.textContent = plant.name;
+        });
+
+        // Grow the garden in the order life happened: 2007 first, today last.
+        events.sort((a, b) => a.start - b.start);
+        const STEP = 320;
+        events.forEach((ev, i) => {
+          const len = Math.ceil(ev.stem.getTotalLength());
+          ev.stem.style.setProperty("--len", len);
+          ev.stem.style.setProperty("--delay", `${i * STEP}ms`);
+          ev.node.style.setProperty("--delay", `${i * STEP + 420}ms`);
+        });
+        svg.classList.add("grow");
+
+        // ----- Tooltip with location and full dates -----
+        let active = null;
+        function showTip(node) {
+          if (!node.dataset.title) return;
+          if (active) active.classList.remove("active");
+          active = node;
+          node.classList.add("active");
+          tip.innerHTML = "";
+          const strong = document.createElement("strong");
+          strong.textContent = node.dataset.title;
+          const org = document.createElement("div");
+          org.textContent = node.dataset.org;
+          const meta = document.createElement("div");
+          meta.className = "muted";
+          meta.textContent = `${node.dataset.dates} · ${node.dataset.loc}`;
+          tip.append(strong, org, meta);
+
+          const r = node.querySelector(".bloom").getBoundingClientRect();
+          const tw = 260;
+          let x = r.left + r.width / 2 - tw / 2;
+          x = Math.max(12, Math.min(window.innerWidth - tw - 12, x));
+          let y = r.top - 12;
+          tip.style.left = `${x}px`;
+          tip.style.width = `${tw}px`;
+          tip.classList.add("show");
+          const th = tip.offsetHeight;
+          y = y - th < 8 ? r.bottom + 12 : y - th;
+          tip.style.top = `${y}px`;
+        }
+        function hideTip() {
+          if (active) active.classList.remove("active");
+          active = null;
+          tip.classList.remove("show");
+        }
+
+        nodesG.querySelectorAll(".node[tabindex]").forEach((node) => {
+          node.addEventListener("mouseenter", () => showTip(node));
+          node.addEventListener("mouseleave", hideTip);
+          node.addEventListener("focus", () => showTip(node));
+          node.addEventListener("blur", hideTip);
+          node.addEventListener("click", (e) => {
+            e.stopPropagation();
+            active === node ? hideTip() : showTip(node);
+          });
+        });
+        document.addEventListener("click", hideTip);
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") hideTip();
+        });
+        window.addEventListener("scroll", hideTip, { passive: true });
+        document.querySelector(".garden-scroll").addEventListener("scroll", hideTip, {
+          passive: true,
+        });
+      })();
+    </script>
+  </body>
+</html>
