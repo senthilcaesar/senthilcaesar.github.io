@@ -2488,6 +2488,19 @@ body.dark-mode .terminal-buttons .btn.maximize {
   margin-top: 22px;
 }
 
+/* Numbered lists (principles, character): hanging indent so wrapped lines align */
+.terminal-output .term-item {
+  display: grid;
+  grid-template-columns: 3.5ch 1fr;
+  column-gap: 0.5ch;
+  margin-bottom: 10px;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+.terminal-output .term-item-num {
+  text-align: right;
+}
+
 .terminal-output > .cmd-result {
   margin-top: 8px;
 }
