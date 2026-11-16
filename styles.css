@@ -2435,8 +2435,76 @@ body.dark-mode .terminal-buttons .btn.maximize {
   font-weight: 600;
   flex-grow: 1;
   text-align: center;
-  margin-right: 46px;
+  margin-right: 18px;
   transition: color 0.3s ease;
+}
+
+/* Voice-over toggle: reads each command's output aloud */
+.terminal-voice-btn {
+  background: none;
+  border: none;
+  padding: 4px;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  color: #64748b;
+  cursor: pointer;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.terminal-voice-btn:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+  color: #0f172a;
+}
+
+.terminal-voice-btn[aria-pressed="true"] {
+  color: #0284c7;
+}
+
+.terminal-voice-btn .icon-voice-on,
+.terminal-voice-btn[aria-pressed="true"] .icon-voice-off {
+  display: none;
+}
+
+.terminal-voice-btn[aria-pressed="true"] .icon-voice-on {
+  display: block;
+}
+
+.terminal-voice-btn.speaking .icon-voice-on path {
+  animation: voice-wave 1s ease-in-out infinite;
+}
+
+.terminal-voice-btn.speaking .icon-voice-on path + path {
+  animation-delay: 0.2s;
+}
+
+@keyframes voice-wave {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-voice-btn.speaking .icon-voice-on path {
+    animation: none;
+  }
+}
+
+body.dark-mode .terminal-voice-btn {
+  color: #94a3b8;
+}
+
+body.dark-mode .terminal-voice-btn:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #f8fafc;
+}
+
+body.dark-mode .terminal-voice-btn[aria-pressed="true"] {
+  color: #38bdf8;
 }
 
 .terminal-body {

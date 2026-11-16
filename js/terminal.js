@@ -12,12 +12,14 @@
   const outputContainer = windowDiv.querySelector(".terminal-output");
   const body = document.getElementById("terminal-body");
   const chips = windowDiv.querySelectorAll(".term-chip");
+  const voiceBtn = windowDiv.querySelector(".terminal-voice-btn");
 
   const commandHistory = [];
   let historyIndex = -1;
   let isTyping = false;
   let hasTypedWelcome = false;
   const TYPING_SPEED = 4; // ms per character (extremely fast)
+  const WELCOME_HTML = `Welcome to Senthil's interactive console v1.0.0.<br>Type <span class="highlight">help</span> to see a list of commands.<br><br>`;
 
   const qaDatabase = [
     {
@@ -95,6 +97,271 @@
     },
   ];
 
+  // Voice-over: optionally read each command's output aloud. Fixed outputs
+  // have pre-rendered Kokoro clips (audio/terminal/), looked up by a
+  // fingerprint of the spoken text, so an edited output never plays stale
+  // audio. Anything without a clip (dates, durations) uses the browser voice.
+  const VOICE_KEY = "terminal-voice";
+  const VOICE_ON_MESSAGE = "Voice-over on.";
+  const CLIP_DIR = "audio/terminal/";
+  const synth = "speechSynthesis" in window ? window.speechSynthesis : null;
+  const canPlayClips = typeof Audio === "function";
+  const voiceSupported = canPlayClips || !!synth;
+  let voiceEnabled = false;
+  let chosenVoice = null;
+  let speechRun = 0; // bumps on every stop so stale callbacks are ignored
+  // { fingerprint: filename }, set by audio/terminal/clips.js. A script
+  // rather than a fetch, so it also works when index.html is opened from disk.
+  const clips = (canPlayClips && window.TERMINAL_VOICE_CLIPS) || {};
+  let clipPlayer = null;
+
+  try {
+    voiceEnabled = voiceSupported && localStorage.getItem(VOICE_KEY) === "on";
+  } catch (e) {
+    voiceEnabled = false;
+  }
+
+  function pickVoice() {
+    if (!synth) return;
+    const english = synth.getVoices().filter((v) => /^en(-|_|$)/i.test(v.lang));
+    if (!english.length) return;
+    const preferred =
+      /natural|neural|premium|enhanced|google us english|samantha|daniel|aria|jenny/i;
+    chosenVoice =
+      english.find((v) => preferred.test(v.name) && v.localService) ||
+      english.find((v) => preferred.test(v.name)) ||
+      english.find((v) => v.default) ||
+      english[0];
+  }
+
+  if (synth && synth.addEventListener) {
+    pickVoice();
+    synth.addEventListener("voiceschanged", pickVoice);
+  }
+
+  const MONTH_FULL = {
+    Jan: "January", Feb: "February", Mar: "March", Apr: "April",
+    Jun: "June", Jul: "July", Aug: "August", Sep: "September",
+    Oct: "October", Nov: "November", Dec: "December",
+  };
+
+  const ENTITIES = { nbsp: " ", amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", "#39": "'" };
+
+  // Turn the HTML a command returns into sentences that sound natural.
+  // Pure string work (no DOM), so tools/terminal-voice/build.js gets the
+  // exact same text, and fingerprint, as the page does.
+  function htmlToSpeech(html) {
+    return html
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<\/(td|th)>/gi, ", ")
+      .replace(/<\/(tr|li|p|div)>/gi, "\n")
+      .replace(/<\/span>\s*(?=<span class="term-item[" ])/gi, "</span>\n")
+      .replace(/<[^>]*>/g, "")
+      .replace(/&(#?\w+);/g, (m, name) => (name in ENTITIES ? ENTITIES[name] : m))
+      .replace(/\p{Extended_Pictographic}|️/gu, "")
+      .replace(/•/g, "")
+      .replace(/\b(\d{4})\s+-\s+(?=[A-Z])/g, "$1 to ")
+      .replace(/\[|\]/g, "")
+      .replace(/\b(Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b(?=\s+\d{4})/g, (m) => MONTH_FULL[m])
+      .replace(/\b1 yr\b/g, "1 year")
+      .replace(/\b(\d+) yrs\b/g, "$1 years")
+      .replace(/\b1 mo\b/g, "1 month")
+      .replace(/\b(\d+) mos\b/g, "$1 months")
+      .replace(/^\s*(\d+)\)/gm, "$1. ")
+      .replace(/^\s*([a-z])\)/gm, "")
+      .replace(/^\s*-\s+/gm, "")
+      .replace(/\s+-\s+/g, ", ")
+      .replace(/\s*\|\s*/g, ", ")
+      .replace(/\be\.g\.\s*/g, "for example ")
+      .replace(/\s*\bv\d+(\.\d+)+\b/g, "") // version numbers stay on screen only
+      .split("\n")
+      .map((line) => line.replace(/\s+/g, " ").trim().replace(/,$/, ""))
+      .filter(Boolean)
+      .map((line) => (/[.!?:,]$/.test(line) ? line : line + "."))
+      .join("\n");
+  }
+
+  // FNV-1a over the text: a short, stable key for the clip manifest.
+  function speechFingerprint(text) {
+    let h = 0x811c9dc5;
+    for (let i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = Math.imul(h, 0x01000193);
+    }
+    return (h >>> 0).toString(16).padStart(8, "0");
+  }
+
+  // Chrome stops long utterances after ~15 seconds, so queue short chunks.
+  function chunkSpeech(text) {
+    const chunks = [];
+    text.split("\n").forEach((line) => {
+      const sentences = line.match(/[^.!?]+[.!?]+["')]*\s*|[^.!?]+$/g) || [line];
+      let current = "";
+      sentences.forEach((sentence) => {
+        if ((current + sentence).length > 180 && current) {
+          chunks.push(current.trim());
+          current = "";
+        }
+        current += sentence;
+      });
+      if (current.trim()) chunks.push(current.trim());
+    });
+    return chunks;
+  }
+
+  function setSpeaking(on) {
+    if (voiceBtn) voiceBtn.classList.toggle("speaking", on);
+  }
+
+  function stopSpeaking() {
+    speechRun++;
+    if (synth) synth.cancel();
+    if (clipPlayer) {
+      clipPlayer.pause();
+      clipPlayer.removeAttribute("src");
+    }
+    setSpeaking(false);
+  }
+
+  function speakWithBrowser(text, run) {
+    if (!synth) return;
+    const chunks = chunkSpeech(text);
+    chunks.forEach((chunk, i) => {
+      const utterance = new SpeechSynthesisUtterance(chunk);
+      if (chosenVoice) {
+        utterance.voice = chosenVoice;
+        utterance.lang = chosenVoice.lang;
+      }
+      if (i === 0) {
+        utterance.onstart = () => run === speechRun && setSpeaking(true);
+      }
+      if (i === chunks.length - 1) {
+        utterance.onend = utterance.onerror = () =>
+          run === speechRun && setSpeaking(false);
+      }
+      synth.speak(utterance);
+    });
+  }
+
+  // Plays one or more clips back to back on a single audio element (once it
+  // has started inside the user's gesture, later play() calls are allowed).
+  function playClips(files, pieces, run) {
+    if (!clipPlayer) {
+      clipPlayer = new Audio();
+      clipPlayer.preload = "auto";
+    }
+    let index = 0;
+    const fallBack = () => {
+      // Missing or blocked clip: read the rest with the browser voice.
+      if (run === speechRun) speakWithBrowser(pieces.slice(index).join("\n"), run);
+    };
+    const playNext = () => {
+      clipPlayer.src = CLIP_DIR + files[index];
+      const playing = clipPlayer.play();
+      if (playing && playing.catch) {
+        playing.catch((err) => {
+          if (run !== speechRun || (err && err.name === "AbortError")) return;
+          fallBack();
+        });
+      }
+    };
+    clipPlayer.onplaying = () => run === speechRun && setSpeaking(true);
+    clipPlayer.onerror = fallBack;
+    clipPlayer.onended = () => {
+      if (run !== speechRun) return;
+      index++;
+      if (index < files.length) playNext();
+      else setSpeaking(false);
+    };
+    playNext();
+  }
+
+  // Outputs that change (dates, durations, the visitor's own words) have no
+  // clip of their own. They are spoken from smaller pre-rendered pieces: each
+  // line, and for the lines below, the segments these return.
+  const ORDINALS = [
+    "", "first", "second", "third", "fourth", "fifth", "sixth", "seventh",
+    "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth",
+    "fourteenth", "fifteenth", "sixteenth", "seventeenth", "eighteenth",
+    "nineteenth", "twentieth", "twenty-first", "twenty-second", "twenty-third",
+    "twenty-fourth", "twenty-fifth", "twenty-sixth", "twenty-seventh",
+    "twenty-eighth", "twenty-ninth", "thirtieth", "thirty-first",
+  ];
+  const SEGMENTERS = [
+    // "Today is Monday, November 16, 2026."
+    [
+      /^Today is (\w+), (\w+) (\d{1,2}), (\d{4})\.$/,
+      (m, weekday, month, day, year) => [`Today is ${weekday},`, month, `${ORDINALS[+day]},`, `${year}.`],
+    ],
+    // Don't repeat what the visitor typed.
+    [/^Unknown weather mode: .*?\. (Type .*)$/, (m, rest) => ["Unknown weather mode.", rest]],
+  ];
+
+  function speechPieces(text) {
+    const pieces = [];
+    for (const line of text.split("\n")) {
+      const seg = SEGMENTERS.find(([re]) => re.test(line));
+      if (seg) pieces.push(...seg[1](...line.match(seg[0])));
+      else pieces.push(line);
+    }
+    return pieces;
+  }
+
+  // Commands whose output is not read aloud (a new one still stops any
+  // reading in progress).
+  const SILENT_COMMANDS = ["help"];
+
+  function speakOutput(html, cmdStr = "") {
+    if (!voiceEnabled || !html) return;
+    stopSpeaking();
+    if (SILENT_COMMANDS.includes(cmdStr.trim().split(" ")[0].toLowerCase())) return;
+    const text = htmlToSpeech(html);
+    if (!text) return;
+    const run = speechRun;
+    // Played straight from the key press or click: browsers only let audio
+    // start inside the user's gesture.
+    const whole = clips[speechFingerprint(text)];
+    if (whole) return playClips([whole], [text], run);
+    const pieces = speechPieces(text);
+    const files = pieces.map((piece) => clips[speechFingerprint(piece)]);
+    if (files.every(Boolean)) playClips(files, pieces, run);
+    else speakWithBrowser(text, run);
+  }
+
+  function syncVoiceButton() {
+    if (!voiceBtn) return;
+    voiceBtn.setAttribute("aria-pressed", voiceEnabled ? "true" : "false");
+    voiceBtn.setAttribute(
+      "aria-label",
+      voiceEnabled ? "Turn voice-over off" : "Turn voice-over on",
+    );
+    voiceBtn.title = voiceEnabled ? "Voice-over: on" : "Voice-over: off";
+  }
+
+  function setVoice(on) {
+    voiceEnabled = voiceSupported && on;
+    try {
+      localStorage.setItem(VOICE_KEY, voiceEnabled ? "on" : "off");
+    } catch (e) {
+      /* storage blocked; the setting just won't persist */
+    }
+    if (!voiceEnabled) stopSpeaking();
+    syncVoiceButton();
+  }
+
+  if (voiceBtn) {
+    if (!voiceSupported) {
+      voiceBtn.hidden = true;
+    } else {
+      syncVoiceButton();
+      voiceBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setVoice(!voiceEnabled);
+        if (voiceEnabled) speakOutput(VOICE_ON_MESSAGE);
+      });
+    }
+  }
+
   function tokenizeHTML(htmlString) {
     const tokens = [];
     let i = 0;
@@ -168,9 +435,10 @@
     }
     if (!hasTypedWelcome) {
       hasTypedWelcome = true;
-      const welcomeHTML = `Welcome to Senthil's interactive console v1.0.0.<br>Type <span class="highlight">help</span> to see a list of commands.<br><br>`;
+      const welcomeHTML = WELCOME_HTML;
       outputContainer.innerHTML = "";
       isTyping = true;
+      speakOutput(welcomeHTML);
       typewrite(outputContainer, welcomeHTML, TYPING_SPEED, () => {
         isTyping = false;
         if (window.innerWidth > 768) {
@@ -181,6 +449,7 @@
   }
 
   function closeTerminal() {
+    stopSpeaking();
     windowDiv.classList.add("hidden");
     windowDiv.classList.remove("minimized", "maximized");
     if (backdrop) backdrop.classList.add("hidden");
@@ -236,6 +505,7 @@
       }
 
       if (cmdVal === "clear") {
+        stopSpeaking();
         outputContainer.innerHTML = "";
         return;
       }
@@ -258,6 +528,7 @@
         outputContainer.appendChild(resLine);
 
         isTyping = true;
+        speakOutput(result, cmdVal);
         typewrite(resLine, result, TYPING_SPEED, () => {
           isTyping = false;
         });
@@ -341,6 +612,7 @@
           outputContainer.appendChild(resLine);
 
           isTyping = true;
+          speakOutput(result, cmdVal);
           typewrite(resLine, result, TYPING_SPEED, () => {
             isTyping = false;
             input.focus();
@@ -378,6 +650,7 @@
         "links",
         "contact",
         "theme",
+        "voice",
         "clear",
         "exit",
         "help",
@@ -434,7 +707,7 @@
       case "hey":
         return `Hello! How can I help you today? To see the list of available commands type <span class="highlight">help</span>`;
       case "help":
-        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">identity</span>       - <span class="gray">Who I am</span><br>• <span class="highlight">date</span>          - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">principles</span>     - <span class="gray">Four principles to live by</span><br>• <span class="highlight">character</span>      - <span class="gray">Traits of character to hold to</span><br>• <span class="highlight">presentation</span>   - <span class="gray">Tips for giving a presentation</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">garden</span>         - <span class="gray">Career timeline as a garden</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">reading</span>        - <span class="gray">Favorite newspapers & magazines</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
+        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">identity</span>       - <span class="gray">Who I am</span><br>• <span class="highlight">date</span>          - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">principles</span>     - <span class="gray">Four principles to live by</span><br>• <span class="highlight">character</span>      - <span class="gray">Traits of character to hold to</span><br>• <span class="highlight">presentation</span>   - <span class="gray">Tips for giving a presentation</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">garden</span>         - <span class="gray">Career timeline as a garden</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">reading</span>        - <span class="gray">Favorite newspapers & magazines</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">voice</span>          - <span class="gray">Read output aloud (voice on / voice off)</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
       case "education":
         return `<b>Education History:</b><br><br>
 • <span class="highlight">[Jan 2015 - Jan 2019]</span> <b>Master of Science in Computer Science</b>, <span class="error">University of Massachusetts Boston</span> (USA)<br>
@@ -776,7 +1049,22 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
           return `<span class="success">Theme toggled to ${isDark ? "Dark Mode" : "Light Mode"}!</span>`;
         }
         return `<span class="error">Theme toggle button not found.</span>`;
+      case "voice":
+      case "voiceover": {
+        if (!voiceSupported) {
+          return `<span class="error">Voice-over isn't supported in this browser.</span>`;
+        }
+        const arg = (parts[1] || "").toLowerCase();
+        if (arg === "on") setVoice(true);
+        else if (arg === "off") setVoice(false);
+        else if (arg === "") setVoice(!voiceEnabled);
+        else return `<span class="error">Usage: "voice on" or "voice off".</span>`;
+        return voiceEnabled
+          ? `<span class="success">Voice-over on. Command output will be read aloud.</span>`
+          : `<span class="success">Voice-over off.</span>`;
+      }
       case "clear":
+        stopSpeaking();
         outputContainer.innerHTML = "";
         return "";
       case "exit":
@@ -870,6 +1158,19 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
         }
         return `<span class="error">Command not found. Type "help" to list available commands.</span>`;
     }
+  }
+
+  // Lets tools/terminal-voice/build.js collect every output's spoken text.
+  if (typeof window.__collectTerminalVoice === "function") {
+    window.__collectTerminalVoice({
+      executeCommand,
+      htmlToSpeech,
+      speechFingerprint,
+      speechPieces,
+      welcomeHTML: WELCOME_HTML,
+      voiceOnMessage: VOICE_ON_MESSAGE,
+      qaAnswers: qaDatabase.map((qa) => qa.answer),
+    });
   }
 
   // Resize Handler: every edge and corner can be dragged, like a desktop window
@@ -976,7 +1277,7 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
 
   header.addEventListener("pointerdown", (e) => {
     if (e.button !== 0 || !canDrag()) return;
-    if (e.target.closest(".terminal-buttons")) return;
+    if (e.target.closest(".terminal-buttons, .terminal-voice-btn")) return;
     e.preventDefault();
 
     const rect = windowDiv.getBoundingClientRect();

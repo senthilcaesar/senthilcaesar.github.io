@@ -24,7 +24,19 @@ The project has been refactored for modularity, separating structure, layout, an
     ├── gears.js        # Three.js gears scene builder, shaders, and tilt listeners
     ├── terminal.js     # Retro terminal emulator UI, dragging, and Command database
     └── weather.js      # Canvas physics loops, obstacle coordinates caching, and particle engines
+├── audio/terminal/     # Kokoro voice-over clips for terminal output + clips.js index
+└── tools/terminal-voice/ # build.js re-renders those clips (run after editing an output)
 ```
+
+### Terminal voice-over
+
+The speaker button in the terminal header (or `voice on` / `voice off`) reads each command's
+output aloud in Kokoro (`af_heart`, 0.82× speed); `help` is not read. Outputs that change are spoken
+from smaller pre-rendered pieces: `experience` line by line (the coming 36 months are rendered
+ahead), `date` from "Today is Monday," + "November" + "sixteenth," + "2026." (5 years ahead). Each
+clip is matched to the exact text it reads, so after editing an output, and every year or so for the
+dates, run `node tools/terminal-voice/build.js`; anything without a clip falls back to the
+browser's voice until you do.
 
 ---
 
