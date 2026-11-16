@@ -2497,6 +2497,9 @@ body.dark-mode .terminal-buttons .btn.maximize {
   word-break: normal;
   overflow-wrap: break-word;
 }
+.terminal-output .term-item-sub {
+  margin-left: 4ch;
+}
 .terminal-output .term-item-num {
   text-align: right;
 }
