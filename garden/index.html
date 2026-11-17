@@ -148,28 +148,61 @@
         min-width: 0;
         max-width: 100vw;
       }
-      .garden-scroll {
-        width: 100%;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
       }
-      #garden {
+      .garden-wide {
         display: block;
         width: 100%;
-        min-width: 1400px;
         height: auto;
       }
-      .scroll-hint {
-        display: none;
-        text-align: center;
-        font-size: 0.8rem;
-        color: var(--label-sub);
-        margin: 0 16px 8px;
+      /* Below 1400px each plant gets its own card. The cards share one
+         scale and their lawns meet edge to edge, so a row still reads
+         as one garden. */
+      .garden-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        column-gap: 0;
+        row-gap: 28px;
+        align-items: end;
       }
-      @media (max-width: 1100px) {
-        .scroll-hint {
-          display: block;
+      @media (min-width: 640px) {
+        .garden-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 1100px) {
+        .garden-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .garden-card {
+        min-width: 0;
+      }
+      /* Cards start under the header instead of sinking to the bottom of a
+         tall portrait screen. */
+      @media (max-width: 1399px) {
+        main {
+          justify-content: flex-start;
+          padding-bottom: 24px;
+        }
+      }
+      .garden-card svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      @media (max-width: 639px) {
+        .sky-header {
+          padding: 44px 16px 16px;
+        }
+        main {
+          padding-top: 36px;
         }
       }
 
@@ -224,16 +257,26 @@
         transform-origin: center;
         transition: transform 0.25s ease;
       }
-      .node:hover .bloom,
+      .node {
+        -webkit-tap-highlight-color: transparent;
+      }
+      @media (hover: hover) {
+        .node:hover .bloom {
+          transform: scale(1.18) rotate(22deg);
+        }
+      }
       .node:focus-visible .bloom,
       .node.active .bloom {
         transform: scale(1.18) rotate(22deg);
+      }
+      /* Transparent fill makes the whole ring a tap target, not just the petals. */
+      .focus-ring {
+        fill: transparent;
       }
       .node:focus-visible .focus-ring {
         stroke: var(--title);
         stroke-width: 2;
         stroke-dasharray: 4 3;
-        fill: none;
       }
 
       /* Growth animation: stems draw, flowers bloom in date order. */
@@ -254,6 +297,12 @@
         opacity: 0;
         animation: fade 0.5s ease forwards;
         animation-delay: var(--delay);
+      }
+      /* Cards wait until they scroll into view before growing. */
+      .grow:not(.in-view) .stem,
+      .grow:not(.in-view) .bloom-wrap,
+      .grow:not(.in-view) .label {
+        animation-play-state: paused;
       }
       @keyframes draw {
         to {
@@ -289,7 +338,7 @@
         position: fixed;
         z-index: 10;
         pointer-events: none;
-        max-width: 260px;
+        max-width: calc(100vw - 24px);
         background: var(--tip-bg);
         color: var(--tip-text);
         border: 1px solid var(--tip-border);
@@ -328,33 +377,25 @@
     </header>
 
     <main>
-      <p class="scroll-hint">Swipe sideways to walk through the garden &rarr;</p>
-      <div class="garden-scroll">
-        <svg
-          id="garden"
-          viewBox="0 120 1820 660"
-          role="img"
-          aria-labelledby="garden-title garden-desc"
-        >
-          <title id="garden-title">Senthil's Career Garden</title>
-          <desc id="garden-desc">
-            Four plants growing from a shared bed of ground. Education, 2007 to 2019:
-            B.E. in Electronics and Communication at Anna University, then M.S. in
-            Computer Science at UMass Boston. Information Technology, 2012 to 2017: IT
-            Specialist at MphasiS, then IT Research Assistant at UMass Boston. Neuroscience
-            Research, 2019 to 2024: Clinical
-            Research Coordinator II at Mass General Hospital, Research Data Analyst I at
-            Boston University, branching to Research Associate in Research Math at
-            Nationwide Children's Hospital and Bioinformatician I at Brigham and
-            Women's Hospital. AI and Innovation, 2025 to present: Member of Technical
-            Staff at Amudham Naturals, then Senior Innovation Engineer at Tarento Group.
-          </desc>
-          <g id="stems"></g>
-          <path id="ground" class="ground" d="" />
-          <g id="beds"></g>
-          <g id="nodes"></g>
-        </svg>
-      </div>
+      <div
+        id="garden-root"
+        role="group"
+        aria-labelledby="garden-title"
+        aria-describedby="garden-desc"
+      ></div>
+      <h2 id="garden-title" class="sr-only">Senthil's Career Garden</h2>
+      <p id="garden-desc" class="sr-only">
+        Four plants growing from a shared bed of ground. Education, 2007 to 2019:
+        B.E. in Electronics and Communication at Anna University, then M.S. in
+        Computer Science at UMass Boston. Information Technology, 2012 to 2017: IT
+        Specialist at MphasiS, then IT Research Assistant at UMass Boston. Neuroscience
+        Research, 2019 to 2024: Clinical Research Coordinator II at Mass General
+        Hospital, Research Data Analyst I at Boston University, branching to Research
+        Associate in Research Math at Nationwide Children's Hospital and
+        Bioinformatician I at Brigham and Women's Hospital. AI and Innovation, 2025 to
+        present: Member of Technical Staff at Amudham Naturals, then Senior Innovation
+        Engineer at Tarento Group.
+      </p>
     </main>
 
     <div class="tip" id="tip" role="status" aria-live="polite"></div>
@@ -466,6 +507,7 @@
                 x: -95,
                 y: 320,
                 side: "left",
+                compact: { x: 70, side: "right", orgShort: "Nationwide Children's" },
                 title: "Research Associate",
                 org: "Nationwide Children's Hospital",
                 role: "Research Math",
@@ -530,11 +572,10 @@
           },
         ];
 
-        const svg = document.getElementById("garden");
-        const stemsG = document.getElementById("stems");
-        const nodesG = document.getElementById("nodes");
-        const bedsG = document.getElementById("beds");
+        const root = document.getElementById("garden-root");
         const tip = document.getElementById("tip");
+        const WIDE = window.matchMedia("(min-width: 1400px)");
+        const STEP = 320;
 
         const el = (tag, attrs, parent) => {
           const n = document.createElementNS(NS, tag);
@@ -544,35 +585,24 @@
         };
 
         // ----- Scalloped cloud edge under the header -----
-        (function () {
+        // Bumps stay about 60px wide whatever the screen width.
+        function drawScallop() {
+          const w = Math.max(320, document.documentElement.clientWidth);
+          const count = Math.max(4, Math.round(w / 60));
+          const bump = w / count;
           let d = "M0,0 ";
-          const w = 1200;
-          const bump = 60;
-          for (let x = 0; x < w; x += bump) {
-            d += `Q${x + bump / 2},${22} ${x + bump},0 `;
+          for (let i = 0; i < count; i++) {
+            const x = i * bump;
+            d += `Q${x + bump / 2},22 ${x + bump},0 `;
           }
           d += `L${w},0 Z`;
+          const svg = document.querySelector(".scallop");
+          svg.setAttribute("viewBox", `0 0 ${w} 22`);
           document.getElementById("scallop-path").setAttribute("d", d);
-        })();
+        }
 
         // ----- Rolling ground -----
-        (function () {
-          const left = -20;
-          const right = 1840;
-          const bottom = 800;
-          // Hand-tuned hills so the bed reads as a gentle, uneven lawn.
-          const crests = [
-            [0, 612],
-            [190, 588],
-            [420, 604],
-            [640, 590],
-            [860, 606],
-            [1080, 586],
-            [1300, 604],
-            [1520, 588],
-            [1720, 602],
-            [1840, 596],
-          ];
+        function groundPath(crests, left, right, bottom) {
           let d = `M${left},${bottom} L${left},${crests[0][1]} `;
           for (let i = 0; i < crests.length - 1; i++) {
             const [x0, y0] = crests[i];
@@ -580,9 +610,33 @@
             const mx = (x0 + x1) / 2;
             d += `C${mx},${y0} ${mx},${y1} ${x1},${y1} `;
           }
-          d += `L${right},${bottom} Z`;
-          document.getElementById("ground").setAttribute("d", d);
-        })();
+          return d + `L${right},${bottom} Z`;
+        }
+        // Hand-tuned hills so the panorama's bed reads as a gentle, uneven lawn.
+        const WIDE_CRESTS = [
+          [-20, 612],
+          [190, 588],
+          [420, 604],
+          [640, 590],
+          [860, 606],
+          [1080, 586],
+          [1300, 604],
+          [1520, 588],
+          [1720, 602],
+          [1840, 596],
+        ];
+        // A card's lawn starts and ends at the same height, so neighbouring
+        // cards join without a step.
+        function cardCrests(left, right) {
+          const rise = [0, -12, 6, -10, 4, -13, 5, -8];
+          const n = Math.max(3, Math.round((right - left) / 110));
+          const pts = [];
+          for (let i = 0; i <= n; i++) {
+            const y = i === 0 || i === n ? 598 : 598 + rise[i % rise.length];
+            pts.push([left + ((right - left) * i) / n, y]);
+          }
+          return pts;
+        }
 
         // ----- Flower shape (eight round petals around a ring) -----
         function drawFlower(parent, cx, cy, color) {
@@ -604,7 +658,7 @@
           }
           el("circle", { cx, cy, r: 13, fill: color }, bloom);
           el("circle", { cx, cy, r: 5.5, class: "flower-eye" }, bloom);
-          el("circle", { cx, cy, r: 25, class: "focus-ring", fill: "none" }, wrap);
+          el("circle", { cx, cy, r: 25, class: "focus-ring" }, wrap);
           return wrap;
         }
 
@@ -630,18 +684,24 @@
           return `M${px},${py} C${px},${py - 34} ${cx},${py - 14} ${cx},${turn} L${cx},${cy}`;
         }
 
-        // ----- Build everything, then order the animation by date -----
-        const events = []; // { start, stem, node }
-
-        PLANTS.forEach((plant) => {
+        // ----- Draw one plant into the given layers -----
+        // Returns its growth events and the flowers' positions for fitting.
+        function drawPlant(plant, baseX, compact, stemsG, nodesG) {
+          const events = [];
+          const points = [];
           const byId = {};
-          plant.nodes.forEach((n) => {
-            n.cx = plant.baseX + n.x;
-            n.cy = GROUND_Y - n.y;
+          const nodes = plant.nodes.map((src) => {
+            const o = compact && src.compact ? src.compact : {};
+            const n = Object.assign({}, src, o, {
+              cx: baseX + (o.x !== undefined ? o.x : src.x),
+              cy: GROUND_Y - src.y,
+              side: o.side || src.side,
+            });
             byId[n.id] = n;
+            return n;
           });
 
-          plant.nodes.forEach((n) => {
+          nodes.forEach((n) => {
             let d;
             let trunk = false;
             if (n.parent) {
@@ -652,6 +712,7 @@
               trunk = true;
             }
             const stem = el("path", { d, class: trunk ? "stem trunk" : "stem" }, stemsG);
+            points.push([n.cx, n.cy]);
 
             const g = el("g", { class: "node" }, nodesG);
             if (n.bud) {
@@ -697,37 +758,154 @@
             }
             events.push({ start: n.start, stem, node: g });
           });
+          return { events, points };
+        }
 
-          const name = el(
-            "text",
-            {
-              x: plant.labelX,
-              y: GROUND_Y + 92,
-              "text-anchor": "middle",
-              class: "bed-name",
+        // Grow in the order life happened: earliest first.
+        function scheduleGrowth(events) {
+          events.sort((a, b) => a.start - b.start);
+          events.forEach((ev, i) => {
+            const len = Math.ceil(ev.stem.getTotalLength());
+            ev.stem.style.setProperty("--len", len);
+            ev.stem.style.setProperty("--delay", `${i * STEP}ms`);
+            ev.node.style.setProperty("--delay", `${i * STEP + 420}ms`);
+          });
+        }
+
+        function layers(svg) {
+          return {
+            stemsG: el("g", {}, svg),
+            ground: el("path", { class: "ground" }, svg),
+            bedsG: el("g", {}, svg),
+            nodesG: el("g", {}, svg),
+          };
+        }
+
+        // ----- Wide screens: one panorama, all four plants side by side -----
+        function renderWide(animate) {
+          root.className = "";
+          const svg = el("svg", { class: "garden-wide", viewBox: "0 120 1820 660" }, root);
+          const L = layers(svg);
+          L.ground.setAttribute("d", groundPath(WIDE_CRESTS, -20, 1840, 800));
+          const events = [];
+          PLANTS.forEach((plant) => {
+            events.push(...drawPlant(plant, plant.baseX, false, L.stemsG, L.nodesG).events);
+            const name = el(
+              "text",
+              { x: plant.labelX, y: GROUND_Y + 92, "text-anchor": "middle", class: "bed-name" },
+              L.bedsG,
+            );
+            name.textContent = plant.name;
+          });
+          if (animate) {
+            scheduleGrowth(events);
+            svg.classList.add("grow", "in-view");
+          }
+        }
+
+        // ----- Tablets and phones: one card per plant, in a grid -----
+        let cards = [];
+        function renderCompact(animate) {
+          root.className = "garden-grid";
+          cards = PLANTS.map((plant) => {
+            const card = document.createElement("div");
+            card.className = "garden-card";
+            root.appendChild(card);
+            const svg = el("svg", { viewBox: "0 0 400 700" }, card);
+            const L = layers(svg);
+            const { events, points } = drawPlant(plant, 0, true, L.stemsG, L.nodesG);
+            const name = el(
+              "text",
+              { y: GROUND_Y + 92, "text-anchor": "middle", class: "bed-name" },
+              L.bedsG,
+            );
+            name.textContent = plant.name;
+            if (animate) {
+              scheduleGrowth(events);
+              svg.classList.add("grow");
+            }
+            return { card, svg, ground: L.ground, name, points, nodesG: L.nodesG };
+          });
+          fitCards();
+          if (animate) watchCards();
+        }
+
+        // Give every card the same width in SVG units, so all text renders at
+        // one size and lawns line up; each card is only as tall as its plant.
+        function fitCards() {
+          const PAD = 18;
+          let minX = Infinity;
+          let maxX = -Infinity;
+          cards.forEach((c) => {
+            c.top = Infinity;
+            c.points.forEach(([x, y]) => {
+              minX = Math.min(minX, x - 26);
+              maxX = Math.max(maxX, x + 26);
+              c.top = Math.min(c.top, y - 26);
+            });
+            c.nodesG.querySelectorAll("text").forEach((t) => {
+              const b = t.getBBox();
+              minX = Math.min(minX, b.x);
+              maxX = Math.max(maxX, b.x + b.width);
+              c.top = Math.min(c.top, b.y);
+            });
+          });
+          const left = minX - PAD;
+          const width = maxX - minX + PAD * 2;
+          const bottom = GROUND_Y + 112;
+          cards.forEach((c) => {
+            const top = c.top - PAD;
+            c.svg.setAttribute("viewBox", `${left} ${top} ${width} ${bottom - top}`);
+            c.ground.setAttribute(
+              "d",
+              groundPath(cardCrests(left - 1, left + width + 1), left - 1, left + width + 1, bottom),
+            );
+            c.name.setAttribute("x", left + width / 2);
+          });
+        }
+
+        let observer = null;
+        function watchCards() {
+          if (!("IntersectionObserver" in window)) {
+            cards.forEach((c) => c.svg.classList.add("in-view"));
+            return;
+          }
+          observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((e) => {
+                if (!e.isIntersecting) return;
+                e.target.querySelector("svg").classList.add("in-view");
+                observer.unobserve(e.target);
+              });
             },
-            bedsG,
+            { threshold: 0.35 },
           );
-          name.textContent = plant.name;
-        });
+          cards.forEach((c) => observer.observe(c.card));
+        }
 
-        // Grow the garden in the order life happened: 2007 first, today last.
-        events.sort((a, b) => a.start - b.start);
-        const STEP = 320;
-        events.forEach((ev, i) => {
-          const len = Math.ceil(ev.stem.getTotalLength());
-          ev.stem.style.setProperty("--len", len);
-          ev.stem.style.setProperty("--delay", `${i * STEP}ms`);
-          ev.node.style.setProperty("--delay", `${i * STEP + 420}ms`);
-        });
-        svg.classList.add("grow");
+        // ----- Render, and re-render when crossing the wide breakpoint -----
+        let firstRender = true;
+        function render() {
+          hideTip();
+          if (observer) observer.disconnect();
+          observer = null;
+          cards = [];
+          root.innerHTML = "";
+          // Only the first render animates; a resize just redraws.
+          if (WIDE.matches) renderWide(firstRender);
+          else renderCompact(firstRender);
+          firstRender = false;
+          bindNodes();
+        }
 
         // ----- Tooltip with location and full dates -----
         let active = null;
+        let shownAt = 0;
         function showTip(node) {
           if (!node.dataset.title) return;
           if (active) active.classList.remove("active");
           active = node;
+          shownAt = Date.now();
           node.classList.add("active");
           tip.innerHTML = "";
           const strong = document.createElement("strong");
@@ -740,7 +918,7 @@
           tip.append(strong, org, meta);
 
           const r = node.querySelector(".bloom").getBoundingClientRect();
-          const tw = 260;
+          const tw = Math.min(260, window.innerWidth - 24);
           let x = r.left + r.width / 2 - tw / 2;
           x = Math.max(12, Math.min(window.innerWidth - tw - 12, x));
           let y = r.top - 12;
@@ -757,24 +935,50 @@
           tip.classList.remove("show");
         }
 
-        nodesG.querySelectorAll(".node[tabindex]").forEach((node) => {
-          node.addEventListener("mouseenter", () => showTip(node));
-          node.addEventListener("mouseleave", hideTip);
-          node.addEventListener("focus", () => showTip(node));
-          node.addEventListener("blur", hideTip);
-          node.addEventListener("click", (e) => {
-            e.stopPropagation();
-            active === node ? hideTip() : showTip(node);
+        function bindNodes() {
+          root.querySelectorAll(".node[tabindex]").forEach((node) => {
+            // Hover only for real mice; a tap fires its own click below.
+            node.addEventListener("pointerenter", (e) => {
+              if (e.pointerType === "mouse") showTip(node);
+            });
+            node.addEventListener("pointerleave", (e) => {
+              if (e.pointerType === "mouse") hideTip();
+            });
+            node.addEventListener("focus", () => showTip(node));
+            node.addEventListener("blur", hideTip);
+            node.addEventListener("click", (e) => {
+              e.stopPropagation();
+              // A tap focuses the flower (showing the tip) just before the
+              // click, so only treat it as "close" if the tip was already up.
+              if (active === node && Date.now() - shownAt > 400) hideTip();
+              else showTip(node);
+            });
           });
-        });
+        }
+
         document.addEventListener("click", hideTip);
         document.addEventListener("keydown", (e) => {
           if (e.key === "Escape") hideTip();
         });
         window.addEventListener("scroll", hideTip, { passive: true });
-        document.querySelector(".garden-scroll").addEventListener("scroll", hideTip, {
-          passive: true,
+
+        let resizeTimer = 0;
+        window.addEventListener("resize", () => {
+          hideTip();
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(drawScallop, 100);
         });
+        if (WIDE.addEventListener) WIDE.addEventListener("change", render);
+        else WIDE.addListener(render);
+
+        drawScallop();
+        render();
+        // Label widths change once the web font arrives; refit the cards.
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(() => {
+            if (cards.length) fitCards();
+          });
+        }
       })();
     </script>
   </body>
