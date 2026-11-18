@@ -141,6 +141,7 @@ window.TERMINAL_VOICE_CLIPS = {
   "f5bda117": "experience-f5bda117.m4a",
   "f5e69c5c": "experience-f5e69c5c.m4a",
   "ffe7ebc4": "experience-ffe7ebc4.m4a",
+  "34ac58e6": "favorites-34ac58e6.m4a",
   "db4f64cc": "garden-db4f64cc.m4a",
   "ab00be7f": "gravity-ab00be7f.m4a",
   "c9e13b17": "hello-c9e13b17.m4a",
