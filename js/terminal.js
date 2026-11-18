@@ -165,6 +165,8 @@
       .replace(/\p{Extended_Pictographic}|️/gu, "")
       .replace(/[•◦]/g, "")
       .replace(/\b(\d{4})\s+-\s+(?=[A-Z])/g, "$1 to ")
+      // A bracketed date ends in a comma, so the date is said as its own phrase.
+      .replace(/\[([^\]]*\d{4}[^\]]*)\]\s*/g, "$1, ")
       .replace(/\[|\]/g, "")
       .replace(/\b(Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b(?=\s+\d{4})/g, (m) => MONTH_FULL[m])
       .replace(/\b1 yr\b/g, "1 year")
@@ -452,8 +454,9 @@
     }
   }
 
-  function closeTerminal() {
-    stopSpeaking();
+  // keepVoice: "exit" lets its goodbye finish after the window has closed.
+  function closeTerminal({ keepVoice = false } = {}) {
+    if (!keepVoice) stopSpeaking();
     windowDiv.classList.add("hidden");
     windowDiv.classList.remove("minimized", "maximized");
     if (backdrop) backdrop.classList.add("hidden");
@@ -638,6 +641,7 @@
       if (!partial || partial.includes(" ")) return;
       const commands = [
         "about",
+        "name",
         "identity",
         "skills",
         "softskills",
@@ -715,7 +719,7 @@
       case "hey":
         return `Hello! How can I help you today? To see the list of available commands type <span class="highlight">help</span>`;
       case "help":
-        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">identity</span>       - <span class="gray">Who I am</span><br>• <span class="highlight">date</span>          - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">principles</span>     - <span class="gray">Four principles to live by</span><br>• <span class="highlight">character</span>      - <span class="gray">Traits of character to hold to</span><br>• <span class="highlight">presentation</span>   - <span class="gray">Tips for giving a presentation</span><br>• <span class="highlight">hobbies</span>        - <span class="gray">Things I enjoy doing</span><br>• <span class="highlight">favorites</span>      - <span class="gray">A few of my favorite things</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">garden</span>         - <span class="gray">Career timeline as a garden</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">reading</span>        - <span class="gray">Favorite newspapers & magazines</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">voice</span>          - <span class="gray">Read output aloud (voice on / voice off)</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
+        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">name</span>           - <span class="gray">My name</span><br>• <span class="highlight">identity</span>       - <span class="gray">Who I am</span><br>• <span class="highlight">date</span>          - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">principles</span>     - <span class="gray">Four principles to live by</span><br>• <span class="highlight">character</span>      - <span class="gray">Traits of character to hold to</span><br>• <span class="highlight">presentation</span>   - <span class="gray">Tips for giving a presentation</span><br>• <span class="highlight">hobbies</span>        - <span class="gray">Things I enjoy doing</span><br>• <span class="highlight">favorites</span>      - <span class="gray">A few of my favorite things</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">garden</span>         - <span class="gray">Career timeline as a garden</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">reading</span>        - <span class="gray">Favorite newspapers & magazines</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">voice</span>          - <span class="gray">Read output aloud (voice on / voice off)</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
       case "education":
         return `<b>Education History:</b><br><br>
 • <span class="highlight">[Jan 2015 - Jan 2019]</span> <b>Master of Science in Computer Science</b>, <span class="error">University of Massachusetts Boston</span> (USA)<br>
@@ -1017,6 +1021,8 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
         return `<span class="error">Unknown weather mode: "${modeArg}". Type "weather" to see options.</span>`;
       case "about":
         return `<span class="gray">I started my career as an IT Specialist, primarily working in Linux administration. That was when I was first introduced to Bash scripting and discovered how powerful programming could be in automating routine tasks. It sparked my interest in programming and computer science. Eventually, I reached a point where I felt I had outgrown the routine boundaries of my day-to-day responsibilities. I wanted to explore more, learn programming in depth, and understand computer science beyond my immediate role. That motivation led me to pursue a Master's degree in Computer Science at the University of Massachusetts Boston.<br><br>My time at UMass Boston transformed my learning experience and broadened my perspective. Two courses in particular, Big Data Analytics and Structural Bioinformatics, played an important role in shaping my career aspirations. I became interested in applying computer science to advance genetics and genomics research. Although I couldn't find an opportunity in bioinformatics, I serendipitously landed a position in neuroscience research, an opportunity I remain grateful for.<br><br>For the next six years, I worked in computational neuroscience, exploring areas such as brain anatomy, MRI, sleep medicine, and Alzheimer's research. During this time, I gained hands-on experience in data analytics, machine learning, and deep learning. At the end of 2024, due to visa-related restrictions, I had to leave my position in Boston and move back to India.<br><br>Since then, I have been focusing on machine learning and AI. I also ventured into entrepreneurship, building and launching an online food e-commerce business in India, leveraging AI throughout the journey, from research and website development to marketing, advertising, and launching the business on Amazon India.<br><br>Once the business was up and running, I wanted to explore how AI could be adopted and implemented at an enterprise scale. This led me to my current role, where I get to work more closely with enterprise AI solutions.<br><br>Looking ahead, I am excited about the AI transformation journey and eager to take on new challenges, continue learning, and explore the possibilities of AI.</span>`;
+      case "name":
+        return `<span class="gray">My name is Senthil Palanivelu</span>`;
       case "identity":
         return `<span class="gray">My identity is not defined by a single attribute or characteristic. It is the unique manifestation of all my accumulated memories, experiences, lessons, and perspectives, woven together over time to shape who I am today.</span>`;
       case "date":
@@ -1094,7 +1100,7 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
         return "";
       case "exit":
         setTimeout(() => {
-          closeTerminal();
+          closeTerminal({ keepVoice: true });
         }, 300);
         return `<span class="success">Goodbye, Senthil out. 👋</span>`;
       case "matrix":

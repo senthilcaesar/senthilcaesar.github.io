@@ -40,7 +40,7 @@ const YEARS_AHEAD = 5; // date
 // Commands whose output is fixed: one clip each.
 const COMMANDS = [
   "hello", "about", // not "help": it isn't read aloud
-  "identity", "skills", "softskills", "principles",
+  "name", "identity", "skills", "softskills", "principles",
   "character", "presentation", "hobbies", "favorites", "education", "certifications", "links",
   "contact", "blog", "reading", "garden", "projects", "project",
   "project 1", "project 2", "project 3", "weather",
@@ -70,6 +70,8 @@ const PRONOUNCE = [
   [/^When\b/, "[When](/wˈɛn/)"],
   [/^A\b/, "[A](/ˈA/)"],
   [/^Today is\b/, "[Today](/tʊdˈA/) is"], // "Today is Tuesday" came out "Other day is"
+  // exit: both syllables stressed, and "!" for a beat after. (An inserted pause made "Senthil" start with a stray "uh".)
+  [/^Goodbye, /, "[Goodbye](/ɡˌʊdbˈI/)! "],
 
   // URLs and addresses, said the way a person would.
   [/\bsenthilcaesar\.github\.io\/([\w-]+)\/?/g,
@@ -302,6 +304,11 @@ const LIST_LABELS = [
 const LINE_PAUSE_COMMANDS = ["favorites"];
 const PAUSE_BETWEEN_LINES = 0.6; // seconds
 
+// A line that opens with a date or date range ("September 2026," or
+// "April 2026 to Present,"): said on its own, then a gap before the rest.
+const DATE_LEAD = /^((?:[A-Z][a-z]+ )?\d{4}(?: to (?:[A-Z][a-z]+ \d{4}|Present))?), (.+)$/;
+const PAUSE_AFTER_DATE = 0.5; // seconds
+
 // render.py splits the text on ⟨pause N⟩ and inserts N seconds of silence.
 
 function forKokoro(text, linePause = false) {
@@ -311,7 +318,12 @@ function forKokoro(text, linePause = false) {
   for (const line of lines) {
     const item = line.match(/^(\d{1,2})\.\s+(.*)$/);
     const last = parts[parts.length - 1];
-    if (item) {
+    const dated = line.match(DATE_LEAD);
+    if (dated) {
+      // "April 2026 to Present, Senior Innovation Engineer": the date, a gap, then the rest.
+      if (last) parts.push({ pause: PAUSE_BETWEEN_LINES });
+      parts.push({ text: dated[1] + "." }, { pause: PAUSE_AFTER_DATE }, { text: dated[2] });
+    } else if (item) {
       parts.push({ pause: PAUSE_BEFORE_NUMBER }, { number: +item[1] }, { pause: PAUSE_AFTER_NUMBER });
       parts.push({ text: item[2] });
     } else if (linePause && last) {
