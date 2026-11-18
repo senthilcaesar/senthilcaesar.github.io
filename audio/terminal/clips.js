@@ -3,7 +3,7 @@ window.TERMINAL_VOICE_CLIPS = {
   "47307866": "experience-47307866.m4a",
   "60482220": "date-60482220.m4a",
   "69547378": "experience-69547378.m4a",
-  "14a051e3": "about-14a051e3.m4a",
+  "aa38d950": "about-aa38d950.m4a",
   "9435921c": "antigravity-9435921c.m4a",
   "d8ddf18d": "blog-d8ddf18d.m4a",
   "827c993d": "certifications-827c993d.m4a",
