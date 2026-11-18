@@ -153,6 +153,9 @@
   // exact same text, and fingerprint, as the page does.
   function htmlToSpeech(html) {
     return html
+      // The opening heading ("Hobbies:", "Quick Links:") only restates the
+      // command, so it stays on screen but isn't read.
+      .replace(/^\s*(?:<b>[^<]*:<\/b>|[A-Z][\w &]*:)\s*<br\s*\/?>/, "")
       .replace(/<br\s*\/?>/gi, "\n")
       .replace(/<\/(td|th)>/gi, ", ")
       .replace(/<\/(tr|li|p|div)>/gi, "\n")
@@ -160,7 +163,7 @@
       .replace(/<[^>]*>/g, "")
       .replace(/&(#?\w+);/g, (m, name) => (name in ENTITIES ? ENTITIES[name] : m))
       .replace(/\p{Extended_Pictographic}|️/gu, "")
-      .replace(/•/g, "")
+      .replace(/[•◦]/g, "")
       .replace(/\b(\d{4})\s+-\s+(?=[A-Z])/g, "$1 to ")
       .replace(/\[|\]/g, "")
       .replace(/\b(Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b(?=\s+\d{4})/g, (m) => MONTH_FULL[m])
@@ -642,6 +645,9 @@
         "character",
         "presentation",
         "hobbies",
+        "favorites",
+        "date",
+        "reading",
         "experience",
         "garden",
         "education",
@@ -754,22 +760,22 @@
 </table>`;
       case "presentation":
         return `<b>Presentation tips:</b><br><br>
-<span class="term-item"><span class="term-item-num highlight">1)</span><span class="term-item-text"><span class="highlight">Write a talking script.</span> While you won’t be able to read directly from it while presenting, an outline that summarizes your presentation can help keep your talking points clear as you speak.</span></span>
-<span class="term-item term-item-sub"><span class="term-item-num highlight">a)</span><span class="term-item-text">If you struggle to come up with a script, try pulling up your poster or slides, turning on a recorder and talking through it as if you were explaining it to someone else (although it may feel funny talking to yourself).</span></span>
-<span class="term-item"><span class="term-item-num highlight">2)</span><span class="term-item-text"><span class="highlight">Keep it short.</span> Most people want a quick summary of your topic, not a 20-minute explanation. Spend most of your time on the most important ideas of your presentation, and define words your audience may not know along the way.</span></span>
-<span class="term-item term-item-sub"><span class="term-item-num highlight">a)</span><span class="term-item-text">For example, explain what words like “rural”, “Appalachia” and “psychosocial” mean, so the rest of the poster makes sense as you walk people through it.</span></span>
-<span class="term-item"><span class="term-item-num highlight">3)</span><span class="term-item-text"><span class="highlight">PRACTICE, PRACTICE, PRACTICE!</span> Whether you do this with your coworkers or in front of your bathroom mirror, practice makes perfect. Give yourself space to stumble over words and make mistakes in private, so that when it is time to present, you know which words or parts to take at a slower pace.</span></span>
-<span class="term-item"><span class="term-item-num highlight">4)</span><span class="term-item-text"><span class="highlight">Remember: you’ve got this!</span> You did the work and made the poster or presentation. You practiced. You refined your talking script to make it as clean and coherent as possible. You know this content like the back of your hand! Have confidence in yourself (and remember that it’ll be over before you know it!).</span></span>`;
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text"><span class="highlight">Write a talking script.</span> While you won’t be able to read directly from it while presenting, an outline that summarizes your presentation can help keep your talking points clear as you speak.</span></span>
+<span class="term-item term-item-sub"><span class="term-item-num highlight">◦</span><span class="term-item-text">If you struggle to come up with a script, try pulling up your poster or slides, turning on a recorder and talking through it as if you were explaining it to someone else (although it may feel funny talking to yourself).</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text"><span class="highlight">Keep it short.</span> Most people want a quick summary of your topic, not a 20-minute explanation. Spend most of your time on the most important ideas of your presentation, and define words your audience may not know along the way.</span></span>
+<span class="term-item term-item-sub"><span class="term-item-num highlight">◦</span><span class="term-item-text">For example, explain what words like “rural”, “Appalachia” and “psychosocial” mean, so the rest of the poster makes sense as you walk people through it.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text"><span class="highlight">PRACTICE, PRACTICE, PRACTICE!</span> Whether you do this with your coworkers or in front of your bathroom mirror, practice makes perfect. Give yourself space to stumble over words and make mistakes in private, so that when it is time to present, you know which words or parts to take at a slower pace.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text"><span class="highlight">Remember: you’ve got this!</span> You did the work and made the poster or presentation. You practiced. You refined your talking script to make it as clean and coherent as possible. You know this content like the back of your hand! Have confidence in yourself (and remember that it’ll be over before you know it!).</span></span>`;
       case "hobbies":
         return `<b>Hobbies:</b><br><br>
-<span class="term-item"><span class="term-item-num highlight">1)</span><span class="term-item-text">Reading books</span></span>
-<span class="term-item"><span class="term-item-num highlight">2)</span><span class="term-item-text">Hiking</span></span>
-<span class="term-item"><span class="term-item-num highlight">3)</span><span class="term-item-text">Cycling</span></span>
-<span class="term-item"><span class="term-item-num highlight">4)</span><span class="term-item-text">Walking around the city</span></span>
-<span class="term-item"><span class="term-item-num highlight">5)</span><span class="term-item-text">Exploring cafe/book shops</span></span>
-<span class="term-item"><span class="term-item-num highlight">6)</span><span class="term-item-text">Travel</span></span>
-<span class="term-item"><span class="term-item-num highlight">7)</span><span class="term-item-text">Blogging/Vlogging</span></span>
-<span class="term-item"><span class="term-item-num highlight">8)</span><span class="term-item-text">Buying miscellaneous items</span></span>`;
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Reading books</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Hiking</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Cycling</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Walking around the city</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Exploring cafe/book shops</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Travel</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Blogging/Vlogging</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Buying miscellaneous items</span></span>`;
       case "favorites":
         return `<b>Favorites:</b><br><br>
 <span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text"><span class="highlight">Car:</span> Honda CR-V Hybrid</span></span>
@@ -779,44 +785,44 @@
 <span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text"><span class="highlight">Tech:</span> All Apple Products</span></span>`;
       case "character":
         return `<b>Character:</b><br><br>
-<span class="term-item"><span class="term-item-num highlight">1)</span><span class="term-item-text">Self-sufficient</span></span>
-<span class="term-item"><span class="term-item-num highlight">2)</span><span class="term-item-text">Self-assertive</span></span>
-<span class="term-item"><span class="term-item-num highlight">3)</span><span class="term-item-text">Self-actualization</span></span>
-<span class="term-item"><span class="term-item-num highlight">4)</span><span class="term-item-text">Self-determination</span></span>
-<span class="term-item"><span class="term-item-num highlight">5)</span><span class="term-item-text">Stand firm in your personal integrity</span></span>
-<span class="term-item"><span class="term-item-num highlight">6)</span><span class="term-item-text">Work through your moral dilemmas, the wars, the combats of the mind</span></span>
-<span class="term-item"><span class="term-item-num highlight">7)</span><span class="term-item-text">Never let personal emotions have full rein over you; if left unchecked, it will lead straight to destruction.</span></span>
-<span class="term-item"><span class="term-item-num highlight">8)</span><span class="term-item-text">Be disciplined in thought and action.</span></span>
-<span class="term-item"><span class="term-item-num highlight">9)</span><span class="term-item-text">Be patient. It's easy to make rash decisions in a fit of anger.</span></span>
-<span class="term-item"><span class="term-item-num highlight">10)</span><span class="term-item-text">Don't make life decisions based on the barest bits of information.</span></span>
-<span class="term-item"><span class="term-item-num highlight">11)</span><span class="term-item-text">Don't let yourself, your reality, interests, life developments and your self-belief crumble to ground zero just because you fell into infatuation.</span></span>
-<span class="term-item"><span class="term-item-num highlight">12)</span><span class="term-item-text">Self-confidence, dignity and elegance are the image I should have.</span></span>
-<span class="term-item"><span class="term-item-num highlight">13)</span><span class="term-item-text">Silence: Do not engage in unimportant talk.</span></span>
-<span class="term-item"><span class="term-item-num highlight">14)</span><span class="term-item-text">Decide what you want to accomplish, be unyielding.</span></span>
-<span class="term-item"><span class="term-item-num highlight">15)</span><span class="term-item-text">When other people criticize you, you must be calm and dispassionate and show that you are listening attentively.</span></span>
-<span class="term-item"><span class="term-item-num highlight">16)</span><span class="term-item-text">I have no time to be unhappy because there are too many things I want to do.</span></span>
-<span class="term-item"><span class="term-item-num highlight">17)</span><span class="term-item-text">Be resolute (hold your ground).</span></span>
-<span class="term-item"><span class="term-item-num highlight">18)</span><span class="term-item-text">Be patient and wait for the purpose of things to become visible.</span></span>
-<span class="term-item"><span class="term-item-num highlight">19)</span><span class="term-item-text">In pursuing success, knowledge contributes 50% and interpersonal relations 50%.</span></span>
-<span class="term-item"><span class="term-item-num highlight">20)</span><span class="term-item-text">Walk into a room like you own it.</span></span>
-<span class="term-item"><span class="term-item-num highlight">21)</span><span class="term-item-text">Be confident in your actions and words.</span></span>
-<span class="term-item"><span class="term-item-num highlight">22)</span><span class="term-item-text">Life is not just about making money. Even if I make a lot of money, it won't satisfy me. Just to make money is not enough meaning in life. I want to keep raising the quality of my life. I want to find new kinds of happiness. I am looking for something that couldn't be measured.</span></span>
-<span class="term-item"><span class="term-item-num highlight">23)</span><span class="term-item-text">Don't lose sight of what is more important to you.</span></span>
-<span class="term-item"><span class="term-item-num highlight">24)</span><span class="term-item-text">Proceed with a strong intention, but a gentle approach.</span></span>`;
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Self-sufficient</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Self-assertive</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Self-actualization</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Self-determination</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Stand firm in your personal integrity</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Work through your moral dilemmas, the wars, the combats of the mind</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Never let personal emotions have full rein over you; if left unchecked, it will lead straight to destruction.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Be disciplined in thought and action.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Be patient. It's easy to make rash decisions in a fit of anger.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Don't make life decisions based on the barest bits of information.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Don't let yourself, your reality, interests, life developments and your self-belief crumble to ground zero just because you fell into infatuation.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Self-confidence, dignity and elegance are the image I should have.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Silence: Do not engage in unimportant talk.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Decide what you want to accomplish, be unyielding.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">When other people criticize you, you must be calm and dispassionate and show that you are listening attentively.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">I have no time to be unhappy because there are too many things I want to do.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Be resolute (hold your ground).</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Be patient and wait for the purpose of things to become visible.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">In pursuing success, knowledge contributes 50% and interpersonal relations 50%.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Walk into a room like you own it.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Be confident in your actions and words.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Life is not just about making money. Even if I make a lot of money, it won't satisfy me. Just to make money is not enough meaning in life. I want to keep raising the quality of my life. I want to find new kinds of happiness. I am looking for something that couldn't be measured.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Don't lose sight of what is more important to you.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text">Proceed with a strong intention, but a gentle approach.</span></span>`;
       case "principles":
       case "princicples":
         return `<b>Principles:</b><br><br>
-<span class="term-item"><span class="term-item-num highlight">1)</span><span class="term-item-text"><span class="highlight">Don't allow yourself to fall ill.</span> A wild life can at times appear romantic, poetic, and attractive, but in today's conditions it is inappropriate. You are the best keeper of your life. There is nothing more unfortunate nowadays than to lose your health. It is closest to your heart. The only thing to do is keep a close watch on it, pay careful attention to it, and cherish it.</span></span>
-<span class="term-item"><span class="term-item-num highlight">2)</span><span class="term-item-text"><span class="highlight">Make sure you are happy.</span> Only when you are happy can you be youthful, active, fulfilled in your life, and steadfast in the face of all difficulties; only then will you see a future ahead of you and know how to enjoy yourself. This sort of happiness is not a life of contentment, but a life of struggle and of advance. Therefore we should all do some meaningful work each day and some reading, so that each of us is in a position to give something to others. Loafing about simply encourages the feeling that life is hollow, feeble, and in decay.</span></span>
-<span class="term-item"><span class="term-item-num highlight">3)</span><span class="term-item-text"><span class="highlight">Use your brain, and make a habit of doing so.</span> Correct any tendency not to think and ponder, or to swim with the current. Before you say or do anything, think whether what you are saying is right, whether that is the most suitable way of dealing with the problem, whether it goes against your own principles, whether you feel you can take responsibility for it. Then you will have no cause to regret your actions later. This is what is known as acting rationally. It is the best way of avoiding the pitfalls of sweet words and honeyed phrases, of being sidetracked by petty gains, of wasting our emotions and wasting our lives.</span></span>
-<span class="term-item"><span class="term-item-num highlight">4)</span><span class="term-item-text"><span class="highlight">Resolution in hardship, perseverance to the end.</span> Aware, modern person should identify and cast off all their rosy illusions. Happiness is to take up the struggle in the midst of the raging storm and not to pluck the lute in the moonlight or recite poetry among the blossoms. In the absence of the greatest resolution, it is very easy to falter in mid-path. Not to suffer is to become degenerate. The strength to carry on should be nurtured through the quality of "perseverance." People without great aims and ambitions rarely have the firmness of purpose that does not covet petty advantages or seek a comfortable existence. But only those who have aims and ambitions for the benefit, not of the individual, but of humankind as a whole can persevere to the end.</span></span>`;
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text"><span class="highlight">Don't allow yourself to fall ill.</span> A wild life can at times appear romantic, poetic, and attractive, but in today's conditions it is inappropriate. You are the best keeper of your life. There is nothing more unfortunate nowadays than to lose your health. It is closest to your heart. The only thing to do is keep a close watch on it, pay careful attention to it, and cherish it.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text"><span class="highlight">Make sure you are happy.</span> Only when you are happy can you be youthful, active, fulfilled in your life, and steadfast in the face of all difficulties; only then will you see a future ahead of you and know how to enjoy yourself. This sort of happiness is not a life of contentment, but a life of struggle and of advance. Therefore we should all do some meaningful work each day and some reading, so that each of us is in a position to give something to others. Loafing about simply encourages the feeling that life is hollow, feeble, and in decay.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text"><span class="highlight">Use your brain, and make a habit of doing so.</span> Correct any tendency not to think and ponder, or to swim with the current. Before you say or do anything, think whether what you are saying is right, whether that is the most suitable way of dealing with the problem, whether it goes against your own principles, whether you feel you can take responsibility for it. Then you will have no cause to regret your actions later. This is what is known as acting rationally. It is the best way of avoiding the pitfalls of sweet words and honeyed phrases, of being sidetracked by petty gains, of wasting our emotions and wasting our lives.</span></span>
+<span class="term-item"><span class="term-item-num highlight">•</span><span class="term-item-text"><span class="highlight">Resolution in hardship, perseverance to the end.</span> Aware, modern person should identify and cast off all their rosy illusions. Happiness is to take up the struggle in the midst of the raging storm and not to pluck the lute in the moonlight or recite poetry among the blossoms. In the absence of the greatest resolution, it is very easy to falter in mid-path. Not to suffer is to become degenerate. The strength to carry on should be nurtured through the quality of "perseverance." People without great aims and ambitions rarely have the firmness of purpose that does not covet petty advantages or seek a comfortable existence. But only those who have aims and ambitions for the benefit, not of the individual, but of humankind as a whole can persevere to the end.</span></span>`;
       case "softskills":
         return `<b>Essential Soft Skills:</b><br><br>
-<span class="highlight">1.</span> Asking the Right Questions<br>
-<span class="highlight">2.</span> Clear and Articulate Communication<br>
-<span class="highlight">3.</span> Storytelling and Narrative Building<br>
-<span class="highlight">4.</span> A Research Oriented Mindset<br>
-<span class="highlight">5.</span> Polished Presentation Skills`;
+• Asking the Right Questions<br>
+• Clear and Articulate Communication<br>
+• Storytelling and Narrative Building<br>
+• A Research Oriented Mindset<br>
+• Polished Presentation Skills`;
       case "experience": {
         const MONTH_NAMES = [
           "Jan",

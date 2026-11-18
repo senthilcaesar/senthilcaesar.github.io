@@ -246,7 +246,7 @@ function collect() {
     const key = exported.speechFingerprint(text);
     if (items.has(key)) return;
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-    items.set(key, { key, text, tight, file: `${slug}-${key}.m4a` });
+    items.set(key, { key, text, tight, linePause: LINE_PAUSE_COMMANDS.includes(name), file: `${slug}-${key}.m4a` });
   };
   for (const [name, html] of htmls) {
     if (html) add(name, exported.htmlToSpeech(html));
@@ -297,9 +297,14 @@ const LIST_LABELS = [
   [/^Character:/, "Trait number"],
 ];
 
+// Outputs whose lines are separate points: a gap after each one, instead of
+// running them together into one stream.
+const LINE_PAUSE_COMMANDS = ["favorites"];
+const PAUSE_BETWEEN_LINES = 0.6; // seconds
+
 // render.py splits the text on ⟨pause N⟩ and inserts N seconds of silence.
 
-function forKokoro(text) {
+function forKokoro(text, linePause = false) {
   const parts = []; // { pause } | { number } | { text }
   const lines = text.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').split("\n");
   const label = (LIST_LABELS.find(([re]) => re.test(lines[0])) || [null, "Number"])[1];
@@ -309,6 +314,8 @@ function forKokoro(text) {
     if (item) {
       parts.push({ pause: PAUSE_BEFORE_NUMBER }, { number: +item[1] }, { pause: PAUSE_AFTER_NUMBER });
       parts.push({ text: item[2] });
+    } else if (linePause && last) {
+      parts.push({ pause: PAUSE_BETWEEN_LINES }, { text: line });
     } else if (last && "text" in last) {
       last.text += " " + line;
     } else {
@@ -341,12 +348,12 @@ function main() {
 
   if (args.has("--json")) {
     // for pronunciation audits: [{ file, text, kokoro }]
-    console.log(JSON.stringify(items.map((it) => ({ file: it.file, text: it.text, tight: it.tight, kokoro: forKokoro(it.text) }))));
+    console.log(JSON.stringify(items.map((it) => ({ file: it.file, text: it.text, tight: it.tight, kokoro: forKokoro(it.text, it.linePause) }))));
     return;
   }
 
   if (args.has("--list")) {
-    for (const it of items) console.log(`${it.file}\n  ${forKokoro(it.text)}\n`);
+    for (const it of items) console.log(`${it.file}\n  ${forKokoro(it.text, it.linePause)}\n`);
     return;
   }
 
@@ -361,7 +368,7 @@ function main() {
       voice: VOICE,
       speed: SPEED,
       items: todo.map((it) => ({
-        text: forKokoro(it.text),
+        text: forKokoro(it.text, it.linePause),
         tight: it.tight,
         // a date's day ("sixteenth,") said alone starts with a stray "uh"
         lead_in: it.tight && /^[a-z-]+(st|nd|rd|th),$/.test(it.text) ? "November" : undefined,

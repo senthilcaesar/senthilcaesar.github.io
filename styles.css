@@ -2556,7 +2556,7 @@ body.dark-mode .terminal-voice-btn[aria-pressed="true"] {
   margin-top: 22px;
 }
 
-/* Numbered lists (principles, character): hanging indent so wrapped lines align */
+/* Bulleted lists (principles, character, hobbies…): hanging indent so wrapped lines align */
 .terminal-output .term-item {
   display: grid;
   grid-template-columns: 3.5ch 1fr;
