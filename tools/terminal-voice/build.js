@@ -30,7 +30,7 @@ const { execFileSync } = require("child_process");
 const ROOT = path.resolve(__dirname, "../..");
 const OUT_DIR = path.join(ROOT, "audio/terminal");
 const VOICE = "af_heart";
-const SPEED = 0.82;
+const SPEED = 0.83;
 const KOKORO_PY =
   process.env.KOKORO_PY || path.join(os.homedir(), ".cache/demo-video-tts/bin/python");
 
