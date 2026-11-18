@@ -41,7 +41,7 @@ const YEARS_AHEAD = 5; // date
 const COMMANDS = [
   "hello", "about", // not "help": it isn't read aloud
   "identity", "skills", "softskills", "principles",
-  "character", "presentation", "education", "certifications", "links",
+  "character", "presentation", "hobbies", "education", "certifications", "links",
   "contact", "blog", "reading", "garden", "projects", "project",
   "project 1", "project 2", "project 3", "weather",
   ...["auto", "none", "rain", "sun-rising", "snowing", "summer", "windy",
