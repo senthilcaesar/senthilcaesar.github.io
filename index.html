@@ -128,6 +128,10 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
       onerror="if(!window.THREE){this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js';}"
     ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"
+    ></script>
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="styles.css" />
@@ -564,6 +568,10 @@
           />
         </svg>
       </div>
+
+      <!-- Two 3D birds flying across the background (js/birds.js).
+           Placed after the sun, moon and clouds so the birds fly in front of them. -->
+      <div id="sky-birds" class="sky-birds" aria-hidden="true"></div>
 
       <div class="main-layout" id="about">
         <!-- Left Sidebar -->
@@ -1637,6 +1645,8 @@
     <!-- Modular Scripts -->
     <script defer src="js/main.js"></script>
     <script defer src="js/gears.js"></script>
+    <script defer src="models/bird-models.js"></script>
+    <script defer src="js/birds.js"></script>
     <script defer src="audio/terminal/clips.js"></script>
     <script defer src="js/terminal.js"></script>
     <script defer src="js/weather.js"></script>

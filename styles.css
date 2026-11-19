@@ -5506,3 +5506,33 @@ body.dark-mode .gear-lightbox {
     gap: 16px !important;
   }
 }
+
+/* ---------- Background birds (3D, rendered by js/birds.js) ---------- */
+.sky-birds {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.35;
+  transition: opacity var(--transition-speed);
+}
+
+.sky-birds canvas {
+  display: block;
+}
+
+body.dark-mode .sky-birds {
+  opacity: 0.25;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-birds {
+    display: none;
+  }
+}
+
+@media print {
+  .sky-birds {
+    display: none;
+  }
+}
