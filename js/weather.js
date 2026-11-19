@@ -27,7 +27,7 @@
       ".quick-link-card",
       ".profile-img",
       ".speech-bubble",
-      ".contact-box",
+      ".envelope",
       ".sub-list-col",
     ];
     const scrollY = window.scrollY;

@@ -1015,58 +1015,55 @@
       <!-- Contact Info Section -->
       <article class="content-section" id="contact">
         <h2 class="section-title">Contact</h2>
-        <div class="contact-window">
-          <div class="window-header">
-            <div class="window-controls">
-              <span class="control close"></span>
-              <span class="control minimize"></span>
-              <span class="control zoom"></span>
-            </div>
-            <div class="window-title">New Message</div>
-            <div class="window-header-spacer"></div>
+        <div class="envelope" id="contact-envelope">
+          <div class="envelope-return">
+            <span>A friendly visitor</span>
+            <span>Somewhere on the internet</span>
           </div>
-          <div class="window-fields">
-            <div class="field-row">
-              <span class="field-label">To:</span>
-              <span class="field-value">
-                <span class="contact-pill">
-                  Senthil Palanivelu &lt;senthilcaesar@gmail.com&gt;
+
+          <div class="envelope-postage" aria-hidden="true">
+            <div class="envelope-postmark">
+              <span class="postmark-date" id="postmark-date">2026</span>
+            </div>
+            <div class="stamp-wrap">
+              <div class="envelope-stamp">
+                <span class="stamp-inner">
+                  <span class="stamp-flag"></span>
+                  <span class="stamp-label">BOSTON</span>
                 </span>
-              </span>
-            </div>
-            <div class="field-row">
-              <span class="field-label">Subject:</span>
-              <span class="field-value highlight-subject"
-                >Hello! Let's connect</span
-              >
+              </div>
             </div>
           </div>
-          <div class="window-body">
-            <p class="window-text">
-              Hi Senthil,<br /><br />
-              I'd love to get in touch to discuss research, machine learning
-              projects, or simply connect and say hello!
-            </p>
-            <div class="window-actions">
-              <a
-                href="mailto:senthilcaesar@gmail.com?subject=Hello!%20Let's%20connect"
-                class="macos-btn-primary"
-                aria-label="Send Email"
-              >
-                <span>Send Message</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="send-icon"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M1.946 9.315c-.522-.174-.527-.455.01-.634l20.587-6.862c.522-.174.747.079.536.585L16.2 22.996c-.21.506-.5.485-.637-.029l-3.396-12.74-10.22-1.912z"
-                  />
-                </svg>
-              </a>
-            </div>
+
+          <address class="envelope-address">
+            <span class="address-name">Senthil Palanivelu</span>
+            <span>senthilcaesar@gmail.com</span>
+            <span>RE: Hello! Let's connect</span>
+          </address>
+
+          <div class="envelope-footer">
+            <span class="envelope-barcode" aria-hidden="true"></span>
+            <a
+              href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=senthilcaesar@gmail.com&amp;su=Hello!%20Let's%20connect"
+              class="envelope-send"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Send an email to Senthil in Gmail (opens in a new tab)"
+            >
+              <span class="send-inner">
+                <span class="mail-icon" aria-hidden="true">
+                  <svg class="mail-back" viewBox="0 0 26 18"><rect x="0.8" y="0.8" width="24.4" height="16.4" rx="1.6" /></svg>
+                  <span class="mail-flap">
+                    <svg viewBox="0 0 26 12"><path d="M0.8 0.8 13 11 25.2 0.8Z" /></svg>
+                  </span>
+                  <span class="mail-letter">
+                    <svg viewBox="0 0 18 14"><rect x="0.7" y="0.7" width="16.6" height="12.6" rx="0.8" /><path d="M4 5h10M4 8h10M4 11h6" /></svg>
+                  </span>
+                  <svg class="mail-pocket" viewBox="0 0 26 18"><path d="M0.8 0.8 13 10.4 25.2 0.8V15.6a1.6 1.6 0 0 1-1.6 1.6H2.4a1.6 1.6 0 0 1-1.6-1.6Z" /><path class="mail-fold" d="M0.8 17 10.6 8.6M25.2 17 15.4 8.6" /></svg>
+                </span>
+                <span class="send-label">Send Mail</span>
+              </span>
+            </a>
           </div>
         </div>
       </article>

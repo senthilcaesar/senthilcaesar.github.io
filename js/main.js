@@ -1181,3 +1181,14 @@ function createGearLoop(svg, caption) {
 
     return { play, stop: reset, pause, resume, isPaused: () => paused, isMuted, setMuted };
 }
+
+// --- CONTACT ENVELOPE ---
+// Stamp today's date into the postmark.
+(function initContactEnvelope() {
+    const postmark = document.getElementById('postmark-date');
+    if (!postmark) return;
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = now.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+    postmark.textContent = `${month} ${day}\n${now.getFullYear()}`;
+})();
