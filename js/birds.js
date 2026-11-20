@@ -3,13 +3,19 @@
 (function () {
   // model: which bird; scale: size; y: height (-1 bottom .. 1 top of view);
   // z: depth (negative = further away); speed: screen-widths per second (roughly);
-  // flap: wing-beat speed; offset: starting point along the path (0..1)
+  // flap: wing-beat speed; offset: where the bird starts each pass, at or behind the
+  // left edge (0 = just off-screen, negative = further back, so it enters later)
   const FLOCK = [
-    { model: "stork", scale: 0.6, y: 0.55, z: 0, speed: 0.032, flap: 1.0, offset: 0.2 },
-    { model: "stork", scale: 0.45, y: 0.42, z: -250, speed: 0.032, flap: 1.15, offset: 0.12 },
-    { model: "parrot", scale: 0.45, y: 0.3, z: -150, speed: 0.045, flap: 1.4, offset: 0.85 },
-    { model: "parrot", scale: 0.35, y: 0.22, z: -350, speed: 0.045, flap: 1.55, offset: 0.78 },
+    { model: "stork", scale: 0.6, y: 0.55, z: 0, speed: 0.032, flap: 1.0, offset: 0 },
+    { model: "stork", scale: 0.45, y: 0.42, z: -250, speed: 0.032, flap: 1.15, offset: -0.08 },
+    { model: "parrot", scale: 0.45, y: 0.3, z: -150, speed: 0.045, flap: 1.4, offset: -0.1 },
+    { model: "parrot", scale: 0.35, y: 0.22, z: -350, speed: 0.045, flap: 1.55, offset: -0.17 },
   ];
+
+  // The sky stays empty for FIRST_PAUSE_SECONDS after the page opens, then for
+  // PAUSE_SECONDS after each flock has flown off the right edge.
+  const FIRST_PAUSE_SECONDS = 18;
+  const PAUSE_SECONDS = 8;
 
   function init() {
     const container = document.getElementById("sky-birds");
@@ -54,8 +60,9 @@
         action.timeScale = s.flap;
         action.startAt(-Math.random());
         action.play();
+        mesh.visible = false; // joins the next pass
         scene.add(mesh);
-        birds.push({ mesh: mesh, mixer: mixer, s: s, progress: s.offset });
+        birds.push({ mesh: mesh, mixer: mixer, s: s, progress: s.offset, active: false });
       }, undefined, function (err) {
         console.warn("[birds] could not load model", err);
       });
@@ -63,6 +70,17 @@
 
     const clock = new THREE.Clock();
     let running = true;
+    let flying = false; // false: empty sky, counting down to the next pass
+    let waitLeft = FIRST_PAUSE_SECONDS;
+
+    function startPass() {
+      flying = true;
+      birds.forEach(function (b) {
+        b.progress = b.s.offset;
+        b.active = true;
+        b.mesh.visible = true;
+      });
+    }
 
     function animate() {
       if (!running) return;
@@ -71,10 +89,21 @@
       const t = clock.elapsedTime;
       const half = viewHalf();
 
+      if (!flying) {
+        waitLeft -= dt;
+        if (waitLeft <= 0 && birds.length) startPass();
+      }
+
       birds.forEach(function (b, i) {
+        if (!b.active) return;
         b.mixer.update(dt);
         b.progress += b.s.speed * dt;
-        if (b.progress > 1.15) b.progress -= 1.3;
+        if (b.progress >= 1) {
+          // off the right edge: this bird is done for this pass
+          b.active = false;
+          b.mesh.visible = false;
+          return;
+        }
         // depth-aware edges so birds start and end fully off-screen
         const depthScale = (camera.position.z - b.s.z) / camera.position.z;
         const edge = half.w * depthScale + 200;
@@ -85,6 +114,11 @@
         b.mesh.rotation.y = Math.PI / 2;
         b.mesh.rotation.z = Math.cos(t * 0.6 + i * 2) * 0.08;
       });
+
+      if (flying && !birds.some(function (b) { return b.active; })) {
+        flying = false;
+        waitLeft = PAUSE_SECONDS;
+      }
 
       renderer.render(scene, camera);
     }

@@ -31,7 +31,7 @@
         "about senthil",
       ],
       answer:
-        "I'm a CS graduate from UMass Boston specializing in Data Analytics, AI Engineering, and Machine Learning. I'm passionate about using evidence-based insights to solve real-world problems.",
+        "I'm a CS graduate from UMass Boston specializing in Data Analytics, AI Engineering, and Machine Learning. I'm passionate about using evidence-based insights to solve challenging problems.",
     },
     {
       keywords: [

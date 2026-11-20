@@ -157,7 +157,7 @@ window.TERMINAL_VOICE_CLIPS = {
   "5da20493": "project-3-5da20493.m4a",
   "b03b3445": "project-b03b3445.m4a",
   "cb362f26": "projects-cb362f26.m4a",
-  "b0bb201e": "qa-1-b0bb201e.m4a",
+  "4d370b83": "qa-1-4d370b83.m4a",
   "86afe2e7": "qa-2-86afe2e7.m4a",
   "0364b19c": "qa-3-0364b19c.m4a",
   "c109ead8": "qa-4-c109ead8.m4a",
