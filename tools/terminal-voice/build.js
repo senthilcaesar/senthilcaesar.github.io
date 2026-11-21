@@ -40,7 +40,7 @@ const YEARS_AHEAD = 5; // date
 // Commands whose output is fixed: one clip each.
 const COMMANDS = [
   "hello", "about", // not "help": it isn't read aloud
-  "name", "identity", "questions", "skills", "softskills", "principles",
+  "name", "identity", "questions", "communication", "thoughts", "skills", "softskills", "principles",
   "character", "presentation", "hobbies", "favorites", "education", "certifications", "links",
   "contact", "blog", "reading", "garden", "projects", "project",
   "project 1", "project 2", "project 3", "weather",
@@ -72,6 +72,8 @@ const PRONOUNCE = [
   [/^Today is\b/, "[Today](/tʊdˈA/) is"], // "Today is Tuesday" came out "Other day is"
   // exit: both syllables stressed, and "!" for a beat after. (An inserted pause made "Senthil" start with a stray "uh".)
   [/^Goodbye, /, "[Goodbye](/ɡˌʊdbˈI/)! "],
+  // communication: a beat after the subject, said only (not shown on screen).
+  [/\bTalking well enriches\b/, "Talking well, enriches"],
 
   // URLs and addresses, said the way a person would.
   [/\bsenthilcaesar\.github\.io\/([\w-]+)\/?/g,
@@ -301,7 +303,7 @@ const LIST_LABELS = [
 
 // Outputs whose lines are separate points: a gap after each one, instead of
 // running them together into one stream.
-const LINE_PAUSE_COMMANDS = ["favorites"];
+const LINE_PAUSE_COMMANDS = ["favorites", "thoughts"];
 const PAUSE_BETWEEN_LINES = 0.6; // seconds
 
 // A line that opens with a date or date range ("September 2026," or
