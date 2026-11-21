@@ -40,7 +40,7 @@ const YEARS_AHEAD = 5; // date
 // Commands whose output is fixed: one clip each.
 const COMMANDS = [
   "hello", "about", // not "help": it isn't read aloud
-  "name", "identity", "skills", "softskills", "principles",
+  "name", "identity", "questions", "skills", "softskills", "principles",
   "character", "presentation", "hobbies", "favorites", "education", "certifications", "links",
   "contact", "blog", "reading", "garden", "projects", "project",
   "project 1", "project 2", "project 3", "weather",
