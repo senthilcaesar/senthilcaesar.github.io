@@ -166,7 +166,6 @@ window.TERMINAL_VOICE_CLIPS = {
   "cf2e44e3": "qa-6-cf2e44e3.m4a",
   "9bb42825": "qa-7-9bb42825.m4a",
   "38de7b4d": "questions-38de7b4d.m4a",
-  "5aec9b15": "reading-5aec9b15.m4a",
   "df6dd32a": "skills-df6dd32a.m4a",
   "3a80ddf5": "softskills-3a80ddf5.m4a",
   "63e06b32": "sudo-63e06b32.m4a",

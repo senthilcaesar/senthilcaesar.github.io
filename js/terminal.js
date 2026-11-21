@@ -458,6 +458,7 @@
   function closeTerminal({ keepVoice = false } = {}) {
     if (!keepVoice) stopSpeaking();
     windowDiv.classList.add("hidden");
+    clearKeyboardFit();
     windowDiv.classList.remove("minimized", "maximized");
     if (backdrop) backdrop.classList.add("hidden");
     if (typeof window.updateWeatherObstacles === "function") {
@@ -654,7 +655,6 @@
         "hobbies",
         "favorites",
         "date",
-        "reading",
         "experience",
         "garden",
         "education",
@@ -722,7 +722,7 @@
       case "hey":
         return `Hello! How can I help you today? To see the list of available commands type <span class="highlight">help</span>`;
       case "help":
-        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">name</span>           - <span class="gray">My name</span><br>• <span class="highlight">identity</span>       - <span class="gray">Who I am</span><br>• <span class="highlight">questions</span>      - <span class="gray">A question worth asking</span><br>• <span class="highlight">communication</span>  - <span class="gray">Why talking well matters</span><br>• <span class="highlight">thoughts</span>       - <span class="gray">A thought worth keeping</span><br>• <span class="highlight">date</span>          - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">principles</span>     - <span class="gray">Four principles to live by</span><br>• <span class="highlight">character</span>      - <span class="gray">Traits of character to hold to</span><br>• <span class="highlight">presentation</span>   - <span class="gray">Tips for giving a presentation</span><br>• <span class="highlight">hobbies</span>        - <span class="gray">Things I enjoy doing</span><br>• <span class="highlight">favorites</span>      - <span class="gray">A few of my favorite things</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">garden</span>         - <span class="gray">Career timeline as a garden</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">reading</span>        - <span class="gray">Favorite newspapers & magazines</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">voice</span>          - <span class="gray">Read output aloud (voice on / voice off)</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
+        return `Available commands:<br>• <span class="highlight">about</span>          - <span class="gray">Brief bio</span><br>• <span class="highlight">name</span>           - <span class="gray">My name</span><br>• <span class="highlight">identity</span>       - <span class="gray">Who I am</span><br>• <span class="highlight">questions</span>      - <span class="gray">A question worth asking</span><br>• <span class="highlight">communication</span>  - <span class="gray">Why talking well matters</span><br>• <span class="highlight">thoughts</span>       - <span class="gray">A thought worth keeping</span><br>• <span class="highlight">date</span>          - <span class="gray">Today's day of week & date</span><br>• <span class="highlight">skills</span>         - <span class="gray">Technical proficiencies bar chart</span><br>• <span class="highlight">softskills</span>     - <span class="gray">Essential soft skills</span><br>• <span class="highlight">principles</span>     - <span class="gray">Four principles to live by</span><br>• <span class="highlight">character</span>      - <span class="gray">Traits of character to hold to</span><br>• <span class="highlight">presentation</span>   - <span class="gray">Tips for giving a presentation</span><br>• <span class="highlight">hobbies</span>        - <span class="gray">Things I enjoy doing</span><br>• <span class="highlight">favorites</span>      - <span class="gray">A few of my favorite things</span><br>• <span class="highlight">experience</span>     - <span class="gray">Career timeline</span><br>• <span class="highlight">garden</span>         - <span class="gray">Career timeline as a garden</span><br>• <span class="highlight">education</span>      - <span class="gray">Education history and courses</span><br>• <span class="highlight">certifications</span> - <span class="gray">Professional certificates</span><br>• <span class="highlight">projects</span>       - <span class="gray">Open the Projects page</span><br>• <span class="highlight">weather</span>        - <span class="gray">Canvas weather control (e.g. "weather rain")</span><br>• <span class="highlight">links</span>          - <span class="gray">Quick links list</span><br>• <span class="highlight">contact</span>        - <span class="gray">Contact and social accounts</span><br>• <span class="highlight">theme</span>          - <span class="gray">Toggle dark/light mode</span><br>• <span class="highlight">voice</span>          - <span class="gray">Read output aloud (voice on / voice off)</span><br>• <span class="highlight">clear</span>          - <span class="gray">Clear terminal window</span><br>• <span class="highlight">exit</span>           - <span class="gray">Close the terminal</span><br>• <span class="highlight">help</span>           - <span class="gray">Show this screen</span><br><br>💡 Try system overrides: <span class="highlight">matrix</span>, <span class="highlight">gravity</span>, <span class="highlight">sudo destroy</span>`;
       case "education":
         return `<b>Education History:</b><br><br>
 • <span class="highlight">[Jan 2015 - Jan 2019]</span> <b>Master of Science in Computer Science</b>, <span class="error">University of Massachusetts Boston</span> (USA)<br>
@@ -1058,32 +1058,6 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
       }
       case "blog":
         return `Check out my latest thoughts, guides, and learnings:<br><a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">senthilcaesar.github.io/blogs/</a>`;
-      case "reading":
-      case "reads":
-      case "press":
-      case "magazines":
-      case "newspapers":
-        if (typeof window.openReadingModal === "function") {
-          window.openReadingModal();
-          return `<span class="success">Opening Favorite Reading List dialog... 📰</span>`;
-        }
-        return `<b>Favorite Newspapers & Magazines:</b><br><br>
-<b>📰 Newspapers:</b><br>
-• <a class="link" href="https://www.nytimes.com" target="_blank">New York Times</a><br>
-• <a class="link" href="https://www.wsj.com" target="_blank">Wall Street Journal</a><br><br>
-<b>📑 Magazines:</b><br>
-• <a class="link" href="https://hbr.org" target="_blank">Harvard Business Review</a><br>
-• <a class="link" href="https://sloanreview.mit.edu" target="_blank">MIT Sloan Management Review</a><br>
-• <a class="link" href="https://www.bloomberg.com/businessweek" target="_blank">Bloomberg Businessweek</a><br>
-• <a class="link" href="https://www.scientificamerican.com/" target="_blank">Scientific American</a><br>
-• <a class="link" href="https://www.quantamagazine.org/" target="_blank">Quanta Magazine</a><br>
-• <a class="link" href="https://www.nytimes.com/section/magazine" target="_blank">NYT Magazine</a><br>
-• <a class="link" href="https://time.com" target="_blank">Times Magazine</a><br>
-• <a class="link" href="https://www.wired.com" target="_blank">Wired USA</a><br>
-• <a class="link" href="https://www.economist.com" target="_blank">The Economist</a><br>
-• <a class="link" href="https://www.forbes.com" target="_blank">Forbes USA</a><br>
-• <a class="link" href="https://www.ft.com/magazine" target="_blank">FT Weekend Magazine</a><br>
-• <a class="link" href="https://www.theatlantic.com" target="_blank">The Atlantic</a>`;
       case "links":
         return `Quick Links:<br>• <a class="link" href="https://senthilcaesar.github.io/portfolio/" target="_blank">Portfolio</a><br>• <a class="link" href="https://senthilcaesar.github.io/projects/" target="_blank">Projects</a><br>• <a class="link" href="https://senthilcaesar.github.io/my-reading/" target="_blank">Readings</a><br>• <a class="link" href="https://senthilcaesar.github.io/knowledgelab/" target="_blank">KnowledgeLab</a><br>• <a class="link" href="https://senthilcaesar.github.io/resources/" target="_blank">URL Library</a><br>• <a class="link" href="https://senthilcaesar.github.io/commands/" target="_blank">Commands</a><br>• <a class="link" href="https://senthilcaesar.github.io/promptshelf/" target="_blank">Prompt Shelf</a><br>• <a class="link" href="https://senthilcaesar.github.io/blogs/" target="_blank">Blogs</a><br>• <a class="link" href="https://senthilcaesar.github.io/study/" target="_blank">Study</a><br>• <a class="link" href="https://senthilcaesar.github.io/tech-stack/" target="_blank">Tech Stack</a><br>• <a class="link" href="https://senthilcaesar.github.io/wander-list/" target="_blank">Wanderlist</a>`;
       case "contact":
@@ -1371,20 +1345,68 @@ Total Work Experience: <span class="success">${totalYears}+ Years (Net Active Ex
     moveTo(rect.left, rect.top);
   });
 
-  // Mobile virtual keyboard adaptation
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener("resize", () => {
-      if (!windowDiv.classList.contains("hidden") && window.innerWidth <= 768) {
-        const offset = window.innerHeight - window.visualViewport.height;
-        if (offset > 60) {
-          windowDiv.style.bottom = `${offset}px`;
-          body.scrollTop = body.scrollHeight;
-        } else {
-          windowDiv.style.bottom = "0px";
-        }
-      }
+  // Send button: runs the typed command without hunting for the keyboard's Enter key
+  const sendBtn = windowDiv.querySelector(".terminal-send-btn");
+  if (sendBtn) {
+    // Keep the keyboard open: don't let the tap move focus off the input
+    sendBtn.addEventListener("pointerdown", (e) => e.preventDefault());
+    sendBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      input.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      input.focus();
     });
   }
+
+  // On-screen keyboard: shrink the terminal to the visible area so the
+  // input and the latest output stay in view while typing (phones & tablets)
+  const COMPACT_MAX_WIDTH = 1024;
+  const isPhoneLayout = () =>
+    window.innerWidth <= 768 ||
+    window.matchMedia("(max-height: 520px) and (orientation: landscape)").matches;
+
+  // Only undoes what fitToVisualViewport set, so a desktop-dragged position survives
+  function clearKeyboardFit() {
+    if (!windowDiv.classList.contains("keyboard-open")) return;
+    windowDiv.classList.remove("keyboard-open");
+    ["top", "bottom", "height", "max-height"].forEach((prop) =>
+      windowDiv.style.removeProperty(prop)
+    );
+  }
+
+  function fitToVisualViewport() {
+    const vv = window.visualViewport;
+    if (!vv || windowDiv.classList.contains("hidden") || window.innerWidth > COMPACT_MAX_WIDTH) {
+      clearKeyboardFit();
+      return;
+    }
+    const keyboard = window.innerHeight - vv.height - vv.offsetTop;
+    if (keyboard <= 60) {
+      clearKeyboardFit();
+      return;
+    }
+    windowDiv.classList.add("keyboard-open");
+    if (isPhoneLayout()) {
+      // Bottom sheet sits right on top of the keyboard and fills what's left
+      const height = Math.max(vv.height - 8, 180);
+      windowDiv.style.setProperty("bottom", `${keyboard}px`, "important");
+      windowDiv.style.setProperty("height", `${height}px`, "important");
+      windowDiv.style.setProperty("max-height", `${height}px`, "important");
+    } else {
+      // Floating tablet window: pin near the top of the visible area
+      const top = vv.offsetTop + 12;
+      const height = Math.max(vv.height - 24, 200);
+      windowDiv.style.setProperty("top", `${top}px`, "important");
+      windowDiv.style.setProperty("height", `${height}px`, "important");
+      windowDiv.style.setProperty("max-height", `${height}px`, "important");
+    }
+    outputContainer.scrollTop = outputContainer.scrollHeight;
+  }
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", fitToVisualViewport);
+    window.visualViewport.addEventListener("scroll", fitToVisualViewport);
+  }
+  input.addEventListener("blur", () => setTimeout(fitToVisualViewport, 120));
 
   // Auto scroll into view when input receives focus on mobile/tablet
   input.addEventListener("focus", () => {

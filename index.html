@@ -1614,8 +1614,16 @@
             autocorrect="off"
             autocapitalize="off"
             spellcheck="false"
+            enterkeyhint="send"
+            placeholder="type a command…"
             aria-label="Terminal command input"
           />
+          <button type="button" class="terminal-send-btn" aria-label="Run command" title="Run">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 10 4 15 9 20"></polyline>
+              <path d="M20 4v7a4 4 0 0 1-4 4H4"></path>
+            </svg>
+          </button>
         </div>
       </div>
       <div class="terminal-resize-handle" data-dir="n"></div>

@@ -4457,6 +4457,276 @@ body.mobile-menu-open {
   }
 }
 
+/* ---------------------------------------------------------------
+   Compact terminal for tablets & phones
+   - Output scrolls on its own; chips + input stay pinned at the bottom
+   - Input becomes a roomy pill with a send button
+   - Tighter spacing, readable wrapping, stacked tables on phones
+---------------------------------------------------------------- */
+.terminal-send-btn {
+  display: none;
+}
+
+#terminal-input::placeholder {
+  color: transparent;
+}
+
+@media (max-width: 1024px), (max-height: 520px) and (orientation: landscape) {
+  .terminal-body {
+    overflow: hidden;
+    padding: 10px 14px 10px;
+  }
+
+  .terminal-output {
+    min-height: 0;
+    margin-bottom: 0;
+    padding-right: 2px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .terminal-output div {
+    margin-bottom: 4px;
+    word-break: normal;
+    overflow-wrap: anywhere;
+  }
+
+  .terminal-output > .cmd-line:not(:first-child) {
+    margin-top: 14px;
+  }
+
+  .terminal-output > .cmd-result {
+    margin-top: 4px;
+  }
+
+  .terminal-output .term-item {
+    margin-bottom: 7px;
+  }
+
+  .terminal-output::after {
+    height: 8px;
+  }
+
+  /* Chips: one swipeable row with a fade hinting there is more */
+  .terminal-quick-chips {
+    gap: 6px;
+    padding: 7px 0 7px;
+    margin: 0;
+    -webkit-mask-image: linear-gradient(to right, #000 88%, transparent);
+    mask-image: linear-gradient(to right, #000 88%, transparent);
+  }
+
+  .term-chip {
+    min-height: 32px;
+    padding: 4px 11px;
+    font-size: 0.75rem;
+    border-radius: 999px;
+  }
+
+  .term-chip:hover,
+  .term-chip:active {
+    transform: none;
+  }
+
+  /* Input: a clear, thumb-friendly field */
+  .terminal-input-line {
+    gap: 6px;
+    min-height: 44px;
+    padding: 0 4px 0 12px;
+    border: 1px solid rgba(0, 120, 212, 0.3);
+    border-radius: 12px;
+    background: #ffffff;
+    flex-shrink: 0;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .terminal-input-line:focus-within {
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+  }
+
+  .terminal-input-line .prompt {
+    font-size: 13px;
+  }
+
+  #terminal-input {
+    min-width: 0;
+    height: 42px;
+  }
+
+  #terminal-input::placeholder {
+    color: #94a3b8;
+    opacity: 1;
+  }
+
+  .terminal-send-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 9px;
+    background: #0284c7;
+    color: #ffffff;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: background-color 0.15s ease, transform 0.1s ease;
+  }
+
+  .terminal-send-btn:active {
+    transform: scale(0.92);
+    background: #0369a1;
+  }
+
+  body.dark-mode .terminal-input-line {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(137, 180, 250, 0.3);
+  }
+
+  body.dark-mode .terminal-input-line:focus-within {
+    border-color: #89b4fa;
+    box-shadow: 0 0 0 3px rgba(137, 180, 250, 0.15);
+  }
+
+  body.dark-mode #terminal-input::placeholder {
+    color: #6c7086;
+  }
+
+  body.dark-mode .terminal-send-btn {
+    background: #89b4fa;
+    color: #11111b;
+  }
+
+  body.dark-mode .terminal-send-btn:active {
+    background: #74a0f0;
+  }
+}
+
+/* Tablets: slightly smaller type than desktop */
+@media (min-width: 769px) and (max-width: 1024px) {
+  #terminal-window {
+    font-size: 14px;
+  }
+
+  .terminal-header {
+    padding: 7px 12px;
+  }
+}
+
+/* Phones: maximise room for output */
+@media (max-width: 768px), (max-height: 520px) and (orientation: landscape) {
+  #terminal-window {
+    height: min(82dvh, 640px) !important;
+    padding-bottom: max(8px, env(safe-area-inset-bottom, 8px));
+  }
+
+  .terminal-header {
+    padding: 12px 10px 6px 14px;
+    gap: 2px;
+  }
+
+  .terminal-header::before {
+    top: 5px;
+    width: 34px;
+  }
+
+  /* The red dot duplicates the ✕ button on phones */
+  .terminal-buttons {
+    display: none;
+  }
+
+  .terminal-title {
+    font-size: 12px;
+    text-align: left;
+    margin-right: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .terminal-voice-btn,
+  .terminal-mobile-close-btn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .terminal-body {
+    padding: 8px 12px 6px;
+  }
+
+  .terminal-output {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .terminal-output .term-item {
+    grid-template-columns: 2.5ch 1fr;
+  }
+
+  .terminal-output .term-item-sub {
+    margin-left: 2.5ch;
+  }
+
+  /* Tables stack into label + value blocks instead of overflowing */
+  .terminal-output .term-table,
+  .terminal-output .term-table tbody,
+  .terminal-output .term-table tr,
+  .terminal-output .term-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .terminal-output .term-table tr:first-child:has(th) {
+    display: none;
+  }
+
+  .terminal-output .term-table td {
+    border: none;
+    padding: 0;
+    font-size: 0.8rem;
+  }
+
+  .terminal-output .term-table tr {
+    padding: 8px 0;
+    border-bottom: 1px dashed rgba(148, 163, 184, 0.35);
+  }
+
+  .terminal-output .term-table td:first-child {
+    margin-bottom: 2px;
+  }
+
+  /* Keyboard open: every pixel goes to output + input */
+  #terminal-window.keyboard-open {
+    border-radius: 14px 14px 0 0 !important;
+    padding-bottom: 4px;
+  }
+
+  #terminal-window.keyboard-open .terminal-header {
+    padding-top: 6px;
+    padding-bottom: 4px;
+  }
+
+  #terminal-window.keyboard-open .terminal-header::before {
+    display: none;
+  }
+
+  #terminal-window.keyboard-open .terminal-quick-chips {
+    padding: 4px 0;
+  }
+}
+
+@media (max-height: 440px) and (orientation: landscape) {
+  #terminal-window {
+    height: 94dvh !important;
+  }
+}
+
 @media (max-width: 440px) {
   .site-logo {
     max-width: 125px;

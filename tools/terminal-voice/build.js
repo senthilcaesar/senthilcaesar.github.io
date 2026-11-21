@@ -42,7 +42,7 @@ const COMMANDS = [
   "hello", "about", // not "help": it isn't read aloud
   "name", "identity", "questions", "communication", "thoughts", "skills", "softskills", "principles",
   "character", "presentation", "hobbies", "favorites", "education", "certifications", "links",
-  "contact", "blog", "reading", "garden", "projects", "project",
+  "contact", "blog", "garden", "projects", "project",
   "project 1", "project 2", "project 3", "weather",
   ...["auto", "none", "rain", "sun-rising", "snowing", "summer", "windy",
       "cloudy", "fall", "moon", "matrix"].map((m) => `weather ${m}`),
