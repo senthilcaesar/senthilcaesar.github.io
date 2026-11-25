@@ -5297,9 +5297,9 @@ body.dark-mode .reading-item-badge {
 }
 
 .reading-item-name {
-  font-family: "Lora", Georgia, "Times New Roman", serif;
+  font-family: "Faculty Glyphic", Georgia, "Times New Roman", serif;
   font-size: 0.98rem;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--heading-color);
   line-height: 1.3;
   white-space: nowrap;
@@ -5310,7 +5310,7 @@ body.dark-mode .reading-item-badge {
 
 body.dark-mode .reading-item-name {
   color: #ffffff;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .reading-item-desc {
@@ -5350,17 +5350,20 @@ body.dark-mode .reading-list-item:focus-visible {
 
 .reading-list-item:hover .reading-item-badge,
 .reading-list-item:focus-visible .reading-item-badge {
-  background: var(--publication-accent);
-  color: #ffffff;
-  border-color: var(--publication-accent);
+  background: color-mix(in srgb, var(--publication-accent) 26%, transparent);
+  color: var(--publication-accent);
+  border-color: color-mix(in srgb, var(--publication-accent) 70%, transparent);
+  box-shadow: 0 2px 6px -1px color-mix(in srgb, var(--publication-accent) 30%, transparent);
+  transform: scale(1.06);
 }
 
 body.dark-mode .reading-list-item:hover .reading-item-badge,
 body.dark-mode .reading-list-item:focus-visible .reading-item-badge {
-  background: #ffffff;
-  color: #0b1120;
-  border-color: #ffffff;
-  box-shadow: 0 0 14px rgba(255, 255, 255, 0.40);
+  background: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transform: scale(1.06);
 }
 
 .reading-list-item:hover .reading-item-name,
