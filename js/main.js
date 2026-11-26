@@ -613,9 +613,15 @@ if (mobileThemeBtn) {
 // Types the greeting one key strike at a time, like an old manual typewriter:
 // uneven rhythm, a pause after words, and slightly misaligned letters.
 (function () {
+    // Lets other features (the Food for Thought tab) wait for the name to finish
+    function announceDone() {
+        window.greetingTyped = true;
+        document.dispatchEvent(new CustomEvent('greeting:typed'));
+    }
+
     const greeting = document.getElementById('bio-greeting');
-    if (!greeting) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!greeting) return announceDone();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return announceDone();
 
     // Wrap every character in a hidden span, keeping the wave and name markup intact
     const chars = [];
@@ -652,6 +658,7 @@ if (mobileThemeBtn) {
     function typeNext() {
         if (i >= chars.length) {
             setTimeout(() => caret.remove(), 1200);
+            announceDone();
             return;
         }
         const span = chars[i++];

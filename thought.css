@@ -1,0 +1,565 @@
+/* ==========================================================================
+   Today's Food for Thought
+   A frosted-glass edge tab that opens a matching glass drawer, styled like the
+   "What I read" drawer, where the day's saying is typed out.
+   ========================================================================== */
+
+:root {
+  --thought-ink: var(--heading-color);
+  --thought-ink-soft: var(--text-muted);
+  --thought-ember: var(--link-color);
+  --thought-ember-soft: rgba(37, 99, 235, 0.08);
+  --thought-edge: color-mix(in srgb, var(--border-color) 60%, transparent);
+}
+
+body.dark-mode {
+  --thought-ink: #ffffff;
+  --thought-ink-soft: #94a3b8;
+  --thought-ember: #93c5fd;
+  --thought-ember-soft: rgba(147, 197, 253, 0.1);
+  --thought-edge: rgba(255, 255, 255, 0.12);
+}
+
+/* ---------- Edge tab ---------- */
+.thought-tab {
+  position: fixed;
+  right: 0;
+  /* Sits just under the sticky header; the script measures its height */
+  top: calc(var(--thought-header-h, 72px) + 14px);
+  z-index: 98; /* under the header (100) and its dropdowns, and under the mobile menu (99) */
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px 12px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-right: 0;
+  border-radius: 999px 0 0 999px;
+  /* Same frosted glass as the drawer */
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  color: var(--thought-ink);
+  cursor: pointer;
+  box-shadow:
+    -10px 8px 30px -12px rgba(15, 23, 42, 0.18),
+    inset 1px 0 0 rgba(255, 255, 255, 0.4);
+  transform: translateX(110%);
+  opacity: 0;
+  transition:
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 600ms ease,
+    padding 300ms ease,
+    box-shadow 300ms ease;
+}
+
+body.dark-mode .thought-tab {
+  background: rgba(11, 17, 32, 0.78);
+  backdrop-filter: blur(36px) saturate(210%);
+  -webkit-backdrop-filter: blur(36px) saturate(210%);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    -14px 10px 36px -12px rgba(0, 0, 0, 0.7),
+    inset 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+.thought-tab.is-visible {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.thought-tab:hover,
+.thought-tab:focus-visible {
+  padding-right: 28px;
+  box-shadow:
+    -10px 12px 36px -10px rgba(37, 99, 235, 0.3),
+    inset 1px 0 0 rgba(255, 255, 255, 0.4);
+}
+
+body.dark-mode .thought-tab:hover,
+body.dark-mode .thought-tab:focus-visible {
+  box-shadow:
+    -12px 12px 40px -10px rgba(96, 165, 250, 0.35),
+    inset 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+.thought-tab:focus-visible {
+  outline: 2px solid var(--thought-ember);
+  outline-offset: 3px;
+}
+
+body.thought-open .thought-tab {
+  transform: translateX(110%);
+  opacity: 0;
+}
+
+/* A small point of light; it ripples until today's thought has been read */
+.thought-tab-flame {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #dbeafe, var(--thought-ember) 70%);
+  box-shadow: 0 0 10px 3px color-mix(in srgb, var(--thought-ember) 35%, transparent);
+}
+
+.thought-tab-flame::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid var(--thought-ember);
+  opacity: 0;
+  animation: thought-ripple 2.8s ease-out infinite;
+}
+
+.thought-tab.is-seen .thought-tab-flame::after {
+  animation: none;
+}
+
+@keyframes thought-ripple {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+.thought-tab-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+  text-align: left;
+}
+
+.thought-tab-title {
+  font-family: "Lora", Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.005em;
+}
+
+.thought-tab-sub {
+  font-family: "Inter", "Plus Jakarta Sans", sans-serif;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--thought-ink-soft);
+}
+
+/* ---------- Backdrop (matches the "What I read" drawer) ---------- */
+.thought-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  visibility: hidden;
+  background: rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(2.5px);
+  -webkit-backdrop-filter: blur(2.5px);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 0.35s;
+}
+
+body.dark-mode .thought-backdrop {
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.thought-backdrop.is-open {
+  transition:
+    opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+body.thought-open {
+  overflow: hidden;
+}
+
+/* ---------- Drawer ----------
+   The same frosted glass as the "What I read" drawer, mirrored to open from
+   the right. */
+.thought-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(640px, 100vw);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(28px) saturate(190%);
+  -webkit-backdrop-filter: blur(28px) saturate(190%);
+  color: var(--thought-ink);
+  border-left: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 24px 0 0 24px;
+  box-shadow:
+    -20px 0 60px -15px rgba(15, 23, 42, 0.08),
+    inset 1px 0 0 rgba(255, 255, 255, 0.4);
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  transform: translateX(104%);
+  visibility: hidden;
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 0.35s;
+}
+
+body.dark-mode .thought-drawer {
+  background: rgba(11, 17, 32, 0.78);
+  backdrop-filter: blur(36px) saturate(210%);
+  -webkit-backdrop-filter: blur(36px) saturate(210%);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    -30px 0 80px -10px rgba(0, 0, 0, 0.75),
+    inset 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
+.thought-drawer.is-open {
+  transform: translateX(0);
+  visibility: visible;
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s;
+}
+
+/* Header: title and date on the left, round close button on the right */
+.thought-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 24px 18px 32px;
+  border-bottom: 1px solid color-mix(in srgb, var(--border-color) 45%, transparent);
+  user-select: none;
+  flex-shrink: 0;
+}
+
+body.dark-mode .thought-head {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.thought-kicker {
+  margin: 0;
+  font-family: "Lora", Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+  color: var(--thought-ink);
+}
+
+.thought-date {
+  margin: 6px 0 0;
+  font-family: "Inter", "Plus Jakarta Sans", sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--thought-ink-soft);
+}
+
+.thought-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border: 1px solid color-mix(in srgb, var(--border-color) 60%, transparent);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.thought-close svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.thought-close:hover,
+.thought-close:focus-visible {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--heading-color);
+  transform: scale(1.06);
+}
+
+body.dark-mode .thought-close {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #cbd5e1;
+}
+
+body.dark-mode .thought-close:hover,
+body.dark-mode .thought-close:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+/* Scrolling body below the header */
+.thought-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 44px 36px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(15, 23, 42, 0.18) transparent;
+}
+
+body.dark-mode .thought-body {
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+
+.thought-body::-webkit-scrollbar { width: 6px; }
+.thought-body::-webkit-scrollbar-track { background: transparent; }
+.thought-body::-webkit-scrollbar-thumb {
+  background: rgba(15, 23, 42, 0.16);
+  border-radius: 9999px;
+}
+body.dark-mode .thought-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ---------- The saying ---------- */
+.thought-quote {
+  margin: auto 0 0;
+  padding: 48px 0 8px;
+  cursor: default;
+}
+
+.thought-mark {
+  display: block;
+  height: 64px;
+  font-family: "Lora", Georgia, serif;
+  font-size: 7.5rem;
+  line-height: 1;
+  color: var(--thought-ember);
+  opacity: 0;
+  transform: translateY(12px) scale(0.9);
+  transition: opacity 1200ms ease 400ms, transform 1200ms cubic-bezier(0.22, 1, 0.36, 1) 400ms;
+}
+
+.thought-drawer.is-open .thought-mark {
+  opacity: 0.4;
+  transform: none;
+}
+
+.thought-text {
+  margin: 0;
+  min-height: 4.8em;
+  /* Faculty Glyphic ships in a single regular weight */
+  font-family: "Faculty Glyphic", "Lora", Georgia, serif;
+  font-size: clamp(1.2rem, 1.05rem + 0.7vw, 1.5rem);
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0.002em;
+  color: var(--thought-ink);
+  text-wrap: pretty;
+}
+
+.thought-text.is-typing {
+  cursor: pointer;
+}
+
+.thought-text.is-typing::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: -0.15em;
+  background: var(--thought-ember);
+  animation: thought-caret 1s steps(1) infinite;
+}
+
+@keyframes thought-caret {
+  50% { opacity: 0; }
+}
+
+.thought-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 28px;
+  font-family: "Faculty Glyphic", "Lora", Georgia, serif;
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+  color: var(--thought-ink-soft);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 1000ms ease, transform 1000ms ease;
+}
+
+.thought-rule {
+  width: 0;
+  height: 1px;
+  background: var(--thought-ember);
+  transition: width 1200ms cubic-bezier(0.22, 1, 0.36, 1) 200ms;
+}
+
+.thought-drawer.is-revealed .thought-author {
+  opacity: 1;
+  transform: none;
+}
+
+.thought-drawer.is-revealed .thought-rule {
+  width: 36px;
+}
+
+/* ---------- After the words land ---------- */
+.thought-after {
+  margin-top: auto;
+  padding-top: 40px;
+}
+
+.thought-after > * {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 900ms ease, transform 900ms ease;
+}
+
+.thought-drawer.is-revealed .thought-after > * {
+  opacity: 1;
+  transform: none;
+}
+
+.thought-drawer.is-revealed .thought-after > :nth-child(1) { transition-delay: 900ms; }
+.thought-drawer.is-revealed .thought-after > :nth-child(2) { transition-delay: 1400ms; }
+
+.thought-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.thought-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid var(--thought-edge);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--thought-ink);
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 200ms ease, background 200ms ease, color 200ms ease;
+}
+
+.thought-action svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.thought-action:hover,
+.thought-action:focus-visible {
+  border-color: var(--thought-ember);
+  background: var(--thought-ember-soft);
+}
+
+.thought-action.is-done {
+  color: var(--thought-ember);
+  border-color: var(--thought-ember);
+}
+
+.thought-next {
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--thought-edge);
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  color: var(--thought-ink-soft);
+}
+
+#thought-countdown {
+  font-weight: 700;
+  color: var(--thought-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.thought-drawer.is-error .thought-after,
+.thought-drawer.is-error .thought-author {
+  display: none;
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 640px) {
+  .thought-tab {
+    top: calc(var(--thought-header-h, 60px) + 10px);
+    gap: 10px;
+    padding: 10px 14px 10px 13px;
+  }
+
+  .thought-tab-title {
+    font-size: 0.9rem;
+  }
+
+  .thought-tab-sub {
+    font-size: 0.6rem;
+  }
+
+  .thought-drawer {
+    border-radius: 0;
+    border-left: none;
+  }
+
+  .thought-head {
+    padding: 18px 16px 14px 20px;
+  }
+
+  .thought-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .thought-body {
+    padding: 16px 20px max(24px, env(safe-area-inset-bottom));
+  }
+
+  .thought-quote {
+    padding-top: 28px;
+  }
+
+  .thought-mark {
+    font-size: 6rem;
+    height: 52px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .thought-tab,
+  .thought-drawer,
+  .thought-backdrop,
+  .thought-mark,
+  .thought-author,
+  .thought-rule,
+  .thought-after > * {
+    transition: none !important;
+  }
+
+  .thought-tab-flame::after {
+    animation: none;
+  }
+}

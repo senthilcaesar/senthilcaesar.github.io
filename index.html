@@ -135,6 +135,7 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="thought.css?v=7" />
 
     <!-- Typography Custom Styles -->
     <style>
@@ -1636,6 +1637,82 @@
       <div class="terminal-resize-handle" data-dir="sw"></div>
     </div>
 
+    <!-- Today's Food for Thought: edge tab + right-side drawer -->
+    <button
+      type="button"
+      class="thought-tab"
+      id="thought-tab"
+      aria-controls="thought-drawer"
+      aria-expanded="false"
+      aria-label="Open today's food for thought"
+    >
+      <span class="thought-tab-flame" aria-hidden="true"></span>
+      <span class="thought-tab-text">
+        <span class="thought-tab-sub">Today&rsquo;s</span>
+        <span class="thought-tab-title">Food for Thought</span>
+      </span>
+    </button>
+
+    <!-- The drawer sits inside its backdrop, exactly like the "What I read" drawer,
+         so the glass blends with the page the same way -->
+    <div class="thought-backdrop" id="thought-backdrop">
+
+      <aside
+        class="thought-drawer"
+        id="thought-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="thought-heading"
+        aria-hidden="true"
+        inert
+      >
+        <div class="thought-head">
+          <div>
+            <p class="thought-kicker" id="thought-heading">Today&rsquo;s Food for Thought</p>
+            <p class="thought-date" id="thought-date"></p>
+          </div>
+          <button type="button" class="thought-close" id="thought-close" aria-label="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="thought-body">
+          <figure class="thought-quote" aria-live="polite">
+            <span class="thought-mark" aria-hidden="true">&ldquo;</span>
+            <blockquote class="thought-text" id="thought-text"></blockquote>
+            <figcaption class="thought-author">
+              <span class="thought-rule" aria-hidden="true"></span>
+              <span id="thought-author"></span>
+            </figcaption>
+          </figure>
+
+          <div class="thought-after" id="thought-after">
+            <div class="thought-actions">
+              <button type="button" class="thought-action" id="thought-replay">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <polyline points="1 4 1 10 7 10"></polyline>
+                  <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                </svg>
+                <span>Read again</span>
+              </button>
+              <button type="button" class="thought-action" id="thought-copy">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span>Copy</span>
+              </button>
+            </div>
+
+            <p class="thought-next">A new thought arrives in <span id="thought-countdown"></span></p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
     <!-- Glitch Screen Overlay for Easter Eggs -->
     <div id="glitch-screen" class="glitch-overlay">
       <div class="glitch-title">⚠️ SYSTEM CRASH DETECTED ⚠️</div>
@@ -1651,12 +1728,13 @@
     </div>
 
     <!-- Modular Scripts -->
-    <script defer src="js/main.js"></script>
+    <script defer src="js/main.js?v=3"></script>
     <script defer src="js/gears.js"></script>
     <script defer src="models/bird-models.js"></script>
     <script defer src="js/birds.js"></script>
     <script defer src="audio/terminal/clips.js"></script>
     <script defer src="js/terminal.js"></script>
     <script defer src="js/weather.js"></script>
+    <script defer src="js/thought.js?v=5"></script>
   </body>
 </html>
