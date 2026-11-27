@@ -92,34 +92,231 @@ body.thought-open .thought-tab {
   opacity: 0;
 }
 
-/* A small point of light; it ripples until today's thought has been read */
-.thought-tab-flame {
-  position: relative;
-  width: 10px;
-  height: 10px;
+/* A sea-drop diamond: a pear-cut stone in milky platinum, point up, floating gently.
+   Every few seconds a glint of light ripples across its facets and a small
+   star sparkles at its shoulder; the rest of the time it is still.
+   Once today's thought has been read, it just floats, with no glint. */
+.thought-tab-gem {
+  /* Milky platinum: soft whites and cool greys, edged in darker grey so the
+     pale stone still holds its shape on the pale tab */
+  --gem-a: #e2e8f0;
+  --gem-b: #f8fafc;
+  --gem-c: #a3adbb;
+  --gem-d: #cfd6df;
+  --gem-base: #cbd5e1;
+  --gem-table-1: #ffffff;
+  --gem-table-2: #eef1f5;
+  --gem-table-3: #b4bdc9;
+  --gem-line: rgba(255, 255, 255, 0.85);
+  --gem-edge: rgba(100, 116, 139, 0.75);
+  --gem-glow: rgba(148, 163, 184, 0.45);
+  --gem-sparkle-glow: #e2e8f0;
+  --gem-cycle: 4.5s;
+
+  display: block;
+  width: 17px;
+  height: 24px;
   flex: 0 0 auto;
-  border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #dbeafe, var(--thought-ember) 70%);
-  box-shadow: 0 0 10px 3px color-mix(in srgb, var(--thought-ember) 35%, transparent);
+  filter: drop-shadow(0 2px 3px rgba(15, 23, 42, 0.22)) drop-shadow(0 0 5px var(--gem-glow));
 }
 
-.thought-tab-flame::after {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 1px solid var(--thought-ember);
+body.dark-mode .thought-tab-gem {
+  --gem-a: #dfe4ea;
+  --gem-b: #f8fafc;
+  --gem-c: #94a0b0;
+  --gem-d: #c3cbd5;
+  --gem-base: #b8c2ce;
+  --gem-table-1: #ffffff;
+  --gem-table-2: #e9edf2;
+  --gem-table-3: #a7b1be;
+  --gem-line: rgba(255, 255, 255, 0.7);
+  --gem-edge: rgba(241, 245, 249, 0.85);
+  --gem-glow: rgba(226, 232, 240, 0.4);
+  filter: drop-shadow(0 0 6px var(--gem-glow));
+}
+
+.thought-tab-gem svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.gem-base { fill: var(--gem-base); }
+.gem-stop-1 { stop-color: var(--gem-table-1); }
+.gem-stop-2 { stop-color: var(--gem-table-2); }
+.gem-stop-3 { stop-color: var(--gem-table-3); }
+
+.gem-f {
+  stroke: var(--gem-line);
+  stroke-width: 0.3;
+  stroke-linejoin: round;
+}
+
+.gem-a { fill: var(--gem-a); }
+.gem-b { fill: var(--gem-b); }
+.gem-c { fill: var(--gem-c); }
+.gem-d { fill: var(--gem-d); }
+
+.gem-table {
+  fill: url(#gem-table-fill);
+  stroke: var(--gem-line);
+  stroke-width: 0.35;
+  opacity: 0.92;
+}
+
+.gem-shine {
+  fill: #ffffff;
+  opacity: 0.55;
+}
+
+.gem-edge {
+  fill: none;
+  stroke: var(--gem-edge);
+  stroke-width: 0.6;
+}
+
+/* Glint: the facets catch the light one after another, left to right */
+.gem-glints polygon {
+  fill: #ffffff;
   opacity: 0;
-  animation: thought-ripple 2.8s ease-out infinite;
+  animation: gem-glint var(--gem-cycle) ease-out infinite;
+  animation-delay: calc(var(--i) * 45ms);
 }
 
-.thought-tab.is-seen .thought-tab-flame::after {
+.gem-sparkle {
+  fill: #ffffff;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  filter: drop-shadow(0 0 1.5px var(--gem-sparkle-glow)) drop-shadow(0 0 0.6px rgba(100, 116, 139, 0.9));
+  animation: gem-sparkle var(--gem-cycle) ease-in-out infinite;
+}
+
+.gem-float {
+  transform-box: view-box;
+  animation: gem-float 4s ease-in-out infinite;
+}
+
+/* Hover: the stone lights up from within and gives off a soft, breathing glow */
+.thought-tab-gem {
+  transition: filter 450ms ease;
+}
+
+.thought-tab:hover .thought-tab-gem,
+.thought-tab:focus-visible .thought-tab-gem {
+  filter:
+    brightness(1.12)
+    drop-shadow(0 0 2px rgba(255, 255, 255, 1))
+    drop-shadow(0 0 6px rgba(100, 116, 139, 0.65))
+    drop-shadow(0 0 14px rgba(148, 163, 184, 0.85));
+  animation: gem-hover-glow 1.8s ease-in-out 450ms infinite;
+}
+
+body.dark-mode .thought-tab:hover .thought-tab-gem,
+body.dark-mode .thought-tab:focus-visible .thought-tab-gem {
+  filter:
+    brightness(1.15)
+    drop-shadow(0 0 2px rgba(255, 255, 255, 1))
+    drop-shadow(0 0 8px rgba(241, 245, 249, 0.85))
+    drop-shadow(0 0 16px rgba(203, 213, 225, 0.6));
+  animation-name: gem-hover-glow-dark;
+}
+
+/* Hover: light plays through the stone. Each facet catches it in turn, so a
+   slow shimmer travels across the cut, and the facet lines glint as it passes. */
+/* (body-prefixed so it still plays after today's thought has been read) */
+body .thought-tab:hover .gem-glints polygon,
+body .thought-tab:focus-visible .gem-glints polygon {
+  animation: gem-facet-play 2.6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 110ms);
+}
+
+.thought-tab:hover .gem-f,
+.thought-tab:focus-visible .gem-f {
+  animation: gem-facet-line 2.6s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 110ms);
+}
+
+.thought-tab:hover .gem-table,
+.thought-tab:focus-visible .gem-table {
+  animation: gem-table-glow 2.6s ease-in-out infinite;
+}
+
+@keyframes gem-facet-play {
+  0%, 100% { opacity: 0; }
+  30%      { opacity: 0.5; }
+  60%      { opacity: 0; }
+}
+
+@keyframes gem-facet-line {
+  0%, 100% { stroke-width: 0.3; stroke: var(--gem-line); }
+  30%      { stroke-width: 0.55; stroke: #ffffff; }
+  60%      { stroke-width: 0.3; stroke: var(--gem-line); }
+}
+
+@keyframes gem-table-glow {
+  0%, 100% { opacity: 0.92; }
+  50%      { opacity: 0.6; }
+}
+
+@keyframes gem-hover-glow {
+  0%, 100% {
+    filter:
+      brightness(1.12)
+      drop-shadow(0 0 2px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 6px rgba(100, 116, 139, 0.65))
+      drop-shadow(0 0 14px rgba(148, 163, 184, 0.85));
+  }
+  50% {
+    filter:
+      brightness(1.2)
+      drop-shadow(0 0 3px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 9px rgba(100, 116, 139, 0.8))
+      drop-shadow(0 0 20px rgba(148, 163, 184, 1));
+  }
+}
+
+@keyframes gem-hover-glow-dark {
+  0%, 100% {
+    filter:
+      brightness(1.15)
+      drop-shadow(0 0 2px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 8px rgba(241, 245, 249, 0.85))
+      drop-shadow(0 0 16px rgba(203, 213, 225, 0.6));
+  }
+  50% {
+    filter:
+      brightness(1.25)
+      drop-shadow(0 0 3px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 12px rgba(241, 245, 249, 1))
+      drop-shadow(0 0 22px rgba(203, 213, 225, 0.8));
+  }
+}
+
+/* Read already: it keeps floating, but the glint and sparkle rest */
+.thought-tab.is-seen .gem-glints polygon,
+.thought-tab.is-seen .gem-sparkle {
   animation: none;
 }
 
-@keyframes thought-ripple {
-  0% { transform: scale(0.6); opacity: 0.7; }
-  100% { transform: scale(2.2); opacity: 0; }
+@keyframes gem-glint {
+  0%   { opacity: 0; }
+  4%   { opacity: 0.75; }
+  14%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+@keyframes gem-sparkle {
+  0%, 18% { opacity: 0; transform: scale(0.2) rotate(0deg); }
+  26%     { opacity: 1; transform: scale(1.15) rotate(45deg); }
+  38%     { opacity: 0; transform: scale(0.3) rotate(90deg); }
+  100%    { opacity: 0; transform: scale(0.2) rotate(90deg); }
+}
+
+@keyframes gem-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-1.2px); }
 }
 
 .thought-tab-text {
@@ -559,7 +756,17 @@ body.dark-mode .thought-body::-webkit-scrollbar-thumb {
     transition: none !important;
   }
 
-  .thought-tab-flame::after {
+  .gem-float,
+  .gem-glints polygon,
+  .gem-sparkle,
+  .thought-tab:hover .thought-tab-gem,
+  .thought-tab:focus-visible .thought-tab-gem,
+  body .thought-tab:hover .gem-glints polygon,
+  body .thought-tab:focus-visible .gem-glints polygon,
+  .thought-tab:hover .gem-f,
+  .thought-tab:focus-visible .gem-f,
+  .thought-tab:hover .gem-table,
+  .thought-tab:focus-visible .gem-table {
     animation: none;
   }
 }

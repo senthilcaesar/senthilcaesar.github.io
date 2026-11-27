@@ -135,7 +135,7 @@
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="thought.css?v=7" />
+    <link rel="stylesheet" href="thought.css?v=20" />
 
     <!-- Typography Custom Styles -->
     <style>
@@ -1646,7 +1646,61 @@
       aria-expanded="false"
       aria-label="Open today's food for thought"
     >
-      <span class="thought-tab-flame" aria-hidden="true"></span>
+      <span class="thought-tab-gem" aria-hidden="true">
+        <svg viewBox="0 0 20 28" focusable="false">
+          <defs>
+            <clipPath id="gem-clip"><path d="M10 1 C13.4 6.2 18 10.8 18 17.6 A8 8 0 0 1 2 17.6 C2 10.8 6.6 6.2 10 1 Z"></path></clipPath>
+            <linearGradient id="gem-table-fill" x1="0" y1="0" x2="1" y2="1">
+              <stop class="gem-stop-1" offset="0"></stop>
+              <stop class="gem-stop-2" offset="0.5"></stop>
+              <stop class="gem-stop-3" offset="1"></stop>
+            </linearGradient>
+          </defs>
+          <g class="gem-float">
+            <g clip-path="url(#gem-clip)">
+              <path class="gem-base" d="M10 1 C13.4 6.2 18 10.8 18 17.6 A8 8 0 0 1 2 17.6 C2 10.8 6.6 6.2 10 1 Z"></path>
+              <polygon style="--i:10" class="gem-f gem-a" points="10,8.2 12.9,11.6 17.5,7.5"></polygon>
+              <polygon style="--i:9" class="gem-f gem-c" points="10,8.2 10,-1 17.5,7.5"></polygon>
+              <polygon style="--i:13" class="gem-f gem-b" points="12.9,11.6 13.8,16.4 21,15.5"></polygon>
+              <polygon style="--i:14" class="gem-f gem-d" points="12.9,11.6 17.5,7.5 21,15.5"></polygon>
+              <polygon style="--i:12" class="gem-f gem-c" points="13.8,16.4 12.4,20.6 19,25"></polygon>
+              <polygon style="--i:15" class="gem-f gem-a" points="13.8,16.4 21,15.5 19,25"></polygon>
+              <polygon style="--i:8" class="gem-f gem-d" points="12.4,20.6 10,21.8 10,29.5"></polygon>
+              <polygon style="--i:11" class="gem-f gem-b" points="12.4,20.6 19,25 10,29.5"></polygon>
+              <polygon style="--i:4" class="gem-f gem-a" points="10,21.8 7.6,20.6 1,25"></polygon>
+              <polygon style="--i:6" class="gem-f gem-c" points="10,21.8 10,29.5 1,25"></polygon>
+              <polygon style="--i:2" class="gem-f gem-b" points="7.6,20.6 6.2,16.4 -1,15.5"></polygon>
+              <polygon style="--i:0" class="gem-f gem-d" points="7.6,20.6 1,25 -1,15.5"></polygon>
+              <polygon style="--i:3" class="gem-f gem-c" points="6.2,16.4 7.1,11.6 2.5,7.5"></polygon>
+              <polygon style="--i:1" class="gem-f gem-a" points="6.2,16.4 -1,15.5 2.5,7.5"></polygon>
+              <polygon style="--i:7" class="gem-f gem-d" points="7.1,11.6 10,8.2 10,-1"></polygon>
+              <polygon style="--i:5" class="gem-f gem-b" points="7.1,11.6 2.5,7.5 10,-1"></polygon>
+              <polygon class="gem-table" points="10,8.2 12.9,11.6 13.8,16.4 12.4,20.6 10,21.8 7.6,20.6 6.2,16.4 7.1,11.6"></polygon>
+              <g class="gem-glints">
+              <polygon style="--i:10" points="10,8.2 12.9,11.6 17.5,7.5"></polygon>
+              <polygon style="--i:9" points="10,8.2 10,-1 17.5,7.5"></polygon>
+              <polygon style="--i:13" points="12.9,11.6 13.8,16.4 21,15.5"></polygon>
+              <polygon style="--i:14" points="12.9,11.6 17.5,7.5 21,15.5"></polygon>
+              <polygon style="--i:12" points="13.8,16.4 12.4,20.6 19,25"></polygon>
+              <polygon style="--i:15" points="13.8,16.4 21,15.5 19,25"></polygon>
+              <polygon style="--i:8" points="12.4,20.6 10,21.8 10,29.5"></polygon>
+              <polygon style="--i:11" points="12.4,20.6 19,25 10,29.5"></polygon>
+              <polygon style="--i:4" points="10,21.8 7.6,20.6 1,25"></polygon>
+              <polygon style="--i:6" points="10,21.8 10,29.5 1,25"></polygon>
+              <polygon style="--i:2" points="7.6,20.6 6.2,16.4 -1,15.5"></polygon>
+              <polygon style="--i:0" points="7.6,20.6 1,25 -1,15.5"></polygon>
+              <polygon style="--i:3" points="6.2,16.4 7.1,11.6 2.5,7.5"></polygon>
+              <polygon style="--i:1" points="6.2,16.4 -1,15.5 2.5,7.5"></polygon>
+              <polygon style="--i:7" points="7.1,11.6 10,8.2 10,-1"></polygon>
+              <polygon style="--i:5" points="7.1,11.6 2.5,7.5 10,-1"></polygon>
+              </g>
+              <ellipse class="gem-shine" cx="6.6" cy="12.5" rx="1.6" ry="3.4" transform="rotate(22 6.6 12.5)"></ellipse>
+            </g>
+            <path class="gem-edge" d="M10 1 C13.4 6.2 18 10.8 18 17.6 A8 8 0 0 1 2 17.6 C2 10.8 6.6 6.2 10 1 Z"></path>
+            <path class="gem-sparkle" d="M16.5 3.2 Q16.9 5.6 19.3 6 Q16.9 6.4 16.5 8.8 Q16.1 6.4 13.7 6 Q16.1 5.6 16.5 3.2 Z"></path>
+          </g>
+        </svg>
+      </span>
       <span class="thought-tab-text">
         <span class="thought-tab-sub">Today&rsquo;s</span>
         <span class="thought-tab-title">Food for Thought</span>
