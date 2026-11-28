@@ -482,12 +482,6 @@ body.dark-mode .mountain-background {
     height: 160px;
     border-radius: 32px;
   }
-
-  #gear-canvas-container {
-    width: 170px;
-    height: 170px;
-    margin-top: -12px;
-  }
 }
 
 @media (max-width: 720px) {
@@ -547,13 +541,6 @@ body.dark-mode .mountain-background {
   .social-links {
     margin-bottom: 8px;
     gap: 10px;
-  }
-
-  #gear-canvas-container {
-    width: 140px;
-    height: 140px;
-    margin-top: -10px;
-    touch-action: pan-y;
   }
 }
 
@@ -1183,9 +1170,20 @@ body.dark-mode .reading-list-btn {
   touch-action: pan-y;
 }
 
+/* Smaller gears on tablets and phones. These must come after the base rule
+   above, or its 200px size wins. */
+@media (max-width: 1024px) and (min-width: 721px) {
+  #gear-canvas-container {
+    width: 170px;
+    height: 170px;
+  }
+}
+
 /* On phones the sidebar stacks above the bio, so keep the gears close. */
 @media (max-width: 720px) {
   #gear-canvas-container {
+    width: 140px;
+    height: 140px;
     margin-top: 4px;
   }
 }

@@ -310,7 +310,17 @@
             let targetRotX = 0.35;
             let targetRotY = -0.25;
 
-            container.addEventListener('mousemove', (e) => {
+            function resetTilt() {
+                targetRotX = 0.35;
+                targetRotY = -0.25;
+            }
+
+            // Tilt follows a real mouse only. Phones and tablets turn a tap into a
+            // fake mousemove but send no mouseleave afterwards, so the gears would
+            // stay tilted until the next tap elsewhere and then snap back, which
+            // looks like a glitch.
+            container.addEventListener('pointermove', (e) => {
+                if (e.pointerType !== 'mouse') return;
                 const rect = container.getBoundingClientRect();
                 const mouseX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
                 const mouseY = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
@@ -319,10 +329,10 @@
                 targetRotX = 0.35 - mouseY * 0.35;
             });
 
-            container.addEventListener('mouseleave', () => {
-                targetRotX = 0.35;
-                targetRotY = -0.25;
-            });
+            container.addEventListener('pointerleave', resetTilt);
+            // Clicking opens the lightbox over the gears; start level when it closes.
+            container.addEventListener('click', resetTilt);
+            window.addEventListener('blur', resetTilt);
 
             // Clicking the gears opens the illustration lightbox (see js/main.js).
 
